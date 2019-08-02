@@ -31,25 +31,34 @@ export default function AskqueResumen(props) {
             <Grid container>
                 <Grid item xs={10}>
                     <div className={classes.header}>
-                        <Typography gutterBottom variant="subtitle1">
+                        <Typography gutterBottom variant="h6">
                             Nombre del cuestionario
                 </Typography>
-                        <Typography variant="body2" gutterBottom>
+                        <Typography variant="subtitle1" gutterBottom>
                             Código {props.code} - MultipleChoice
                 </Typography>
                     </div>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body1" color="textSecondary">
                         Módulo Bioquimica II
                 </Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body1" color="textSecondary">
                         Tiempo promedio de respuesta 4 min
                 </Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body1" color="textSecondary">
                         Cantidad de participantes: 63
                 </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                        Participaron 63 personas
+
+                    <Typography variant="body1" color="textSecondary">
+                        Participaron 63 personas  (prueba)
                 </Typography>
+                    <Typography variant="body1" color="textSecondary">
+                        22/04/2019
+                </Typography>
+
+                    <Typography variant="body1" color="textSecondary">
+                        04 Julio, 2019  (prueba)
+                </Typography>
+
 
                 </Grid>
                 <Grid item xs={2} container>
