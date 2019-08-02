@@ -10,7 +10,7 @@ import AskQuestionary from "./AskQuestionary"
 
 export default class Root extends Component {
   render() {
-    return <Router basename="askque">
+    return <Router>
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
