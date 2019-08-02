@@ -7,6 +7,7 @@ import Login from "./Login"
 import Register from './Register'
 import CreateQuestionary from "./CreateQuestionary"
 import AskQuestionary from "./AskQuestionary"
+import MyAskques from "./MyAskques"
 
 export default class Root extends Component {
   render() {
@@ -16,6 +17,7 @@ export default class Root extends Component {
         <Route path="/register" component={Register} />
         <Route path="/create-questionary" component={CreateQuestionary} />
         <Route path="/ask-questionary" component={AskQuestionary} />
+        <Route path="/my-askques" component={MyAskques} />
         <Route path="/" component={Home} />
       </Switch>
     </Router>
