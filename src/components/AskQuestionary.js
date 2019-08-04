@@ -28,8 +28,11 @@ export default class AskQuestionary extends Component {
         const wordLength = e.target.value.length
         const showLoading = wordLength === 3
         const showInformation = !showLoading
-        this.setState({ value: e.target.value.toUpperCase(), showLoading, showInformation })
-        setTimeout(() => this.setState({ showResume: true, showInformation: false, showLoading: false }), 3000)
+        this.setState({ value: e.target.value.toUpperCase() })
+        if (showLoading) {
+            setTimeout(() => this.setState({ showInformation: false, showLoading }), 1000)
+        }
+        setTimeout(() => this.setState({ showResume: true, showInformation: false, showLoading: false }), 5000)
     }
 
 
