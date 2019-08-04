@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import '../style/style.scss'
 import AppBar from "./AppBar"
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+//import { makeStyles } from '@material-ui/core/styles';
 import LoadingAskqueInfo from './LoadingAskqueInfo'
 import Grid from '@material-ui/core/Grid';
 import AskqueResumen from './AskqueResume';
 
-const styles = makeStyles(theme => ({
-    header: {
-        marginTop: '1em'
-    }
-}));
+// const styles = makeStyles(theme => ({
+//     header: {
+//         marginTop: '1em'
+//     }
+// }));
 
 
 export default class AskQuestionary extends Component {
