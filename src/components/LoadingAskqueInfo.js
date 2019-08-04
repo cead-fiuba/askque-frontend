@@ -18,7 +18,9 @@ export default function LoadingAskqueInfo() {
 
     React.useEffect(() => {
         return () => {
-            clearTimeout(timer.current);
+            // eslint-disable-next-line
+            const element = timer.current
+            clearTimeout(element)
         };
     }, []);
 
