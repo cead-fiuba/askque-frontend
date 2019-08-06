@@ -101,11 +101,11 @@ export default function Home(props) {
         </Grid>
       </Grid>
     </main>
-    <Grid container>
+    <Grid container spacing={2}>
       <Grid item sm={4} xs={12}>
         <Grid container alignItems="center" direction="column">
           <Grid item>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+            <Typography variant="h5" align="center" color="textSecondary" paragraph style={{ marginTop: '40px' }}>
               Fácil
             </Typography>
           </Grid>
@@ -125,7 +125,7 @@ export default function Home(props) {
       <Grid item sm={4} xs={12}>
         <Grid container alignItems="center" direction="column">
           <Grid item>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+            <Typography variant="h5" align="center" color="textSecondary" paragraph style={{ marginTop: '40px' }}>
               Rapido
             </Typography>
           </Grid>
@@ -143,7 +143,7 @@ export default function Home(props) {
       <Grid item sm={4} xs={12}>
         <Grid container alignItems="center" direction="column">
           <Grid item>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+            <Typography variant="h5" align="center" color="textSecondary" paragraph style={{ marginTop: '40px' }}>
               Seguro
             </Typography>
           </Grid>
