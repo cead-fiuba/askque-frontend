@@ -8,6 +8,7 @@ import Register from './Register'
 import CreateQuestionary from "./CreateQuestionary"
 import AskQuestionary from "./AskQuestionary"
 import MyAskques from "./MyAskques"
+import 'typeface-roboto';
 
 export default class Root extends Component {
   render() {

@@ -42,9 +42,9 @@ class ButtonAppBar extends Component {
         <AppBar position={this.props.position}>
           <Toolbar>
             <Typography variant="h6" color="inherit" className={classes.grow}
-              onClick={()=> this.redirectTo("/")}
+              onClick={() => this.redirectTo("/")}
             >
-              Company Name
+              ASKQUE
           </Typography>
             <Button onClick={() => this.redirectTo("/register")}>
               <AccountPlus />

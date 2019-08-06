@@ -5,8 +5,10 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Send, Pencil } from 'mdi-material-ui'
 import { makeStyles } from '@material-ui/core/styles';
-
-
+import Image from "../images/image1.jpg"
+import ManitoArriba from '@material-ui/icons/ThumbUpAlt'
+import Seguro from '@material-ui/icons/VerifiedUser'
+import Speed from '@material-ui/icons/ShutterSpeed'
 
 
 
@@ -16,7 +18,12 @@ const styles = makeStyles(theme => ({
     flexGrow: 1,
   },
   body: {
-    marginTop: theme.spacing(4),
+    // marginTop: theme.spacing(4),
+    backgroundImage: ` url(${Image})`,
+    backgroundColor: '#7fc7d9',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    padding: 30,
   },
   buttons: {
     marginTop: theme.spacing(4)
@@ -46,11 +53,24 @@ export default function Home(props) {
     <AppBar
       position="static"
     />
-    <main className={style.body}>
-      <Typography variant="h3" align="center" color="textPrimary" gutterBottom>
-        ASKQUE
+    <main
+      className={style.body}
+    >
+      <Typography
+        variant="h3"
+        align="center"
+        color="primary"
+        gutterBottom
+        marked="center"
+      >
+        ENCUESTAS SENCILLAS
       </Typography>
-      <Typography variant="h6" align="center" color="textSecondary" paragraph>
+      <span
+        style={{ width: '73px', height: '5px', margin: '8px auto 8px', display: 'block', backgroundColor: 'red' }}
+      >
+
+      </span>
+      <Typography variant="h6" align="center" paragraph color="primary">
         Aplicación para crear preguntas educativas de manera sencilla y rápida. Esta aplicación
         se utilizará en la Facultad de Ingenieria de la UBA
       </Typography>
@@ -81,6 +101,64 @@ export default function Home(props) {
         </Grid>
       </Grid>
     </main>
+    <Grid container>
+      <Grid item sm={4} xs={12}>
+        <Grid container alignItems="center" direction="column">
+          <Grid item>
+            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+              Fácil
+            </Typography>
+          </Grid>
+          <Grid item>
+            <ManitoArriba style={{ fontSize: '120px' }}>
+            </ManitoArriba>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6" align="center" color="textSecondary" paragraph>
+              Muy facil de usar que obtener el código del askque y listo!
+            </Typography>
+          </Grid>
+        </Grid>
+
+
+      </Grid>
+      <Grid item sm={4} xs={12}>
+        <Grid container alignItems="center" direction="column">
+          <Grid item>
+            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+              Rapido
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Speed style={{ fontSize: '120px' }}>
+            </Speed>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6" align="center" color="textSecondary" paragraph>
+              No es necesario obtener ningún link, solo con el código ya podes completar el askque
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item sm={4} xs={12}>
+        <Grid container alignItems="center" direction="column">
+          <Grid item>
+            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+              Seguro
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Seguro style={{ fontSize: '120px' }}>
+            </Seguro>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6" align="center" color="textSecondary" paragraph>
+              Muy facil de usar que obtener el código del askque y listo!
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
     <footer className={style.footer}>
       <Typography variant="subtitle1" align="center" color="textSecondary">
         Builded by CETEC
