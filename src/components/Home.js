@@ -23,7 +23,8 @@ const styles = makeStyles(theme => ({
     backgroundColor: '#7fc7d9',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
-    padding: 30,
+    paddingTop: '20%',
+    paddingBottom: '10%'
   },
   buttons: {
     marginTop: theme.spacing(4)
@@ -51,7 +52,7 @@ export default function Home(props) {
   const style = styles()
   return <div>
     <AppBar
-      position="static"
+      position="fixed"
     />
     <main
       className={style.body}
@@ -110,7 +111,7 @@ export default function Home(props) {
             </Typography>
           </Grid>
           <Grid item>
-            <ManitoArriba style={{ fontSize: '120px' }}>
+            <ManitoArriba style={{ fontSize: '120px' }} color='secondary'>
             </ManitoArriba>
           </Grid>
           <Grid item>
@@ -130,7 +131,7 @@ export default function Home(props) {
             </Typography>
           </Grid>
           <Grid item>
-            <Speed style={{ fontSize: '120px' }}>
+            <Speed style={{ fontSize: '120px' }} color='secondary'>
             </Speed>
           </Grid>
           <Grid item>
@@ -148,7 +149,7 @@ export default function Home(props) {
             </Typography>
           </Grid>
           <Grid item>
-            <Seguro style={{ fontSize: '120px' }}>
+            <Seguro style={{ fontSize: '120px' }} color='secondary'>
             </Seguro>
           </Grid>
           <Grid item>
