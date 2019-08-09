@@ -9,10 +9,11 @@ import Tabs from '@material-ui/core/Tabs';
 import { default as AppBar2 } from '@material-ui/core/AppBar';
 import { Teach } from 'mdi-material-ui'
 import School from '@material-ui/icons/School'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Person from '@material-ui/icons/Person';
 import Avatar from '@material-ui/core/Avatar';
 import RegisterStudent from './RegisterStudent';
 import RegisterTeacher from './RegisterTeacher'
+import { AccountPlus } from 'mdi-material-ui'
 
 
 function TabPanel(props) {
@@ -83,10 +84,10 @@ export default function Register() {
     <Container component="main" maxWidth="xs" style={{ marginTop: '3%' }}>
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+          <Person />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Crear cuenta
         </Typography>
         <AppBar2 position="static" className={classes.appBar}>
           <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
