@@ -25,10 +25,10 @@ const useStyles = makeStyles(theme => ({
 
 function AppBarCustom(props) {
 
-  const [value, setValue] = React.useState({
+  /* const [value, setValue] = React.useState({
     redirectToLogin: false,
     redirectToRegister: false
-  });
+  }); */
 
   function redirectTo(newPath) {
     props.history.push(newPath);
