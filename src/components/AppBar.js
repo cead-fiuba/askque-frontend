@@ -1,17 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { AccountPlus, Login } from 'mdi-material-ui'
-import { withRouter } from 'react-router-dom';
+import { makeStyles } from '@material-ui/styles';
+import { withRouter } from 'react-router-dom'
 
-
-
-
-const styles = {
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
@@ -22,45 +18,51 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
-};
+  rightButton: {
+    marginLeft: theme.spacing(1)
+  }
+}));
 
-class ButtonAppBar extends Component {
+function AppBarCustom(props) {
 
-  state = {
+  const [value, setValue] = React.useState({
     redirectToLogin: false,
     redirectToRegister: false
+  });
+
+  function redirectTo(newPath) {
+    props.history.push(newPath);
   }
 
-  redirectTo = (newPath) => {
-    this.props.history.push(newPath);
-  }
 
-  render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.root}>
-        <AppBar position={this.props.position}>
-          <Toolbar>
-            <Typography variant="h6" color="inherit" className={classes.grow}
-              onClick={() => this.redirectTo("/")}
-            >
-              ASKQUE
+  const style = useStyles();
+
+  return <div className={style.root}>
+    <AppBar position={props.position}>
+      <Toolbar>
+        <Typography variant="h6" color="inherit" className={style.grow}
+          onClick={() => redirectTo("/")}
+        >
+          ASKQUE
           </Typography>
-            <Button onClick={() => this.redirectTo("/register")}>
-              <AccountPlus />
-            </Button>
-            <Button onClick={() => { this.redirectTo("/login") }}>
-              <Login />
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
-  }
+        <Button
+          onClick={() => redirectTo("/register")}
+          variant="outlined"
+          style={{ marginRight: '1%' }}
+        >
+          Registrarse
+          <Login className={style.rightButton} />
+        </Button>
+        <Button
+          onClick={() => { redirectTo("/login") }}
+          variant="outlined"
+        >
+          Ingresar
+          <AccountPlus className={style.rightButton} />
+        </Button>
+      </Toolbar>
+    </AppBar>
+  </div>
 }
 
-ButtonAppBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(ButtonAppBar));
+export default withRouter(AppBarCustom)
