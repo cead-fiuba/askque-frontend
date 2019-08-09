@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-//import logo from './logo.svg';
-//import { UserAgent } from "react-useragent";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./Home"
 import Login from "./Login"
@@ -8,7 +6,6 @@ import Register from './Register'
 import CreateQuestionary from "./CreateQuestionary"
 import AskQuestionary from "./AskQuestionary"
 import MyAskques from "./MyAskques"
-import 'typeface-roboto';
 
 export default class Root extends Component {
   render() {

@@ -61,6 +61,7 @@ export default class AskQuestionary extends Component {
                 }
                 {this.state.showInformation ?
                     <input
+                        id="input-askque-code"
                         type="text"
                         maxLength='3'
                         value={this.state.value}

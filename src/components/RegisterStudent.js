@@ -3,16 +3,6 @@ import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
-//import { makeStyles } from '@material-ui/core/styles';
-
-
-/* const useStyles = makeStyles(theme => ({
-    googleButton: {
-        width: '100% !important',
-        marginTop: theme.spacing(7),
-        marginBottom: theme.spacing(9)
-    }
-})); */
 
 export default function RegisterStudent() {
 
@@ -27,6 +17,7 @@ export default function RegisterStudent() {
                 id="standard-name"
                 label="Padrón"
                 margin="normal"
+                variant="outlined"
                 fullWidth
             />
             <TextField
@@ -34,26 +25,31 @@ export default function RegisterStudent() {
                 label="Nombre"
                 margin="normal"
                 fullWidth
+                variant="outlined"
             />
             <TextField
                 id="standard-name"
                 label="Apellido"
                 margin="normal"
                 fullWidth
+                variant="outlined"
             />
             <TextField
                 id="standard-name"
                 label="Email"
                 margin="normal"
                 fullWidth
+                variant="outlined"
+                type="email"
             />
             <TextField
-                id="filled-password-input"
+                id="password"
                 label="Contraseña"
                 type="password"
                 autoComplete="current-password"
                 margin="normal"
                 fullWidth
+                variant="outlined"
             />
         </Container>
     </div>

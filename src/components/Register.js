@@ -27,7 +27,7 @@ function TabPanel(props) {
         id={`simple-tabpanel-${index}`}
         aria-labelledby={`simple-tab-${index}`}
         {...other}
-        style={{ width: '100%'}}
+        style={{ width: '100%' }}
       >
         <Box p={3}>{children}</Box>
       </Typography>
@@ -90,15 +90,16 @@ export default function Register() {
         </Typography>
         <AppBar2 position="static" className={classes.appBar}>
           <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
-            <Tab label="Profesor" {...a11yProps(0)} icon={<Teach />} />
-            <Tab label="Estudiante" {...a11yProps(1)} icon={<School />} />
+            <Tab label="Estudiante" {...a11yProps(0)} icon={<School />} />
+            <Tab label="Profesor" {...a11yProps(1)} icon={<Teach />} />
           </Tabs>
         </AppBar2>
         <TabPanel value={value} index={0}>
-          <RegisterTeacher />
+          <RegisterStudent />
+
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <RegisterStudent />
+          <RegisterTeacher />
         </TabPanel>
       </div>
     </Container>
