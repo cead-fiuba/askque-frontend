@@ -62,7 +62,7 @@ export default function RegisterStudent() {
                 Es necesario tener una cuenta para poder response un Askque
         </Typography>
             <TextField
-                id="standard-name"
+                id="padron"
                 label="Padrón"
                 margin="normal"
                 variant="outlined"
@@ -73,7 +73,7 @@ export default function RegisterStudent() {
                 helperText={values.padronHelperText}
             />
             <TextField
-                id="standard-name"
+                id="name"
                 label="Nombre"
                 margin="normal"
                 fullWidth
@@ -82,7 +82,7 @@ export default function RegisterStudent() {
                 value={values.name}
             />
             <TextField
-                id="standard-name"
+                id="last-name"
                 label="Apellido"
                 margin="normal"
                 fullWidth
@@ -91,7 +91,7 @@ export default function RegisterStudent() {
                 value={values.lastName}
             />
             <TextField
-                id="standard-name"
+                id="email"
                 label="Email"
                 margin="normal"
                 fullWidth
