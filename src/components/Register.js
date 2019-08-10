@@ -13,7 +13,6 @@ import Person from '@material-ui/icons/Person';
 import Avatar from '@material-ui/core/Avatar';
 import RegisterStudent from './RegisterStudent';
 import RegisterTeacher from './RegisterTeacher'
-import { AccountPlus } from 'mdi-material-ui'
 
 
 function TabPanel(props) {
