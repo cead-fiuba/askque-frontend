@@ -160,7 +160,7 @@ export default function RegisterTeacher() {
                     </TextField>
 
                     <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="select-multiple-chip">Chip</InputLabel>
+                        <InputLabel htmlFor="select-multiple-chip">Materias</InputLabel>
                         <Select
                             multiple
                             value={values.personName}
