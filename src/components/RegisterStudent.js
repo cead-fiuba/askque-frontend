@@ -20,7 +20,7 @@ export default function RegisterStudent() {
         email: '',
         pass: '',
         emailIsValid: true,
-        padron: '202',
+        padron: null,
         padronIsValid: true,
         padronHelperText: ''
     });
