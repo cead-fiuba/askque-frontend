@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import { AccountPlus, Login } from 'mdi-material-ui'
 import { makeStyles } from '@material-ui/styles';
 import { withRouter } from 'react-router-dom'
+import Hidden from '@material-ui/core/Hidden';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,14 +51,18 @@ function AppBarCustom(props) {
           variant="outlined"
           style={{ marginRight: '1%' }}
         >
-          Registrarse
+          <Hidden only="xs">
+            Registrarse
+          </Hidden>
           <Login className={style.rightButton} />
         </Button>
         <Button
           onClick={() => { redirectTo("/login") }}
           variant="outlined"
         >
-          Ingresar
+          <Hidden only="xs">
+            Ingresar
+          </Hidden>
           <AccountPlus className={style.rightButton} />
         </Button>
       </Toolbar>
