@@ -50,8 +50,8 @@ const currencies = [
         label: 'Ayudante 2º',
     },
     {
-        value: 'Jefe de catedra',
-        label: 'Jefe de catedra',
+        value: 'Profesor',
+        label: 'Profesor',
     },
 ];
 
@@ -79,7 +79,7 @@ export default function RegisterTeacher() {
     const [values, setValue] = React.useState({
         showGoogleButton: true,
         name: '',
-        ocupation: 'Jefe de catedra',
+        ocupation: 'Profesor',
         personName: [],
         email: ''
     });
@@ -87,25 +87,14 @@ export default function RegisterTeacher() {
     const theme = useTheme();
 
 
-    function handleChange(event) {
-        setValue({ personName: event.target.value })
+    const handleChange = name => event => {
+        setValue({ ...values, [name]: event.target.value })
     }
 
     const responseGoogle = (response) => {
         console.log(response);
         console.log(response.w3.U3);
         setValue({ ...values, showGoogleButton: false, name: response.w3.ig, email: response.w3.U3 })
-    }
-
-    function getStyles(name, personName, theme) {
-        console.log('personName', personName);
-        console.log('values', values)
-        return {
-            fontWeight:
-                personName.indexOf(name) === -1
-                    ? theme.typography.fontWeightRegular
-                    : theme.typography.fontWeightMedium,
-        };
     }
 
     const classes = useStyles();
@@ -118,7 +107,7 @@ export default function RegisterTeacher() {
                         facultad @fi.uba.ar
             </Typography>
                     <GoogleLogin
-                        clientId="1019588126312-sfdo9uujk907immg83anf734ft1dae67.apps.googleusercontent.com"
+                        clientId="1019588126312-j8jtlv1q4a6djif45aumgnoao3m1mk12.apps.googleusercontent.com"
                         buttonText="Login"
                         onSuccess={responseGoogle}
                         onFailure={responseGoogle}
@@ -142,7 +131,7 @@ export default function RegisterTeacher() {
                         className={classes.textField}
                         value={values.ocupation}
                         variant="outlined"
-                        //onChange={handleChange('currency')}
+                        onChange={handleChange('ocupation')}
                         SelectProps={{
                             MenuProps: {
                                 className: classes.menu,
@@ -158,32 +147,6 @@ export default function RegisterTeacher() {
                             </MenuItem>
                         ))}
                     </TextField>
-
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="select-multiple-chip">Materias</InputLabel>
-                        <Select
-                            multiple
-                            value={values.personName}
-                            onChange={handleChange}
-                            input={<Input id="select-multiple-chip" />}
-                            variant="outlined"
-                            renderValue={selected => {
-                                console.log('selected', selected)
-                                return < div className={classes.chips}>
-                                    {selected.map(value => (
-                                        <Chip key={value} label={value} className={classes.chip} />
-                                    ))}
-                                </div>
-                            }}
-                            MenuProps={MenuProps}
-                        >
-                            {materias.map(name => (
-                                <MenuItem key={name} value={name} style={getStyles(name, values.personName, theme)}>
-                                    {name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
                     <TextField
                         disabled
                         id="outlined-disabled"
@@ -195,7 +158,12 @@ export default function RegisterTeacher() {
                         fullWidth
                     />
 
-                    <Button variant="contained" color="secondary" fullWidth className={classes.createAcccountButton}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        fullWidth
+                        className={classes.createAcccountButton}
+                    >
                         Crear cuenta AskQue
             </Button>
                 </div>}
