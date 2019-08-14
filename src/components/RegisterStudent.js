@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { createStudent } from "../service/StudentService"
 
 
 const useStyles = makeStyles(theme => ({
@@ -20,10 +21,24 @@ export default function RegisterStudent() {
         email: '',
         pass: '',
         emailIsValid: true,
-        padron: null,
+        padron: '',
         padronIsValid: true,
         padronHelperText: ''
     });
+
+
+    const createStudentAccount = () => {
+        const student = {
+            name: values.name,
+            email: values.email,
+            password: values.pass,
+            padron: Number(values.padron)
+        }
+        createStudent(student)
+            .then((res) => {
+                console.log('se creo el estudiante de manera correcta')
+            })
+    }
 
 
     function validateEmail(email) {
@@ -74,21 +89,12 @@ export default function RegisterStudent() {
             />
             <TextField
                 id="name"
-                label="Nombre"
+                label="Nombre Completo"
                 margin="normal"
                 fullWidth
                 variant="outlined"
                 onChange={handleChange('name')}
                 value={values.name}
-            />
-            <TextField
-                id="last-name"
-                label="Apellido"
-                margin="normal"
-                fullWidth
-                variant="outlined"
-                onChange={handleChange('lastName')}
-                value={values.lastName}
             />
             <TextField
                 id="email"
@@ -113,7 +119,13 @@ export default function RegisterStudent() {
                 value={values.pass}
             />
 
-            <Button variant="contained" color="secondary" fullWidth className={classes.createAcccountButton}>
+            <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                className={classes.createAcccountButton}
+                onClick={createStudentAccount}
+            >
                 Crear cuenta AskQue
             </Button>
         </Container>
