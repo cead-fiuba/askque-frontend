@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { createTeacher } from "../service/TeacherService"
 import { withRouter } from 'react-router-dom'
+import { AppContextConsumer } from '../context/context'
 
 const useStyles = makeStyles(theme => ({
     googleButton: {
@@ -47,6 +48,7 @@ const currencies = [
     },
 ];
 
+RegisterTeacher.contextType = AppContextConsumer;
 
 function RegisterTeacher(props) {
 
@@ -56,6 +58,8 @@ function RegisterTeacher(props) {
         ocupation: '',
         email: ''
     });
+
+    const { changeIsLooged } = this.context;
 
 
     function redirectTo(newPath) {
@@ -81,6 +85,7 @@ function RegisterTeacher(props) {
 
         createTeacher(teacher).then((response) => {
             console.log('entro en el then')
+            changeIsLooged()
             redirectTo("/my-askques")
         }).catch((error) => {
             console.log('Algo paso mal', error)
@@ -162,6 +167,5 @@ function RegisterTeacher(props) {
         </Container>
     </div >
 }
-
 
 export default withRouter(RegisterTeacher);
