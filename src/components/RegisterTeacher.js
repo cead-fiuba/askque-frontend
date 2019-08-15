@@ -1,18 +1,14 @@
 import React from 'react';
 import GoogleButton from 'react-google-button'
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import GoogleLogin from 'react-google-login';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import Chip from '@material-ui/core/Chip';
-import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
-
+import { createTeacher } from "../service/TeacherService"
+import { withRouter } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     googleButton: {
@@ -38,54 +34,33 @@ const useStyles = makeStyles(theme => ({
 
 const currencies = [
     {
-        value: 'JTP',
+        value: 2,
         label: 'JTP',
     },
     {
-        value: 'Ayudante 1º',
-        label: 'Ayudante 1º',
+        value: 1,
+        label: 'Ayudante',
     },
     {
-        value: 'Ayudante 2º',
-        label: 'Ayudante 2º',
-    },
-    {
-        value: 'Profesor',
+        value: 0,
         label: 'Profesor',
     },
 ];
 
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
-const materias = [
-    'Fisica I',
-    'Fisica II',
-    'Analisis Matematico II',
-    'Quimica I'
-];
-
-export default function RegisterTeacher() {
+function RegisterTeacher(props) {
 
     const [values, setValue] = React.useState({
         showGoogleButton: true,
         name: '',
-        ocupation: 'Profesor',
-        personName: [],
+        ocupation: '',
         email: ''
     });
 
-    const theme = useTheme();
 
+    function redirectTo(newPath) {
+        props.history.push(newPath);
+    }
 
     const handleChange = name => event => {
         setValue({ ...values, [name]: event.target.value })
@@ -95,6 +70,22 @@ export default function RegisterTeacher() {
         console.log(response);
         console.log(response.w3.U3);
         setValue({ ...values, showGoogleButton: false, name: response.w3.ig, email: response.w3.U3 })
+    }
+
+    const createAccount = () => {
+        const teacher = {
+            ocupation: values.ocupation,
+            email: values.email,
+            name: values.name
+        }
+
+        createTeacher(teacher).then((response) => {
+            console.log('entro en el then')
+            redirectTo("/my-askques")
+        }).catch((error) => {
+            console.log('Algo paso mal', error)
+        })
+
     }
 
     const classes = useStyles();
@@ -163,6 +154,7 @@ export default function RegisterTeacher() {
                         color="secondary"
                         fullWidth
                         className={classes.createAcccountButton}
+                        onClick={createAccount}
                     >
                         Crear cuenta AskQue
             </Button>
@@ -170,3 +162,6 @@ export default function RegisterTeacher() {
         </Container>
     </div >
 }
+
+
+export default withRouter(RegisterTeacher);
