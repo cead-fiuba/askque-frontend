@@ -3,16 +3,19 @@ import React from 'react';
 export const AppContext = React.createContext({});
 
 
+
+
+
 export class AppContextProvider extends React.Component {
 
     state = {
-        token: null,
-        isLogged: false,
-        userName: null
+        token: localStorage.getItem('token'),
+        isLogged: localStorage.getItem('token') !== "null",
     }
 
-    changeIsLogged = () => {
-        this.setState({ isLogged: true })
+    setToken = (token) => {
+        this.setState({ token, isLogged: token !== null }, () => { localStorage.setItem('token', token) })
+
     }
 
     render() {
@@ -20,7 +23,7 @@ export class AppContextProvider extends React.Component {
             <AppContext.Provider
                 value={{
                     state: this.state,
-                    changeIsLogged: this.changeIsLogged
+                    setToken: this.setToken
 
                 }}>
                 {this.props.children}

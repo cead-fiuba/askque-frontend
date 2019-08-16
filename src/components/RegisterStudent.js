@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { createStudent } from "../service/StudentService"
+import { withRouter } from 'react-router-dom'
+import { AppContextConsumer } from '../context/context'
 
 
 const useStyles = makeStyles(theme => ({
@@ -13,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function RegisterStudent() {
+function RegisterStudent(props) {
 
     const [values, setValues] = React.useState({
         name: '',
@@ -27,6 +29,10 @@ export default function RegisterStudent() {
     });
 
 
+    const goTo = (value) => {
+        props.history.push(value)
+    }
+
     const createStudentAccount = () => {
         const student = {
             name: values.name,
@@ -36,7 +42,12 @@ export default function RegisterStudent() {
         }
         createStudent(student)
             .then((res) => {
+                console.log('response', res)
                 console.log('se creo el estudiante de manera correcta')
+                goTo('/ask-questionary')
+                props.context.setToken(res.data.token);
+            }).catch((e) => {
+                console.log('algo salio mal al crear la cuenta')
             })
     }
 
@@ -131,3 +142,11 @@ export default function RegisterStudent() {
         </Container>
     </div>
 }
+
+
+export default withRouter((props) => (
+    <AppContextConsumer>
+        {
+            contextData => (<RegisterStudent {...props} context={contextData} />)
+        }
+    </AppContextConsumer>))

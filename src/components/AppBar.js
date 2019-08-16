@@ -28,10 +28,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export function AppBarCustom(props) {
+function AppBarCustom(props) {
 
   function redirectTo(newPath) {
     props.history.push(newPath);
+  }
+
+  function exit() {
+    props.context.setToken(null)
+    redirectTo('/')
   }
 
   const style = useStyles();
@@ -44,47 +49,49 @@ export function AppBarCustom(props) {
         >
           ASKQUE
           </Typography>
-        <AppContextConsumer>
-          {
-            (value) => {
-              return value.state.isLogged ?
-                <>
-                  <Button
-                    variant="outlined"
-                  >
-                    Salir
+        {
+          props.context.state.isLogged ?
+            <>
+              <Button
+                variant="outlined"
+                onClick={exit}
+              >
+                Salir
                     <ExitToApp className={style.rightButton} />
-                  </Button>
-                </>
-                :
-                <>
-                  <Button
-                    onClick={() => redirectTo("/register")}
-                    variant="outlined"
-                    style={{ marginRight: '1%' }}
-                  >
-                    <Hidden only="xs">
-                      Registrarse
+              </Button>
+            </>
+            :
+            <>
+              <Button
+                onClick={() => redirectTo("/register")}
+                variant="outlined"
+                style={{ marginRight: '1%' }}
+              >
+                <Hidden only="xs">
+                  Registrarse
                     </Hidden>
-                    <AccountPlus className={style.rightButton} />
-                  </Button>
-                  <Button
-                    onClick={() => { redirectTo("/login") }}
-                    variant="outlined"
-                  >
-                    <Hidden only="xs">
-                      Ingresar
+                <AccountPlus className={style.rightButton} />
+              </Button>
+              <Button
+                onClick={() => { redirectTo("/login") }}
+                variant="outlined"
+              >
+                <Hidden only="xs">
+                  Ingresar
                     </Hidden>
-                    <Login className={style.rightButton} />
+                <Login className={style.rightButton} />
 
-                  </Button>
-                </>
-            }
-          }
-        </AppContextConsumer>
+              </Button>
+            </>
+        }
       </Toolbar>
     </AppBar>
   </div>
 }
 
-export default withRouter(AppBarCustom)
+export default withRouter((props) => (
+  <AppContextConsumer>
+    {
+      contextData => (<AppBarCustom {...props} context={contextData} />)
+    }
+  </AppContextConsumer>))
