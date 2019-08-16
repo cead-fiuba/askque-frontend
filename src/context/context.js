@@ -7,9 +7,8 @@ export class AppContextProvider extends React.Component {
 
     state = {
         token: null,
-        userLogged: true,
-        userName: 'Cristian Gonzalez',
-        changeIsLogged: this.changeIsLogged
+        isLogged: false,
+        userName: null
     }
 
     changeIsLogged = () => {
@@ -19,7 +18,11 @@ export class AppContextProvider extends React.Component {
     render() {
         return (
             <AppContext.Provider
-                value={this.state}>
+                value={{
+                    state: this.state,
+                    changeIsLogged: this.changeIsLogged
+
+                }}>
                 {this.props.children}
             </AppContext.Provider>
         );

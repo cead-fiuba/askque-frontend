@@ -48,7 +48,6 @@ const currencies = [
     },
 ];
 
-RegisterTeacher.contextType = AppContextConsumer;
 
 function RegisterTeacher(props) {
 
@@ -58,9 +57,6 @@ function RegisterTeacher(props) {
         ocupation: '',
         email: ''
     });
-
-    const { changeIsLooged } = this.context;
-
 
     function redirectTo(newPath) {
         props.history.push(newPath);
@@ -85,7 +81,8 @@ function RegisterTeacher(props) {
 
         createTeacher(teacher).then((response) => {
             console.log('entro en el then')
-            changeIsLooged()
+            console.log('props', props)
+            props.context.changeIsLogged()
             redirectTo("/my-askques")
         }).catch((error) => {
             console.log('Algo paso mal', error)
@@ -101,7 +98,7 @@ function RegisterTeacher(props) {
                     <Typography variant="body2" gutterBottom>
                         Para ingresar como docente es necesario que ingrese con el email institucional de la
                         facultad @fi.uba.ar
-            </Typography>
+                    </Typography>
                     <GoogleLogin
                         clientId="1019588126312-j8jtlv1q4a6djif45aumgnoao3m1mk12.apps.googleusercontent.com"
                         buttonText="Login"
@@ -162,10 +159,16 @@ function RegisterTeacher(props) {
                         onClick={createAccount}
                     >
                         Crear cuenta AskQue
-            </Button>
+                    </Button>
                 </div>}
         </Container>
     </div >
 }
 
-export default withRouter(RegisterTeacher);
+
+export default withRouter((props) => (
+    <AppContextConsumer>
+        {
+            contextData => (<RegisterTeacher {...props} context={contextData} />)
+        }
+    </AppContextConsumer>))

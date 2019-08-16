@@ -8,6 +8,8 @@ import { makeStyles } from '@material-ui/styles';
 import { withRouter } from 'react-router-dom'
 import Hidden from '@material-ui/core/Hidden';
 import { AppContextConsumer } from "../context/context"
+import ExitToApp from '@material-ui/icons/ExitToAppRounded';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,10 +47,16 @@ export function AppBarCustom(props) {
         <AppContextConsumer>
           {
             (value) => {
-              console.log('userLogged', value.userLogged)
-              console.log('userName', value.userName)
-              return value.userLogged ?
-                <div>{value.userName}</div> :
+              return value.state.isLogged ?
+                <>
+                  <Button
+                    variant="outlined"
+                  >
+                    Salir
+                    <ExitToApp className={style.rightButton} />
+                  </Button>
+                </>
+                :
                 <>
                   <Button
                     onClick={() => redirectTo("/register")}
@@ -57,7 +65,7 @@ export function AppBarCustom(props) {
                   >
                     <Hidden only="xs">
                       Registrarse
-    </Hidden>
+                    </Hidden>
                     <Login className={style.rightButton} />
                   </Button>
                   <Button
@@ -66,7 +74,7 @@ export function AppBarCustom(props) {
                   >
                     <Hidden only="xs">
                       Ingresar
-    </Hidden>
+                    </Hidden>
                     <AccountPlus className={style.rightButton} />
                   </Button>
                 </>
