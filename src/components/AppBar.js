@@ -66,7 +66,7 @@ export function AppBarCustom(props) {
                     <Hidden only="xs">
                       Registrarse
                     </Hidden>
-                    <Login className={style.rightButton} />
+                    <AccountPlus className={style.rightButton} />
                   </Button>
                   <Button
                     onClick={() => { redirectTo("/login") }}
@@ -75,7 +75,8 @@ export function AppBarCustom(props) {
                     <Hidden only="xs">
                       Ingresar
                     </Hidden>
-                    <AccountPlus className={style.rightButton} />
+                    <Login className={style.rightButton} />
+
                   </Button>
                 </>
             }
