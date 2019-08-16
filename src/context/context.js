@@ -1,19 +1,15 @@
 import React from 'react';
 
-export const AppContext = React.createContext(
-    {
-        token: null,
-        userLogged: false,
-        userName: null,
-        changeIsLogged: () => { }
-    }
-);
+export const AppContext = React.createContext({});
 
 
 export class AppContextProvider extends React.Component {
 
     state = {
-        isLogged: false
+        token: null,
+        userLogged: true,
+        userName: 'Cristian Gonzalez',
+        changeIsLogged: this.changeIsLogged
     }
 
     changeIsLogged = () => {
@@ -23,12 +19,7 @@ export class AppContextProvider extends React.Component {
     render() {
         return (
             <AppContext.Provider
-                value={{
-                    token: null,
-                    userLogged: false,
-                    userName: 'Cristian Gonzalez',
-                    changeIsLogged: this.changeIsLogged
-                }}>
+                value={this.state}>
                 {this.props.children}
             </AppContext.Provider>
         );

@@ -7,7 +7,7 @@ import { AccountPlus, Login } from 'mdi-material-ui'
 import { makeStyles } from '@material-ui/styles';
 import { withRouter } from 'react-router-dom'
 import Hidden from '@material-ui/core/Hidden';
-import { AppContext } from "../context/context"
+import { AppContextConsumer } from "../context/context"
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,43 +34,45 @@ export function AppBarCustom(props) {
 
   const style = useStyles();
 
-  const { userLogged, userName } = this.context;
   return <div className={style.root}>
-    <AppBar position={this.props.position}>
+    <AppBar position={props.position}>
       <Toolbar>
         <Typography variant="h6" color="inherit" className={style.grow}
           onClick={() => redirectTo("/")}
         >
           ASKQUE
           </Typography>
-        {
-          userLogged ?
-            <div>
-              {userName}
-            </div>
-            :
-            <>
-              <Button
-                onClick={() => redirectTo("/register")}
-                variant="outlined"
-                style={{ marginRight: '1%' }}
-              >
-                <Hidden only="xs">
-                  Registrarse
-                </Hidden>
-                <Login className={style.rightButton} />
-              </Button>
-              <Button
-                onClick={() => { redirectTo("/login") }}
-                variant="outlined"
-              >
-                <Hidden only="xs">
-                  Ingresar
-                </Hidden>
-                <AccountPlus className={style.rightButton} />
-              </Button>
-            </>
-        }
+        <AppContextConsumer>
+          {
+            (value) => {
+              console.log('userLogged', value.userLogged)
+              console.log('userName', value.userName)
+              return value.userLogged ?
+                <div>{value.userName}</div> :
+                <>
+                  <Button
+                    onClick={() => redirectTo("/register")}
+                    variant="outlined"
+                    style={{ marginRight: '1%' }}
+                  >
+                    <Hidden only="xs">
+                      Registrarse
+    </Hidden>
+                    <Login className={style.rightButton} />
+                  </Button>
+                  <Button
+                    onClick={() => { redirectTo("/login") }}
+                    variant="outlined"
+                  >
+                    <Hidden only="xs">
+                      Ingresar
+    </Hidden>
+                    <AccountPlus className={style.rightButton} />
+                  </Button>
+                </>
+            }
+          }
+        </AppContextConsumer>
       </Toolbar>
     </AppBar>
   </div>
