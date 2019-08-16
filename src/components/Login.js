@@ -2,14 +2,16 @@ import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { initSession } from "../service/LoginService"
+import { withRouter } from 'react-router-dom'
+import { AppContextConsumer } from '../context/context'
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -37,8 +39,29 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignIn() {
+function SignIn(props) {
   const classes = useStyles();
+
+
+  const [values, setValues] = React.useState({
+    email: null,
+    password: null
+  });
+
+  const redirectTo = (newPath) => {
+    props.history.push(newPath);
+  }
+
+  const onChange = field => event => {
+    setValues({ ...values, [field]: event.target.value })
+  }
+
+  const login = () => {
+    initSession({ email: values.email, password: values.password }).then((res) => {
+      props.context.setToken(res.data.token);
+      redirectTo("/ask-questionary")
+    })
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -60,6 +83,7 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={onChange('email')}
           />
           <TextField
             variant="outlined"
@@ -71,12 +95,14 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={onChange('password')}
           />
           <Button
             fullWidth
             variant="contained"
             color="secondary"
             className={classes.submit}
+            onClick={login}
           >
             Ingresar
           </Button>
@@ -87,7 +113,7 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link variant="body2" color="textSecondary">
+              <Link variant="body2" color="textSecondary" to="/register">
                 Registrarse
               </Link>
             </Grid>
@@ -97,3 +123,10 @@ export default function SignIn() {
     </Container>
   );
 }
+
+export default withRouter((props) => (
+  <AppContextConsumer>
+    {
+      contextData => (<SignIn {...props} context={contextData} />)
+    }
+  </AppContextConsumer>))
