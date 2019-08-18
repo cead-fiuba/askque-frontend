@@ -11,8 +11,17 @@ import Container from '@material-ui/core/Container';
 import { initSession } from "../service/LoginService"
 import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from '../context/context'
+import { red } from '@material-ui/core/colors';
+import ErrorIcon from '@material-ui/icons/Error';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import clsx from 'clsx';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import PropTypes from 'prop-types';
 
-
+const variantIcon = {
+  error: ErrorIcon
+};
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -37,7 +46,62 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  errorMessage: {
+    padding: theme.spacing(2, 2),
+    background: red[100],
+    color: red[600]
+  }
 }));
+
+const useStyles1 = makeStyles(theme => ({
+  error: {
+    backgroundColor: red[300],
+  },
+  icon: {
+    fontSize: 20,
+  },
+  iconVariant: {
+    opacity: 0.9,
+    marginRight: theme.spacing(1),
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+}));
+function MySnackbarContentWrapper(props) {
+  const classes = useStyles1();
+  const { className, message, onClose, variant, ...other } = props;
+  const Icon = variantIcon[variant];
+
+  return (
+    <SnackbarContent
+      className={clsx(classes[variant], className)}
+      aria-describedby="client-snackbar"
+      message={
+        <span id="client-snackbar" className={classes.message}>
+          <Icon className={clsx(classes.icon, classes.iconVariant)} />
+          {message}
+        </span>
+      }
+      action={[
+        <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
+          <CloseIcon className={classes.icon} />
+        </IconButton>,
+      ]}
+      {...other}
+    />
+  );
+}
+
+MySnackbarContentWrapper.propTypes = {
+  className: PropTypes.string,
+  message: PropTypes.string,
+  onClose: PropTypes.func,
+  variant: PropTypes.oneOf(['error', 'info', 'success', 'warning']).isRequired,
+};
+
+
 
 function SignIn(props) {
   const classes = useStyles();
@@ -45,7 +109,8 @@ function SignIn(props) {
 
   const [values, setValues] = React.useState({
     email: null,
-    password: null
+    password: null,
+    showErrorLogin: false
   });
 
   const redirectTo = (newPath) => {
@@ -57,10 +122,17 @@ function SignIn(props) {
   }
 
   const login = () => {
-    initSession({ email: values.email, password: values.password }).then((res) => {
-      props.context.setToken(res.data.token);
+    initSession({ email: values.email, password: values.password }).then((token) => {
+      props.context.setToken(token)
       redirectTo("/ask-questionary")
-    })
+    }).catch((e) => {
+      setValues({ ...values, showErrorLogin: true })
+    });
+  }
+
+
+  const handleOnClose = () => {
+    setValues({ ...values, showErrorLogin: false })
   }
 
   return (
@@ -73,6 +145,16 @@ function SignIn(props) {
           Ingresar
         </Typography>
         <form className={classes.form} noValidate>
+          {
+            values.showErrorLogin ?
+              <MySnackbarContentWrapper
+                variant="error"
+                className={classes.margin}
+                message="Email o contraseña incorrecto"
+                onClose={handleOnClose}
+              /> :
+              null
+          }
           <TextField
             variant="outlined"
             margin="normal"
