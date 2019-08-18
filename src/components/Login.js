@@ -8,7 +8,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { initSession } from "../service/LoginService"
+import { initSessionStudent } from "../service/LoginService"
 import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from '../context/context'
 import { red } from '@material-ui/core/colors';
@@ -135,7 +135,7 @@ function SignIn(props) {
   }
 
   const login = () => {
-    initSession({ email: values.email, password: values.password }).then((token) => {
+    initSessionStudent({ email: values.email, password: values.password }).then((token) => {
       props.context.setToken(token)
       redirectTo("/ask-questionary")
     }).catch((e) => {

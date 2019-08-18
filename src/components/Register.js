@@ -91,7 +91,7 @@ export default function Register() {
         <AppBar2 position="static" className={classes.appBar}>
           <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
             <Tab label="Estudiante" {...a11yProps(0)} icon={<School />} />
-            <Tab label="Profesor" {...a11yProps(1)} icon={<Teach />} />
+            <Tab label="Docente" {...a11yProps(1)} icon={<Teach />} />
           </Tabs>
         </AppBar2>
         <TabPanel value={value} index={0}>

@@ -82,7 +82,8 @@ function RegisterTeacher(props) {
         createTeacher(teacher).then((response) => {
             console.log('entro en el then')
             console.log('props', props)
-            props.context.changeIsLogged()
+            console.log('response', response)
+            props.context.setToken(null)
             redirectTo("/my-askques")
         }).catch((error) => {
             console.log('Algo paso mal', error)
