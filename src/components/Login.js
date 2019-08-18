@@ -18,6 +18,8 @@ import clsx from 'clsx';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
+import Paper from '@material-ui/core/Paper';
+
 
 const variantIcon = {
   error: ErrorIcon
@@ -34,6 +36,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    padding: theme.spacing(4)
   },
   avatar: {
     margin: theme.spacing(1),
@@ -50,6 +53,16 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 2),
     background: red[100],
     color: red[600]
+  },
+  noAccountPaper: {
+    marginTop: theme.spacing(5),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: theme.spacing(4)
+  },
+  linkToCreateAccount: {
+    marginLeft: theme.spacing(1)
   }
 }));
 
@@ -137,7 +150,7 @@ function SignIn(props) {
 
   return (
     <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
+      <Paper className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -201,7 +214,15 @@ function SignIn(props) {
             </Grid>
           </Grid>
         </form>
-      </div>
+      </Paper>
+      <Paper className={classes.noAccountPaper}>
+        <Typography variant="subtitle1">
+          Todavia no tenes cuenta?
+          <Link color="textSecondary" className={classes.linkToCreateAccount} href='/register'>
+            Crear cuenta
+          </Link>
+        </Typography>
+      </Paper>
     </Container>
   );
 }
