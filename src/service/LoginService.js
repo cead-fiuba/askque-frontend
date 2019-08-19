@@ -13,7 +13,7 @@ export const initSessionStudent = (userData) => {
 export const initSessionTeacher = (email) => {
     return server.post('/login/teacher', { email: email }).then((res) => {
         const token = res.data.token
-        server.defaults.headers.common['Authorizacion'] = token
+        server.defaults.headers.common['Authorization'] = token
         return Promise.resolve(token)
     }).catch((error) => {
         return Promise.reject(error)

@@ -1,22 +1,16 @@
 import React from 'react';
-import GoogleButton from 'react-google-button'
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import GoogleLogin from 'react-google-login';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { createTeacher } from "../service/TeacherService"
 import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from '../context/context'
+import { MyGoogleButton } from './GoogleButton'
 
 const useStyles = makeStyles(theme => ({
-    googleButton: {
-        width: '100% !important',
-        marginTop: theme.spacing(7),
-        marginBottom: theme.spacing(9)
-    },
     formControl: {
         margin: theme.spacing(1),
         minWidth: 120,
@@ -30,6 +24,11 @@ const useStyles = makeStyles(theme => ({
     },
     createAcccountButton: {
         marginTop: theme.spacing(2),
+    },
+    googleButton: {
+        width: '100% !important',
+        marginTop: theme.spacing(7),
+        marginBottom: theme.spacing(9)
     }
 }));
 
@@ -82,8 +81,8 @@ function RegisterTeacher(props) {
         createTeacher(teacher).then((response) => {
             console.log('entro en el then')
             console.log('props', props)
-            console.log('response', response)
-            props.context.setToken(null)
+            console.log('response', response.data.token)
+            props.context.setToken(response.data.token)
             redirectTo("/my-askques")
         }).catch((error) => {
             console.log('Algo paso mal', error)
@@ -100,21 +99,11 @@ function RegisterTeacher(props) {
                         Para ingresar como docente es necesario que ingrese con el email institucional de la
                         facultad @fi.uba.ar
                     </Typography>
-                    <GoogleLogin
-                        clientId="1019588126312-j8jtlv1q4a6djif45aumgnoao3m1mk12.apps.googleusercontent.com"
-                        buttonText="Login"
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        cookiePolicy={'single_host_origin'}
-                        render={renderProps => (
-                            <GoogleButton
-                                className={classes.googleButton}
-                                label='Continua con Google'
-                                onClick={renderProps.onClick}
-                            >
-                            </GoogleButton>
-                        )}
-                    /></>
+                    <MyGoogleButton
+                        handleResponseGoogle={responseGoogle}
+                        style={classes.googleButton}
+                    />
+                </>
                 : <div>
                     Hola {values.name}! estamos a un paso de terminar!
 

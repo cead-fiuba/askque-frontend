@@ -3,12 +3,11 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { initSessionStudent } from "../service/LoginService"
+import { initSessionStudent, initSessionTeacher } from "../service/LoginService"
 import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from '../context/context'
 import { red } from '@material-ui/core/colors';
@@ -19,6 +18,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
+import { MyGoogleButton } from './GoogleButton'
 
 
 const variantIcon = {
@@ -63,6 +64,16 @@ const useStyles = makeStyles(theme => ({
   },
   linkToCreateAccount: {
     marginLeft: theme.spacing(1)
+  },
+  divider: {
+    marginTop: theme.spacing(2)
+  },
+  signAsTeacherText: {
+    marginTop: theme.spacing(2)
+  },
+  googleButton: {
+    width: '100% !important',
+    marginTop: theme.spacing(2)
   }
 }));
 
@@ -123,7 +134,9 @@ function SignIn(props) {
   const [values, setValues] = React.useState({
     email: null,
     password: null,
-    showErrorLogin: false
+    showErrorLogin: false,
+    errorLoginMessage: 'Email o contraseña \
+    incorrecto'
   });
 
   const redirectTo = (newPath) => {
@@ -144,6 +157,21 @@ function SignIn(props) {
   }
 
 
+  const handleResponseGoogle = (res) => {
+    const email = res.w3.U3
+    initSessionTeacher(email).then((token) => {
+      props.context.setToken(token)
+      redirectTo('/my-askques')
+    }).catch((e) => {
+      console.log('e', e.response.status)
+      console.log('tyopeof os tatus', typeof e.response.status)
+      if (e.response.status === 404) {
+        setValues({ ...values, showErrorLogin: true, errorLoginMessage: 'Gmail no válido' })
+      }
+    })
+
+  }
+
   const handleOnClose = () => {
     setValues({ ...values, showErrorLogin: false })
   }
@@ -163,7 +191,7 @@ function SignIn(props) {
               <MySnackbarContentWrapper
                 variant="error"
                 className={classes.margin}
-                message="Email o contraseña incorrecto"
+                message={values.errorLoginMessage}
                 onClose={handleOnClose}
               /> :
               null
@@ -194,25 +222,22 @@ function SignIn(props) {
           />
           <Button
             fullWidth
-            variant="contained"
             color="secondary"
             className={classes.submit}
             onClick={login}
+            size="large"
+            variant="contained"
           >
             Ingresar
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link variant="body2" color="textSecondary">
-                ¿Olvidaste la contraseña?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link variant="body2" color="textSecondary" to="/register">
-                Registrarse
-              </Link>
-            </Grid>
-          </Grid>
+          <Divider variant="middle" className={classes.divider} />
+          <Typography variant="subtitle1" align='center' className={classes.signAsTeacherText}>
+            O ingrese como docente
+          </Typography>
+          <MyGoogleButton
+            style={classes.googleButton}
+            handleResponseGoogle={handleResponseGoogle}
+          />
         </form>
       </Paper>
       <Paper className={classes.noAccountPaper}>
