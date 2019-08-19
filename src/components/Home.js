@@ -30,7 +30,7 @@ const styles = makeStyles(theme => ({
     marginTop: theme.spacing(4)
   },
   leftIcon: {
-    marginLeft: theme.spacing(1)
+    marginRight: theme.spacing(1)
   },
   rightIcon: {
     marginRight: theme.spacing(1)

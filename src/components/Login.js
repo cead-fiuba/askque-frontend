@@ -135,8 +135,7 @@ function SignIn(props) {
     email: null,
     password: null,
     showErrorLogin: false,
-    errorLoginMessage: 'Email o contraseña \
-    incorrecto'
+    errorLoginMessage: 'Email o contraseña incorrecto'
   });
 
   const redirectTo = (newPath) => {
@@ -163,10 +162,12 @@ function SignIn(props) {
       props.context.setToken(token)
       redirectTo('/my-askques')
     }).catch((e) => {
-      console.log('e', e.response.status)
-      console.log('tyopeof os tatus', typeof e.response.status)
-      if (e.response.status === 404) {
+      console.log(e.response)
+      if (e.response !== undefined && e.response.status === 404) {
         setValues({ ...values, showErrorLogin: true, errorLoginMessage: 'Gmail no válido' })
+      }
+      if (e.response === undefined) {
+        setValues({ ...values, showErrorLogin: true, errorLoginMessage: 'Estamos teniendo problemas, por favor intente mas tarde' })
       }
     })
 
