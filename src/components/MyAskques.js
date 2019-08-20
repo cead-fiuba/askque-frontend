@@ -80,7 +80,11 @@ export default function MyAskques(props) {
                     :
                     values.questionaries.map((questionary) => (
                         <AskqueResume
-                            code='W58H'
+                            key={questionary.hash}
+                            code={questionary.hash}
+                            name={questionary.name}
+                            module={questionary.module}
+                            creationDate={questionary.date}
                         />
                     ))
             }

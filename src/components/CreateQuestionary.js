@@ -21,23 +21,24 @@ import EditIcon from '@material-ui/icons/Edit'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import VisilityIcon from '@material-ui/icons/Visibility';
 import Hidden from '@material-ui/core/Hidden';
+import { saveQuestionary } from '../service/TeacherService'
 
 
 const ranges = [
   {
-    value: '3',
+    value: 3,
     label: '3',
   },
   {
-    value: '5',
+    value: 5,
     label: '5',
   },
   {
-    value: '7',
+    value: 7,
     label: '7',
   },
   {
-    value: '10',
+    value: 10,
     label: '10',
   }
 ];
@@ -88,7 +89,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function CreateQuestionary() {
+export default function CreateQuestionary(props) {
 
   const classes = useStyles();
 
@@ -102,16 +103,37 @@ export default function CreateQuestionary() {
     questions: []
   });
 
-  console.log('questions', values.questions)
-
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
   };
+
+  function redirectTo(newPath) {
+    props.history.push(newPath);
+  }
 
   const saveQuestion = (question) => {
     const questions = values.questions
     questions.push(question)
     setValues({ ...values, questions: questions })
+  }
+
+  const save = () => {
+    const questionaryToSave = {
+      name: values.name,
+      time: values.minutes,
+      questions: values.questions.map((question) => ({
+        text: question.question,
+        option: question.options.map((option) => ({
+          text: option.text,
+          correct: option.isCorrect
+        }))
+      })),
+      module: values.module
+    }
+    saveQuestionary(questionaryToSave).then((response) => {
+      redirectTo('/my-askques')
+    })
+
   }
 
   return (
@@ -262,6 +284,7 @@ export default function CreateQuestionary() {
           <Button
             variant="contained"
             color="secondary"
+            onClick={save}
           >
             Guardar
         </Button>
