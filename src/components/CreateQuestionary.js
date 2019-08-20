@@ -20,25 +20,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import VisilityIcon from '@material-ui/icons/Visibility';
+import Hidden from '@material-ui/core/Hidden';
 
-const currencies = [
-  {
-    value: 'USD',
-    label: 'Fisica I',
-  },
-  {
-    value: 'EUR',
-    label: 'Fisica II',
-  },
-  {
-    value: 'BTC',
-    label: 'Fisica III',
-  },
-  {
-    value: 'JPY',
-    label: 'Análisis Matemático II',
-  },
-];
 
 const ranges = [
   {
@@ -97,7 +80,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(5)
   },
   buttonsContainer: {
-    marginTop: theme.spacing(15)
+    marginTop: theme.spacing(10)
   },
   cancelButton: {
     marginRight: theme.spacing(2)
@@ -125,23 +108,11 @@ export default function CreateQuestionary() {
     setValues({ ...values, [prop]: event.target.value });
   };
 
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
-
-
   const saveQuestion = (question) => {
     const questions = values.questions
     questions.push(question)
     setValues({ ...values, questions: questions })
   }
-  const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-  ];
 
   return (
     <div>
@@ -203,55 +174,68 @@ export default function CreateQuestionary() {
               ))}
             </TextField>
           </Grid>
-          <Grid container>
-            <Table
-              style={{ width: '100%' }}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Texto</TableCell>
+          <Table
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell>Texto</TableCell>
+                <Hidden only="xs">
                   <TableCell align="center">Nro de opciones</TableCell>
-                  <TableCell align="center">Acciones</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {
-                  values.questions.map((question, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell component="th" scope="row">
-                        {question.question}
-                      </TableCell>
+                </Hidden>
+                <TableCell align="center">Acciones</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {
+                values.questions.map((question, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell component="th" scope="row">
+
+                      <Typography
+                        variant="body1"
+                        noWrap={true}
+                      >
+                        {question.question.substring(0, 20) + '...'}
+                      </Typography>
+                    </TableCell>
+                    <Hidden only="xs">
                       <TableCell align="center">
                         {question.options.length}
                       </TableCell>
-                      <TableCell align="center">
-                        <CssBaseline />
-                        <ButtonGroup
-                          size="small"
-                          aria-label="small outlined button group"
-                          color="secondary"
-                          variant="contained"
-                        >
-                          <Button>
-                            <DeleteIcon className={classes.leftIcon} />
+                    </Hidden>
+                    <TableCell align="center">
+                      <CssBaseline />
+                      <ButtonGroup
+                        size="small"
+                        aria-label="small outlined button group"
+                        color="secondary"
+                        variant="contained"
+                      >
+                        <Button>
+                          <DeleteIcon className={classes.leftIcon} />
+                          <Hidden only="xs">
                             Eliminar
-                            </Button>
-                          <Button>
-                            <EditIcon className={classes.leftIcon} />
+                          </Hidden>
+                        </Button>
+                        <Button>
+                          <EditIcon className={classes.leftIcon} />
+                          <Hidden only="xs">
                             Editar
-                              </Button>
-                          <Button>
-                            <VisilityIcon className={classes.leftIcon} />
+                          </Hidden>
+                        </Button>
+                        <Button>
+                          <VisilityIcon className={classes.leftIcon} />
+                          <Hidden only="xs">
                             Ver
-                              </Button>
-                        </ButtonGroup>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                }
-              </TableBody>
-            </Table>
-          </Grid>
+                          </Hidden>
+                        </Button>
+                      </ButtonGroup>
+                    </TableCell>
+                  </TableRow>
+                ))
+              }
+            </TableBody>
+          </Table>
 
           <Grid container spacing={1} className={classes.createQuestionButton}
             justify="flex-end"
