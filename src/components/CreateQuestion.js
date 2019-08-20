@@ -45,7 +45,8 @@ const INITIAL_STATE = {
     options: [
         {
             text: NEW_RESPONSE_TEXT,
-            isCorrect: false
+            isCorrect: false,
+            isNew: true
         }],
     responsesCreated: false,
     aResponseWasMarkedAsCorrect: false
@@ -76,10 +77,12 @@ export default function CreateQuestion(props) {
     const handleResponse = idx => event => {
         const oldResponses = values.options
         oldResponses[idx].text = event.target.value === NEW_RESPONSE_TEXT ? "" : event.target.value
+        oldResponses[idx].isNew = false
         if (theLastIsNotEmpty(oldResponses) && oldResponses.length < MAX_RESPONSE) {
             oldResponses.push({
                 text: NEW_RESPONSE_TEXT,
-                isCorrect: false
+                isCorrect: false,
+                isNew: true
             })
         }
         setValues({ ...values, options: oldResponses })
@@ -143,7 +146,8 @@ export default function CreateQuestion(props) {
             options: [
                 {
                     text: NEW_RESPONSE_TEXT,
-                    isCorrect: false
+                    isCorrect: false,
+                    isNew: true
                 }],
             responsesCreated: false,
             aResponseWasMarkedAsCorrect: false
@@ -161,7 +165,7 @@ export default function CreateQuestion(props) {
 
     return (
         <div>
-            <Fab variant="contained" color="secondary" onClick={handleClickOpen}>
+            <Fab color="secondary" onClick={handleClickOpen}>
                 <CreateIcon />
             </Fab>
             {
@@ -224,6 +228,7 @@ export default function CreateQuestion(props) {
                                 markResponse={markResponse}
                                 deleteResponse={deleteResponse}
                                 aResponseWasMarkedAsCorrect={values.aResponseWasMarkedAsCorrect}
+                                existTwoCompleteOptions={exitTwoCompleteOptions()}
                             />
                         </Container>
 

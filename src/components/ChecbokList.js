@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -39,6 +39,7 @@ export default function CheckboxList(props) {
         setChecked(newChecked);
     };
 
+
     return (
         <>
             <List className={classes.root}>
@@ -73,11 +74,13 @@ export default function CheckboxList(props) {
                                 </Button>
                                 <Button
                                     onClick={() => props.markResponse(idx, true)}
+                                    disabled={!props.existTwoCompleteOptions || response.isNew}
                                 >
                                     <OkIcon />
                                 </Button>
                                 <Button
                                     onClick={() => props.markResponse(idx, false)}
+                                    disabled={!props.existTwoCompleteOptions || response.isNew}
                                 >
                                     <NotOkicon />
                                 </Button>
