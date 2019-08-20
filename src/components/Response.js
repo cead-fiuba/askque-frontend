@@ -18,12 +18,12 @@ export default function Response() {
 
     return (
         <Grid container spacing={1} className={classes.rowResponse}>
-            <Grid item xs={2}>
+            <Grid item xs={1}>
                 <IconButton aria-label="Delete">
                     <DoneIcon fontSize="small" />
                 </IconButton>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={10}>
                 <TextField
                     id="standard-full-width"
                     style={{ margin: 8 }}
@@ -35,7 +35,7 @@ export default function Response() {
                     }}
                 />
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={1}>
                 <IconButton aria-label="Delete">
                     <DeleteIcon fontSize="small" />
                 </IconButton>

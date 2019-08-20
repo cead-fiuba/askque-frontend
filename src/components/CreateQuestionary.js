@@ -8,12 +8,12 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import CreateQuestion from "./CreateQuestion";
-import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Container from '@material-ui/core/Container';
 
 const currencies = [
   {
@@ -92,13 +92,13 @@ export default function CreateQuestionary() {
   const classes = useStyles();
 
   const [values, setValues] = React.useState({
-    name: 'Cat in the Hat',
-    age: '',
+    name: '',
     multiline: 'Controlled',
-    currency: '3',
     showCreateResponses: false,
     minutes: '3',
-    open: false
+    open: false,
+    module: '',
+    questions: null
   });
 
 
@@ -128,19 +128,24 @@ export default function CreateQuestionary() {
           NUEVA ENCUESTA
       </Box>
       </Typography>
+      <Container maxWidth="md">
 
-      <Grid container spacing={1} className={classes.rowResponse}>
-        <Grid item xs={12}>
-          <TextField
-            id="outlined-full-width"
-            label="Nombre de la Encuesta"
-            style={{ width: '95%' }}
-            margin="dense"
-            variant="outlined"
-            className={classes.textField}
-          />
-        </Grid>
-        <Grid item xs={12}>
+
+        <Grid container spacing={1} className={classes.rowResponse}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="outlined-full-width"
+              label="Nombre de la Encuesta"
+              style={{ width: '95%' }}
+              margin="dense"
+              variant="outlined"
+              className={classes.textField}
+              onChange={handleChange('name')}
+              value={values.name}
+            //fullWidth
+            />
+          </Grid>
+          {/* <Grid item xs={12} sm={6}>
           <TextField
             id="outlined-select-currency"
             select
@@ -157,6 +162,7 @@ export default function CreateQuestionary() {
             helperText="Seleccione la materia"
             margin="dense"
             variant="outlined"
+          //fullWidth
           >
             {currencies.map(option => (
               <MenuItem key={option.value} value={option.value}>
@@ -164,68 +170,72 @@ export default function CreateQuestionary() {
               </MenuItem>
             ))}
           </TextField>
-        </Grid>
-        <Grid item xs={7}>
-          <TextField
-            id="outlined-name"
-            label="Modulo"
-            className={classes.textField}
-            margin="dense"
-            variant="outlined"
-          />
-        </Grid>
-        <Grid item xs={5}>
-          <TextField
-            select
-            label="Tiempo"
-            value={values.minutes}
-            onChange={handleChange('minutes')}
-            InputProps={{
-              startAdornment: <InputAdornment position="start">Min</InputAdornment>,
-            }}
-            variant="outlined"
-            className={classes.textField}
-            margin="dense"
-            helperText="Demasiado tiempo"
-          >
-            {ranges.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-
-        <Grid container spacing={1} className={classes.rowResponse}
-          justify="center"
-          alignItems="center"
-          direction="row"
-        >
-          <CreateQuestion />
-        </Grid>
-        <Paper>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Texto</TableCell>
-                <TableCell align="right">Nro de respuestas</TableCell>
-                <TableCell align="right">Acción</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map(row => (
-                <TableRow key={row.name}>
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                </TableRow>
+        </Grid> */}
+          <Grid item xs={7} sm={6}>
+            <TextField
+              id="outlined-name"
+              label="Modulo"
+              className={classes.textField}
+              margin="dense"
+              variant="outlined"
+              style={{ width: '95%' }}
+              onChange={handleChange('module')}
+            />
+          </Grid>
+          <Grid item xs={5} sm={4}>
+            <TextField
+              select
+              label="Tiempo"
+              value={values.minutes}
+              onChange={handleChange('minutes')}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">Min</InputAdornment>,
+              }}
+              variant="outlined"
+              className={classes.textField}
+              margin="dense"
+              helperText="Tiempo en minutos"
+            >
+              {ranges.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
               ))}
-            </TableBody>
-          </Table>
-        </Paper>
-      </Grid>
+            </TextField>
+          </Grid>
+
+          <Grid container spacing={1} className={classes.rowResponse}
+            justify="center"
+            alignItems="center"
+            direction="row"
+          >
+            <CreateQuestion />
+          </Grid>
+          <Grid container>
+            <Table
+              style={{ width: '100%' }}
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Texto</TableCell>
+                  <TableCell >Acción</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map(row => (
+                  <TableRow key={row.name}>
+                    <TableCell component="th" scope="row">
+                      {row.name}
+                    </TableCell>
+                    <TableCell align="right">{row.fat}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Grid>
+
+        </Grid>
+      </Container>
     </div>
   )
 }
