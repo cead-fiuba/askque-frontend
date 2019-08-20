@@ -14,6 +14,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit'
+import CssBaseline from '@material-ui/core/CssBaseline';
+import VisilityIcon from '@material-ui/icons/Visibility';
 
 const currencies = [
   {
@@ -83,6 +89,18 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1)
   }, table: {
     minWidth: 650,
+  },
+  leftIcon: {
+    marginRight: theme.spacing(1)
+  },
+  createQuestionButton: {
+    marginTop: theme.spacing(5)
+  },
+  buttonsContainer: {
+    marginTop: theme.spacing(15)
+  },
+  cancelButton: {
+    marginRight: theme.spacing(2)
   }
 }));
 
@@ -98,9 +116,10 @@ export default function CreateQuestionary() {
     minutes: '3',
     open: false,
     module: '',
-    questions: null
+    questions: []
   });
 
+  console.log('questions', values.questions)
 
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
@@ -110,6 +129,12 @@ export default function CreateQuestionary() {
     return { name, calories, fat, carbs, protein };
   }
 
+
+  const saveQuestion = (question) => {
+    const questions = values.questions
+    questions.push(question)
+    setValues({ ...values, questions: questions })
+  }
   const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
     createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
@@ -120,6 +145,7 @@ export default function CreateQuestionary() {
 
   return (
     <div>
+      <CssBaseline />
       <AppBar
         position="static"
       />
@@ -145,32 +171,6 @@ export default function CreateQuestionary() {
             //fullWidth
             />
           </Grid>
-          {/* <Grid item xs={12} sm={6}>
-          <TextField
-            id="outlined-select-currency"
-            select
-            label="Materia"
-            className={classes.textField}
-            value={values.currency}
-            onChange={handleChange('currency')}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu,
-              },
-            }}
-            style={{ width: '95%' }}
-            helperText="Seleccione la materia"
-            margin="dense"
-            variant="outlined"
-          //fullWidth
-          >
-            {currencies.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid> */}
           <Grid item xs={7} sm={6}>
             <TextField
               id="outlined-name"
@@ -203,14 +203,6 @@ export default function CreateQuestionary() {
               ))}
             </TextField>
           </Grid>
-
-          <Grid container spacing={1} className={classes.rowResponse}
-            justify="center"
-            alignItems="center"
-            direction="row"
-          >
-            <CreateQuestion />
-          </Grid>
           <Grid container>
             <Table
               style={{ width: '100%' }}
@@ -218,23 +210,81 @@ export default function CreateQuestionary() {
               <TableHead>
                 <TableRow>
                   <TableCell>Texto</TableCell>
-                  <TableCell >Acción</TableCell>
+                  <TableCell align="center">Nro de opciones</TableCell>
+                  <TableCell align="center">Acciones</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map(row => (
-                  <TableRow key={row.name}>
-                    <TableCell component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                  </TableRow>
-                ))}
+                {
+                  values.questions.map((question, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell component="th" scope="row">
+                        {question.question}
+                      </TableCell>
+                      <TableCell align="center">
+                        {question.options.length}
+                      </TableCell>
+                      <TableCell align="center">
+                        <CssBaseline />
+                        <ButtonGroup
+                          size="small"
+                          aria-label="small outlined button group"
+                          color="secondary"
+                          variant="contained"
+                        >
+                          <Button>
+                            <DeleteIcon className={classes.leftIcon} />
+                            Eliminar
+                            </Button>
+                          <Button>
+                            <EditIcon className={classes.leftIcon} />
+                            Editar
+                              </Button>
+                          <Button>
+                            <VisilityIcon className={classes.leftIcon} />
+                            Ver
+                              </Button>
+                        </ButtonGroup>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                }
               </TableBody>
             </Table>
           </Grid>
 
+          <Grid container spacing={1} className={classes.createQuestionButton}
+            justify="flex-end"
+            alignItems="center"
+            direction="row"
+          >
+            <CreateQuestion
+              saveQuestion={saveQuestion}
+            />
+          </Grid>
         </Grid>
+
+        <Grid container
+          justify="flex-end"
+          alignItems="center"
+          className={classes.buttonsContainer}
+        >
+          <Button
+            variant="contained"
+            className={classes.cancelButton}
+          >
+            Cancelar
+        </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+          >
+            Guardar
+        </Button>
+        </Grid>
+
+
+
       </Container>
     </div>
   )

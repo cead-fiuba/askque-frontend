@@ -57,7 +57,6 @@ export default function CheckboxList(props) {
                                         value={response.text}
                                         variant="outlined"
                                         margin="dense"
-                                        //helperText={response.isCorrect ? "Respuesta correcta" : null}
                                         error={!response.isCorrect && props.aResponseWasMarkedAsCorrect}
                                     />}
                                 className={classes.responseText}

@@ -57,7 +57,7 @@ function AppBarCustom(props) {
                 onClick={exit}
               >
                 Salir
-                    <ExitToApp className={style.rightButton} />
+              <ExitToApp className={style.rightButton} />
               </Button>
             </>
             :
