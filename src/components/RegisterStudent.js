@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createStudent } from "../service/StudentService"
 import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from '../context/context'
-
+import { MySnackbarContentWrapper } from './MySnackbarContentWrapper'
 
 const useStyles = makeStyles(theme => ({
     createAcccountButton: {
@@ -25,7 +25,9 @@ function RegisterStudent(props) {
         emailIsValid: true,
         padron: '',
         padronIsValid: true,
-        padronHelperText: ''
+        padronHelperText: '',
+        showSnackbarError: false,
+        snackbarErrorMessage: null
     });
 
 
@@ -42,12 +44,13 @@ function RegisterStudent(props) {
         }
         createStudent(student)
             .then((res) => {
-                console.log('response', res)
-                console.log('se creo el estudiante de manera correcta')
                 goTo('/ask-questionary')
                 props.context.setToken(res.data.token);
             }).catch((e) => {
-                console.log('algo salio mal al crear la cuenta')
+                console.log('algo salio mal al crear la cuenta', e.response.status === 400)
+                if (e.response.status === 400) {
+                    setValues({ ...values, showSnackbarError: true, snackbarErrorMessage: 'Email ya registrado' })
+                }
             })
     }
 
@@ -61,10 +64,8 @@ function RegisterStudent(props) {
 
     const handleChange = name => event => {
         if (name === 'padron') {
-            console.log('padron', event.target.value)
             const isValid = !isNaN(Number(event.target.value))
             const helperMessage = isValid ? '' : 'Debe ser un número';
-            console.log('isValid', isValid)
             setValues({
                 ...values,
                 padronIsValid: isValid,
@@ -86,7 +87,15 @@ function RegisterStudent(props) {
         <Container component="main" >
             <Typography variant="body2" gutterBottom>
                 Es necesario tener una cuenta para poder response un Askque
-        </Typography>
+            </Typography>
+
+            {
+                values.showSnackbarError ?
+                    <MySnackbarContentWrapper
+                        variant="error"
+                        message={values.snackbarErrorMessage}
+                    /> : null
+            }
             <TextField
                 id="padron"
                 label="Padrón"
