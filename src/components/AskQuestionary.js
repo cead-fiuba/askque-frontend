@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import AskqueResumen from './AskqueResume';
 import { getInformationOfQuestionary } from '../service/StudentService'
 import Button from '@material-ui/core/Button';
-
+import BottomAppBar from "./CompleteQuestionary"
 
 export default class AskQuestionary extends Component {
 
@@ -16,7 +16,8 @@ export default class AskQuestionary extends Component {
         showInformation: true,
         showResume: false,
         questionaryName: null,
-        questionaryModulo: null
+        questionaryModulo: null,
+        startCompleteQuestionary: false
     }
 
     handleChange = (e) => {
@@ -41,6 +42,12 @@ export default class AskQuestionary extends Component {
     }
 
 
+    startCompleteQuestionary = () => {
+        this.setState({ showInformation: false, showResume: false, startCompleteQuestionary: true })
+    }
+
+
+
     render() {
         return <>
             <AppBar
@@ -50,9 +57,13 @@ export default class AskQuestionary extends Component {
                 alignItems='center'
                 justify='center'
             >
-                <Typography variant="h4" align="center" color="textPrimary" gutterBottom style={{ marginTop: '1em' }}>
-                    Ingrese la clave del ASKQUE
-                </Typography>
+                {
+                    this.state.showInformation ?
+                        <Typography variant="h4" align="center" color="textPrimary" gutterBottom style={{ marginTop: '1em' }}>
+                            Ingrese la clave del ASKQUE
+                        </Typography> : null
+                }
+
 
                 <Grid item xs={12}>
                     {this.state.showInformation ?
@@ -84,12 +95,17 @@ export default class AskQuestionary extends Component {
                                 color="secondary"
                                 fullWidth
                                 style={{ marginTop: '8px', marginBottom: '10px' }}
+                                onClick={this.startCompleteQuestionary}
                             >
                                 Estoy listo
                             </Button>
                         </>
                         :
                         null
+                    }
+
+                    {
+                        this.state.startCompleteQuestionary ? <BottomAppBar /> : null
                     }
 
                 </Grid>
