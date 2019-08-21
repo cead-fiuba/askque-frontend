@@ -45,24 +45,24 @@ export default function AskqueResumen(props) {
                         {props.creationDate}
                     </Typography>
 
-                    <Typography variant="body1" color="textSecondary">
-                        04 Julio, 2019  (prueba)
-                </Typography>
-
 
                 </Grid>
-                <Grid item xs={2} container>
-                    <Grid item xs={12}>
-                        <IconButton aria-label="delete">
-                            <ShareIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <IconButton aria-label="delete">
-                            <EditIcon />
-                        </IconButton>
-                    </Grid>
-                </Grid>
+                {props.teacher ?
+                    <Grid item xs={2} container>
+                        <Grid item xs={12}>
+                            <IconButton aria-label="delete">
+                                <ShareIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <IconButton aria-label="delete">
+                                <EditIcon />
+                            </IconButton>
+                        </Grid>
+                    </Grid> :
+                    null
+                }
+
             </Grid>
         </Paper>
     </Grid>

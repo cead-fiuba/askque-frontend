@@ -2,29 +2,42 @@ import React, { Component } from 'react';
 import '../style/style.scss'
 import AppBar from "./AppBar"
 import Typography from '@material-ui/core/Typography';
-import LoadingAskqueInfo from './LoadingAskqueInfo'
 import Grid from '@material-ui/core/Grid';
 import AskqueResumen from './AskqueResume';
+import { getInformationOfQuestionary } from '../service/StudentService'
+import Button from '@material-ui/core/Button';
 
 
 export default class AskQuestionary extends Component {
 
     state = {
-        value: '',
+        questionaryHash: '',
         showLoading: false,
         showInformation: true,
-        showResume: false
+        showResume: false,
+        questionaryName: null,
+        questionaryModulo: null
     }
 
     handleChange = (e) => {
         console.log(e.target.value)
-        const wordLength = e.target.value.length
-        const showLoading = wordLength === 3
-        this.setState({ value: e.target.value.toUpperCase() })
-        if (showLoading) {
-            setTimeout(() => this.setState({ showInformation: false, showLoading }), 1000)
+        const hash = e.target.value.toUpperCase()
+        const isComplete = hash.length === 3
+        this.setState({ questionaryHash: hash })
+        if (isComplete) {
+            getInformationOfQuestionary(hash).then((response) => {
+                console.log('response', response.data)
+                this.setState(
+                    {
+                        showResume: true,
+                        questionaryName: response.data.name,
+                        questionaryModulo: response.data.module,
+                        questionaryTime: response.data.time,
+                        quantityQuestions: response.data.questions.length
+                    }
+                )
+            })
         }
-        setTimeout(() => this.setState({ showResume: true, showInformation: false, showLoading: false }), 5000)
     }
 
 
@@ -33,34 +46,53 @@ export default class AskQuestionary extends Component {
             <AppBar
                 position="static"
             />
-            <main>
-                <Typography variant="h4" align="center" color="textPrimary" gutterBottom style={{ marginTop: '1em' }}>
-                    Ingrese la clave del ASKQUE
-                </Typography>
-            </main>
             <Grid container
                 alignItems='center'
                 justify='center'
             >
-                {this.state.showLoading ? <>
-                    <LoadingAskqueInfo />
-                    <Grid item xs={12}>
-                        <Typography variant="subtitle1" align="center" color="textPrimary" gutterBottom style={{ marginTop: '1em' }}>
-                            Obteniendo información del askque
-                        </Typography>
-                    </Grid>
-                </> :
-                    null
-                }
-                {this.state.showInformation ?
-                    <input
-                        id="input-askque-code"
-                        type="text"
-                        maxLength='3'
-                        value={this.state.value}
-                        onChange={this.handleChange}
-                    /> : null}
-                {this.state.showResume ? <div><AskqueResumen /></div> : null}
+                <Typography variant="h4" align="center" color="textPrimary" gutterBottom style={{ marginTop: '1em' }}>
+                    Ingrese la clave del ASKQUE
+                </Typography>
+
+                <Grid item xs={12}>
+                    {this.state.showInformation ?
+                        <input
+                            id="input-askque-code"
+                            type="text"
+                            maxLength='3'
+                            value={this.state.questionaryHash}
+                            onChange={this.handleChange}
+                        /> : null}
+                </Grid>
+                <Grid container alignItems='center'
+                    justify='center'>
+                    {this.state.showResume ?
+                        <>
+                            <AskqueResumen
+                                name={this.state.questionaryName}
+                                module={this.state.questionaryModulo}
+                                code={this.state.questionaryHash}
+                                time={this.state.questionaryTime}
+                                quantityQuestions={this.state.quantityQuestions}
+                            />
+
+                            <Typography variant="subtitle1" color="textSecondary">
+                                Tenes {this.state.questionaryTime} minutos para responder {this.state.quantityQuestions} preguntas!
+                            </Typography>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                fullWidth
+                                style={{ marginTop: '8px', marginBottom: '10px' }}
+                            >
+                                Estoy listo
+                            </Button>
+                        </>
+                        :
+                        null
+                    }
+
+                </Grid>
             </Grid>
 
         </>
