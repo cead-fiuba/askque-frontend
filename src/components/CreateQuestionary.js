@@ -136,6 +136,10 @@ export default function CreateQuestionary(props) {
 
   }
 
+  const cancelCreateQuestionary = () => {
+    redirectTo('/my-askques')
+  }
+
   return (
     <div>
       <CssBaseline />
@@ -278,6 +282,7 @@ export default function CreateQuestionary(props) {
           <Button
             variant="contained"
             className={classes.cancelButton}
+            onClick={cancelCreateQuestionary}
           >
             Cancelar
         </Button>

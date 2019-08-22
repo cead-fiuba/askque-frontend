@@ -196,7 +196,7 @@ export default function CreateQuestion(props) {
                         <Container>
                             <Paper className={classes.progressPaper}>
                                 <Typography variant="h6" component="h2">
-                                    Progreso : {values.progressMessage}
+                                    Progreso : <b>{values.progressMessage}</b>
                                 </Typography>
                                 <BorderLinearProgress
                                     className={classes.margin}
