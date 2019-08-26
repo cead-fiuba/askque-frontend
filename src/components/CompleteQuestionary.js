@@ -12,51 +12,54 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import SendIcon from '@material-ui/icons/Send';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Checkbox from '@material-ui/core/Checkbox';
+import Grid from '@material-ui/core/Grid';
+
+import Typography from '@material-ui/core/Typography';
 
 
 const messages = [
     {
         id: 1,
-        primary: 'Dado que dsadasdknsam daskdnaskdsandkasnd kasndsamdnasjdnasdunx asndksadnasdnas',
-        secondary: ['Sí', 'No']
+        questionText: 'Dado que dsadasdknsam daskdnaskdsandkasnd kasndsamdnasjdnasdunx asndksadnasdnas',
+        options: ['Sí', 'No']
     },
     {
         id: 2,
-        primary: 'Birthday Gift',
-        secondary: ['SI', 'NO', 'El cuerpo gira pero no rosa con eso, dado que tiene 3 cabezas']
+        questionText: 'Birthday Gift',
+        options: ['SI', 'NO', 'El cuerpo gira pero no rosa con eso, dado que tiene 3 cabezas']
 
     },
     {
         id: 3,
-        primary: 'Dado que Newton nunca se expresó sobre el gravitismo epileptico, no es posible definir que pensaba',
-        secondary: ['Cris no pago el seguro porque se la pasó jugando Free Fire', 'Mañana a la tarde van a caer granizo y Cris no arreglo el tema de su seguro', 'Mañana a la mañana va llover muchos chanchos']
+        questionText: 'Dado que Newton nunca se expresó sobre el gravitismo epileptico, no es posible definir que pensaba',
+        options: ['Cris no pago el seguro porque se la pasó jugando Free Fire', 'Mañana a la tarde van a caer granizo y Cris no arreglo el tema de su seguro', 'Mañana a la mañana va llover muchos chanchos']
     },
     {
         id: 4,
-        primary: 'Yes!',
-        secondary: ['SI', 'NO']
+        questionText: 'Yes!',
+        options: ['SI', 'NO']
     },
     {
         id: 5,
-        primary: "Doctor's Appointment",
-        secondary: ['SI', 'NO']
+        questionText: "Doctor's Appointment",
+        options: ['SI', 'NO']
     },
     {
         id: 6,
-        primary: 'Discussion',
-        secondary: ['SI', 'NO']
+        questionText: 'Discussion',
+        options: ['SI', 'NO']
 
     },
     {
         id: 7,
-        primary: 'Summer BBQ',
-        secondary: ['SI', 'NO']
+        questionText: 'Summer BBQ',
+        options: ['SI', 'NO']
 
     },
     {
         id: 8,
-        primary: 'Summer BBQ',
-        secondary: ['SI', 'NO']
+        questionText: 'Summer BBQ',
+        options: ['SI', 'NO']
     }
 ];
 
@@ -90,21 +93,39 @@ const useStyles = makeStyles(theme => ({
         right: 0,
         margin: '0 auto',
     },
+    root: {
+        padding: theme.spacing(3)
+    }
 }));
 
 export default function BottomAppBar() {
     const classes = useStyles();
 
-    const [checked, setChecked] = React.useState([0]);
+    const [checked, setChecked] = React.useState([]);
 
+
+
+    const handleToggle = value => () => {
+        console.log('handleToggle', value)
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+    };
 
     const createOptions = (options) => {
         return options.map((option, idx) => (
-            <ListItem key={idx} role={undefined} dense button>
+            <ListItem key={idx} role={undefined} dense button onClick={handleToggle(option)}>
                 <ListItemIcon>
                     <Checkbox
                         edge="start"
-                        checked={checked.indexOf(idx) !== -1}
+                        checked={checked.indexOf(option) !== -1}
                         tabIndex={-1}
                         disableRipple
                         inputProps={{ 'aria-labelledby': idx }}
@@ -119,17 +140,41 @@ export default function BottomAppBar() {
         <React.Fragment>
             <CssBaseline />
             <Paper square className={classes.paper}>
-                <List className={classes.list}>
-                    {messages.map(({ id, primary, secondary }) => (
+                {/* <List className={classes.list}>
+                    {messages.map(({ id, questionText, options }) => (
                         <React.Fragment key={id}>
                             {id === 1 && <ListSubheader className={classes.subheader}>Today</ListSubheader>}
                             {id === 3 && <ListSubheader className={classes.subheader}><b>Yesterday</b></ListSubheader>}
                             <ListItem button>
-                                <ListItemText primary={primary} secondary={createOptions(secondary)} />
+                                <ListItemText primary={questionText} options={createOptions(options)} />
                             </ListItem>
                         </React.Fragment>
                     ))}
-                </List>
+                </List> */}
+                <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="flex-start"
+                    className={classes.root}
+                >
+
+                    {messages.map(({ id, questionText, options }) => (
+                        <Grid
+                            item
+                            key={id}
+                        >
+
+                            <Typography variant="body2" gutterBottom>
+                                <b> {questionText} </b>
+                            </Typography>
+                            <List className={classes.list}>
+                                {createOptions(options)}
+                            </List>
+                        </Grid>
+                    ))}
+
+                </Grid>
             </Paper>
             <AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>

@@ -13,7 +13,7 @@ $in-w: $n-char*($char-w + $gap);
 		dimgrey 0, dimgrey $char-w, 
 		transparent 0, transparent $char-w + $gap) 
 		0 100%/ #{$in-w - $gap} 2px no-repeat;
-	font: 20vw "Roboto","Helvetica","Arial";
+	font-size: 20vw;
 	letter-spacing: $gap;
 	
 	&:focus {

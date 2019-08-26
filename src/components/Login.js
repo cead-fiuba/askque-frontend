@@ -156,6 +156,13 @@ function SignIn(props) {
   }
 
 
+  const handleKeyPress = (event) => {
+    var code = event.keyCode || event.which;
+    if (code === 13) {
+      console.log('Enter')
+    }
+  }
+
   const handleResponseGoogle = (res) => {
     const email = res.w3.U3
     initSessionTeacher(email).then((token) => {
@@ -228,6 +235,7 @@ function SignIn(props) {
             onClick={login}
             size="large"
             variant="contained"
+            onKeyPress={handleKeyPress}
           >
             Ingresar
           </Button>
