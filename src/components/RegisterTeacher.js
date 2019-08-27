@@ -79,8 +79,6 @@ function RegisterTeacher(props) {
         }
 
         createTeacher(teacher).then((response) => {
-            console.log('entro en el then')
-            console.log('props', props)
             console.log('response', response.data.token)
             props.context.setToken(response.data.token)
             redirectTo("/my-askques")

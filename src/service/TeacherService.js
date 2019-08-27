@@ -1,7 +1,14 @@
 import server from '../Server';
 
 export const createTeacher = (teacher) => {
-    return server.post('/teachers', teacher)
+    return server.post('/teachers', teacher).then((res) => {
+        const token = res.data.token
+        console.log('token', token)
+        server.defaults.headers.common['Authorization'] = token
+        return Promise.resolve(res)
+    }).catch((error) => {
+        return Promise.reject(error)
+    })
 }
 
 

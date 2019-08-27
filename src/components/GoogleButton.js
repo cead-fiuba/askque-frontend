@@ -6,7 +6,7 @@ import GoogleLogin from 'react-google-login'
 
 export function MyGoogleButton(props) {
     return <GoogleLogin
-        clientId="1019588126312-c3q5immnfbv4tfvpmnd82rf4ano0uc1i.apps.googleusercontent.com"
+        clientId="1019588126312-6ial6jichu6m3lvehv9r3ue1fnd7070v.apps.googleusercontent.com"
         buttonText="Login"
         onSuccess={props.handleResponseGoogle}
         onFailure={props.handleResponseGoogle}
