@@ -13,57 +13,7 @@ import SendIcon from '@material-ui/icons/Send';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
-import { getQuestions } from '../service/StudentService'
-
 import Typography from '@material-ui/core/Typography';
-
-
-const messages = [
-    {
-        id: 1,
-        questionText: 'Dado que dsadasdknsam daskdnaskdsandkasnd kasndsamdnasjdnasdunx asndksadnasdnas',
-        options: ['Sí', 'No']
-    },
-    {
-        id: 2,
-        questionText: 'Birthday Gift',
-        options: ['SI', 'NO', 'El cuerpo gira pero no rosa con eso, dado que tiene 3 cabezas']
-
-    },
-    {
-        id: 3,
-        questionText: 'Dado que Newton nunca se expresó sobre el gravitismo epileptico, no es posible definir que pensaba',
-        options: ['Cris no pago el seguro porque se la pasó jugando Free Fire', 'Mañana a la tarde van a caer granizo y Cris no arreglo el tema de su seguro', 'Mañana a la mañana va llover muchos chanchos']
-    },
-    {
-        id: 4,
-        questionText: 'Yes!',
-        options: ['SI', 'NO']
-    },
-    {
-        id: 5,
-        questionText: "Doctor's Appointment",
-        options: ['SI', 'NO']
-    },
-    {
-        id: 6,
-        questionText: 'Discussion',
-        options: ['SI', 'NO']
-
-    },
-    {
-        id: 7,
-        questionText: 'Summer BBQ',
-        options: ['SI', 'NO']
-
-    },
-    {
-        id: 8,
-        questionText: 'Summer BBQ',
-        options: ['SI', 'NO']
-    }
-];
-
 
 
 const useStyles = makeStyles(theme => ({
@@ -106,8 +56,9 @@ export default function CompleteQuestionary(props) {
     const [checked, setChecked] = useState([]);
 
 
-    const handleToggle = value => () => {
+    const handleToggle = (value, questionId) => () => {
         console.log('handleToggle', value)
+        console.log('questionId', questionId)
         const currentIndex = checked.indexOf(value.id);
         const newChecked = [...checked];
 
@@ -120,9 +71,9 @@ export default function CompleteQuestionary(props) {
         setChecked(newChecked);
     };
 
-    const createOptions = (options) => {
+    const createOptions = (options, questionId) => {
         return options.map((option, idx) => (
-            <ListItem key={option.id} role={undefined} dense button onClick={handleToggle(option)}>
+            <ListItem key={option.id} role={undefined} dense button onClick={handleToggle(option, questionId)}>
                 <ListItemIcon>
                     <Checkbox
                         edge="start"
@@ -170,7 +121,7 @@ export default function CompleteQuestionary(props) {
                                 <b> {text} </b>
                             </Typography>
                             <List className={classes.list}>
-                                {createOptions(options)}
+                                {createOptions(options, id)}
                             </List>
                         </Grid>
                     ))}
@@ -179,7 +130,13 @@ export default function CompleteQuestionary(props) {
             </Paper>
             <AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
-                    <Fab color="secondary" aria-label="add" className={classes.fabButton}>
+                    <Fab
+                        color="secondary"
+                        aria-label="add"
+                        className={classes.fabButton}
+                        onClick={() => {
+                            console.log('enviar respuestas')
+                        }}>
                         <SendIcon />
                     </Fab>
                 </Toolbar>
