@@ -54,15 +54,27 @@ export default function CompleteQuestionary(props) {
     const classes = useStyles();
 
     const [checked, setChecked] = useState([]);
+    const [questionIdsMarked, setQuestionIdsMarked] = useState(new Set())
+    const [showSendButton, setShowSendButton] = useState(false)
+
+
+    function eqSet(as, bs) {
+        if (as.size !== bs.size) return false;
+        for (var a of as) if (!bs.has(a)) return false;
+        return true;
+    }
 
     const handleToggle = (value, questionId) => () => {
-        console.log('handleToggle', value)
-        console.log('questionId', questionId)
         const currentIndex = checked.indexOf(value.id);
         const newChecked = [...checked];
+        const questionIdsMarkedNew = new Set(questionIdsMarked)
+        questionIdsMarkedNew.add(questionId)
+        setQuestionIdsMarked(questionIdsMarkedNew)
 
         if (currentIndex === -1) {
             newChecked.push(value.id);
+            const allQuestionsSet = new Set(props.questionary.questions.map((question) => (question.id)))
+            setShowSendButton(eqSet(allQuestionsSet, questionIdsMarkedNew))
         } else {
             newChecked.splice(currentIndex, 1);
         }
@@ -152,14 +164,18 @@ export default function CompleteQuestionary(props) {
                 </Grid>
             </Paper>
             <AppBar position="fixed" color="primary" className={classes.appBar}>
+
                 <Toolbar>
-                    <Fab
-                        color="secondary"
-                        aria-label="add"
-                        className={classes.fabButton}
-                        onClick={sendResponse}>
-                        <SendIcon />
-                    </Fab>
+                    {showSendButton ?
+                        <Fab
+                            color="secondary"
+                            aria-label="add"
+                            className={classes.fabButton}
+                            onClick={sendResponse}>
+                            <SendIcon />
+                        </Fab> :
+                        <b>Asegurate de marcar alguna opcion cada pregunta</b>
+                    }
                 </Toolbar>
             </AppBar>
         </React.Fragment>
