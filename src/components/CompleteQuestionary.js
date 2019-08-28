@@ -68,17 +68,17 @@ export default function CompleteQuestionary(props) {
         const currentIndex = checked.indexOf(value.id);
         const newChecked = [...checked];
         const questionIdsMarkedNew = new Set(questionIdsMarked)
-        questionIdsMarkedNew.add(questionId)
-        setQuestionIdsMarked(questionIdsMarkedNew)
+        const allQuestionsSet = new Set(props.questionary.questions.map((question) => (question.id)))
 
         if (currentIndex === -1) {
+            questionIdsMarkedNew.add(questionId)
             newChecked.push(value.id);
-            const allQuestionsSet = new Set(props.questionary.questions.map((question) => (question.id)))
-            setShowSendButton(eqSet(allQuestionsSet, questionIdsMarkedNew))
         } else {
+            questionIdsMarkedNew.delete(questionId)
             newChecked.splice(currentIndex, 1);
         }
-
+        setShowSendButton(eqSet(allQuestionsSet, questionIdsMarkedNew))
+        setQuestionIdsMarked(questionIdsMarkedNew)
         setChecked(newChecked);
     };
 
