@@ -7,3 +7,7 @@ export const createStudent = (request) => {
 export const getInformationOfQuestionary = (hash) => {
     return server.get(`/questionaries/${hash}`)
 }
+
+export const saveResponse = (response) => {
+    return server.post('/responses', response)
+}

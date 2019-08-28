@@ -14,6 +14,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import { saveResponse } from '../service/StudentService'
 
 
 const useStyles = makeStyles(theme => ({
@@ -51,10 +52,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function CompleteQuestionary(props) {
     const classes = useStyles();
-    console.log('pros.questionary', props.questionary)
 
     const [checked, setChecked] = useState([]);
-
 
     const handleToggle = (value, questionId) => () => {
         console.log('handleToggle', value)
@@ -71,8 +70,32 @@ export default function CompleteQuestionary(props) {
         setChecked(newChecked);
     };
 
+    const createQuestionIdByOptionId = () => {
+        const questionIdByOptionId = {}
+        props.questionary.questions.forEach(question => {
+            question.options.forEach((option) => {
+                questionIdByOptionId[option.id] = question.id
+            })
+        });
+        return questionIdByOptionId;
+    }
+
+    const sendResponse = () => {
+        const questionIdByOptionId = createQuestionIdByOptionId()
+        const response = {
+            questionaryHash: props.questionary.hash,
+            responses: checked.map((optionId) => (
+                {
+                    optionId: optionId,
+                    questionId: questionIdByOptionId[optionId]
+                }
+            ))
+        }
+        saveResponse(response)
+    }
+
     const createOptions = (options, questionId) => {
-        return options.map((option, idx) => (
+        return options.map((option) => (
             <ListItem key={option.id} role={undefined} dense button onClick={handleToggle(option, questionId)}>
                 <ListItemIcon>
                     <Checkbox
@@ -134,9 +157,7 @@ export default function CompleteQuestionary(props) {
                         color="secondary"
                         aria-label="add"
                         className={classes.fabButton}
-                        onClick={() => {
-                            console.log('enviar respuestas')
-                        }}>
+                        onClick={sendResponse}>
                         <SendIcon />
                     </Fab>
                 </Toolbar>
