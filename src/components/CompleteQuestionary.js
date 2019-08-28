@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,6 +13,7 @@ import SendIcon from '@material-ui/icons/Send';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
+import { getQuestions } from '../service/StudentService'
 
 import Typography from '@material-ui/core/Typography';
 
@@ -98,20 +99,20 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function BottomAppBar() {
+export default function CompleteQuestionary(props) {
     const classes = useStyles();
+    console.log('pros.questionary', props.questionary)
 
-    const [checked, setChecked] = React.useState([]);
-
+    const [checked, setChecked] = useState([]);
 
 
     const handleToggle = value => () => {
         console.log('handleToggle', value)
-        const currentIndex = checked.indexOf(value);
+        const currentIndex = checked.indexOf(value.id);
         const newChecked = [...checked];
 
         if (currentIndex === -1) {
-            newChecked.push(value);
+            newChecked.push(value.id);
         } else {
             newChecked.splice(currentIndex, 1);
         }
@@ -121,17 +122,17 @@ export default function BottomAppBar() {
 
     const createOptions = (options) => {
         return options.map((option, idx) => (
-            <ListItem key={idx} role={undefined} dense button onClick={handleToggle(option)}>
+            <ListItem key={option.id} role={undefined} dense button onClick={handleToggle(option)}>
                 <ListItemIcon>
                     <Checkbox
                         edge="start"
-                        checked={checked.indexOf(option) !== -1}
+                        checked={checked.indexOf(option.id) !== -1}
                         tabIndex={-1}
                         disableRipple
-                        inputProps={{ 'aria-labelledby': idx }}
+                        inputProps={{ 'aria-labelledby': option.id }}
                     />
                 </ListItemIcon>
-                <ListItemText id={idx} primary={option} />
+                <ListItemText id={option.id} primary={option.text} />
             </ListItem>
         ))
     }
@@ -159,14 +160,14 @@ export default function BottomAppBar() {
                     className={classes.root}
                 >
 
-                    {messages.map(({ id, questionText, options }) => (
+                    {props.questionary.questions.map(({ id, text, options }) => (
                         <Grid
                             item
                             key={id}
                         >
 
                             <Typography variant="body2" gutterBottom>
-                                <b> {questionText} </b>
+                                <b> {text} </b>
                             </Typography>
                             <List className={classes.list}>
                                 {createOptions(options)}

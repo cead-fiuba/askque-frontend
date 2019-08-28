@@ -123,7 +123,7 @@ export default function CreateQuestionary(props) {
       time: values.minutes,
       questions: values.questions.map((question) => ({
         text: question.question,
-        option: question.options.map((option) => ({
+        options: question.options.map((option) => ({
           text: option.text,
           correct: option.isCorrect
         }))

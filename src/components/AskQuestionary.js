@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import AskqueResumen from './AskqueResume';
 import { getInformationOfQuestionary } from '../service/StudentService'
 import Button from '@material-ui/core/Button';
-import BottomAppBar from "./CompleteQuestionary"
+import CompleteQuestionary from "./CompleteQuestionary"
 
 export default class AskQuestionary extends Component {
 
@@ -17,7 +17,8 @@ export default class AskQuestionary extends Component {
         showResume: false,
         questionaryName: null,
         questionaryModulo: null,
-        startCompleteQuestionary: false
+        startCompleteQuestionary: false,
+        questionary: null
     }
 
     handleChange = (e) => {
@@ -34,7 +35,8 @@ export default class AskQuestionary extends Component {
                         questionaryName: response.data.name,
                         questionaryModulo: response.data.module,
                         questionaryTime: response.data.time,
-                        quantityQuestions: response.data.questions.length
+                        quantityQuestions: response.data.questions.length,
+                        questionary: response.data
                     }
                 )
             })
@@ -105,7 +107,11 @@ export default class AskQuestionary extends Component {
                     }
 
                     {
-                        this.state.startCompleteQuestionary ? <BottomAppBar /> : null
+                        this.state.startCompleteQuestionary ?
+                            <CompleteQuestionary
+                                hash={this.state.questionaryHash}
+                                questionary={this.state.questionary}
+                            /> : null
                     }
 
                 </Grid>
