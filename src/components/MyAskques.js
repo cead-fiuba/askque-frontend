@@ -7,6 +7,8 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import { Send } from 'mdi-material-ui'
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { ShowResult } from "./ShowResult"
+import { getResultOfQuestionary } from '../service/TeacherService'
 
 
 const useStyles = makeStyles(theme => ({
@@ -33,12 +35,19 @@ export default function MyAskques(props) {
     const classes = useStyles();
     const [values, setState] = useState({
         questionaries: [],
-        errorHappen: false
+        errorHappen: false,
+        showQuestionaryResult: false,
+        questionaryHash: null,
+        questionarySelected: null
     })
 
 
     function redirectTo(newPath) {
         props.history.push(newPath);
+    }
+
+    const showQuestionaryResult = (hash, questionarySelected) => () => {
+        setState({ ...values, showQuestionaryResult: true, questionaryHash: hash, questionarySelected: questionarySelected })
     }
 
     useEffect(() => {
@@ -61,32 +70,39 @@ export default function MyAskques(props) {
         <CssBaseline />
         <Container maxWidth="sm" component="main" className={classes.container}>
             {
-                values.questionaries.length === 0 ?
-                    <>
-                        Ups! Todavia no creaste ningun askque!
-                        No te preocupes, es muy fácil!
+                values.showQuestionaryResult ?
+                    <ShowResult
+                        questionary={values.questionarySelected}
+                    />
+                    :
+                    values.questionaries.length === 0 ?
+                        <>
+                            Ups! Todavia no creaste ningun askque!
+                            No te preocupes, es muy fácil!
 
                             <Button
-                            variant="contained"
-                            color="secondary"
-                            size="large"
-                            className={classes.createAskque}
-                            onClick={() => { redirectTo("/create-questionary") }}
-                        >
-                            <Send className={classes.leftIcon} />
-                            Crear AskQue
+                                variant="contained"
+                                color="secondary"
+                                size="large"
+                                className={classes.createAskque}
+                                onClick={() => { redirectTo("/create-questionary") }}
+                            >
+                                <Send className={classes.leftIcon} />
+                                Crear AskQue
                             </Button>
-                    </>
-                    :
-                    values.questionaries.map((questionary) => (
-                        <AskqueResume
-                            key={questionary.hash}
-                            code={questionary.hash}
-                            name={questionary.name}
-                            module={questionary.module}
-                            creationDate={questionary.date}
-                        />
-                    ))
+                        </>
+                        :
+                        values.questionaries.map((questionary) => (
+                            <AskqueResume
+                                key={questionary.hash}
+                                code={questionary.hash}
+                                name={questionary.name}
+                                module={questionary.module}
+                                creationDate={questionary.date}
+                                onClick={showQuestionaryResult(questionary.hash, questionary)}
+                                results={getResultOfQuestionary(questionary.hash)}
+                            />
+                        ))
             }
         </Container >
     </div >

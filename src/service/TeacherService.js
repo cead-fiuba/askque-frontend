@@ -21,3 +21,8 @@ export const saveQuestionary = (questionary) => {
     return server.post('/questionaries', questionary)
 }
 
+export const getResultOfQuestionary = (hash) => {
+    console.log(`Get result of questionary ${hash}`)
+    return server.get(`/responses/questionaries/${hash}`)
+}
+

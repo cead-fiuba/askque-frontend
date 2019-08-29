@@ -27,7 +27,9 @@ const useStyles = makeStyles(theme => ({
 export default function AskqueResumen(props) {
     const classes = useStyles();
     return <Grid item xs={12}>
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper}
+            onClick={props.onClick}
+        >
             <Grid container>
                 <Grid item xs={10}>
                     <div className={classes.header}>
