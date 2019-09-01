@@ -67,7 +67,7 @@ export default function Home(props) {
         ENCUESTAS SENCILLAS
       </Typography>
       <span
-        style={{ width: '73px', height: '5px', margin: '8px auto 8px', display: 'block', backgroundColor: 'red' }}
+        style={{ width: '73px', height: '5px', margin: '8px auto 8px', display: 'block', backgroundColor: '#0CAAF3' }}
       >
 
       </span>

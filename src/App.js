@@ -13,6 +13,9 @@ const theme = createMuiTheme({
   },
 });
 
+//primary #0CAAF3
+//secondary #DCDCDC
+
 class App extends Component {
   render() {
     return <MuiThemeProvider theme={theme}>

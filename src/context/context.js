@@ -6,13 +6,17 @@ export const AppContext = React.createContext({});
 
 console.log('localStorage.getItem(token)', localStorage.getItem('token') !== "null")
 console.log('localStorage.getItem(token)', localStorage.getItem('token') !== null)
+const tokenIsNull = localStorage.getItem('token') === null
+const tokenIsNullString = localStorage.getItem('token') === "null"
 
+
+console.log('Is logged', !tokenIsNull && !tokenIsNullString)
 
 export class AppContextProvider extends React.Component {
 
     state = {
         token: localStorage.getItem('token'),
-        isLogged: localStorage.getItem('token') !== null,
+        isLogged: !tokenIsNull && !tokenIsNullString
     }
 
     setToken = (token) => {
