@@ -60,9 +60,9 @@ export default function Home(props) {
       <Typography
         variant="h3"
         align="center"
-        color="primary"
         gutterBottom
         marked="center"
+        style={{ color: 'white' }}
       >
         ENCUESTAS SENCILLAS
       </Typography>
@@ -71,7 +71,7 @@ export default function Home(props) {
       >
 
       </span>
-      <Typography variant="h6" align="center" paragraph color="primary">
+      <Typography variant="h6" align="center" paragraph style={{ color: 'white' }}>
         Aplicación para crear preguntas educativas de manera sencilla y rápida. Esta aplicación
         se utilizará en la Facultad de Ingenieria de la UBA
       </Typography>
