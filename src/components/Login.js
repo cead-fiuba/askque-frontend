@@ -193,6 +193,9 @@ function SignIn(props) {
         <Typography component="h1" variant="h5">
           Ingresar
         </Typography>
+        <Typography variant="subtitle1" align='center' className={classes.signAsTeacherText}>
+          Ingrese como alumno
+          </Typography>
         <form className={classes.form} noValidate>
           {
             values.showErrorLogin ?
@@ -241,7 +244,7 @@ function SignIn(props) {
           </Button>
           <Divider variant="middle" className={classes.divider} />
           <Typography variant="subtitle1" align='center' className={classes.signAsTeacherText}>
-            O ingrese como docente
+            Ingrese como docente
           </Typography>
           <MyGoogleButton
             style={classes.googleButton}

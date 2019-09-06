@@ -54,6 +54,7 @@ function AppBarCustom(props) {
             <>
               <Button
                 variant="outlined"
+                color="inherit"
                 onClick={exit}
               >
                 Salir
