@@ -80,7 +80,10 @@ export default function Home(props) {
         alignItems="center"
         direction="column"
       >
-        <Grid xs={8}>
+        <Grid
+          item
+          xs={9}
+        >
           <Button
             variant="contained"
             size="large"
