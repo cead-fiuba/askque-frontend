@@ -80,29 +80,29 @@ export default function Home(props) {
         alignItems="center"
         direction="column"
       >
-        <Grid item
-
-        >
+        <Grid xs={8}>
           <Button
             variant="contained"
             size="large"
             color="primary"
             onClick={() => { redirectTo("/create-questionary") }}
+            className={style.buttons}
+            fullWidth
           >
             <Send className={style.leftIcon} />
             Crear AskQue
             </Button>
-        </Grid>
-        <Grid item
-          className={style.buttons}
-        >
+
           <Button variant="contained" size="large" color="primary"
             onClick={() => { redirectTo("/ask-questionary") }}
+            className={style.buttons}
+            fullWidth
           >
             <Pencil className={style.leftIcon} />
             Responder AskQue
           </Button>
         </Grid>
+
       </Grid>
     </main>
     <Grid container spacing={2}>
