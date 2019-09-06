@@ -9,7 +9,9 @@ import Image from "../images/image1.jpg"
 import ManitoArriba from '@material-ui/icons/ThumbUpAlt'
 import Seguro from '@material-ui/icons/VerifiedUser'
 import Speed from '@material-ui/icons/ShutterSpeed'
-
+import { withRouter } from 'react-router-dom'
+import { AppContextConsumer } from "../context/context"
+import TeacherHome from './TeacherHome'
 
 
 
@@ -43,133 +45,145 @@ const styles = makeStyles(theme => ({
 
 
 
-export default function Home(props) {
+function Home(props) {
 
   function redirectTo(newPath) {
     props.history.push(newPath);
   }
 
   const style = styles()
-  return <div>
+  return <React.Fragment>
     <AppBar
       position="fixed"
     />
-    <main
-      className={style.body}
-    >
-      <Typography
-        variant="h3"
-        align="center"
-        gutterBottom
-        marked="center"
-        style={{ color: 'white' }}
-      >
-        ENCUESTAS SENCILLAS
-      </Typography>
-      <span
-        style={{ width: '73px', height: '5px', margin: '8px auto 8px', display: 'block', backgroundColor: '#0CAAF3' }}
-      >
-
-      </span>
-      <Typography variant="h6" align="center" paragraph style={{ color: 'white' }}>
-        Aplicación para crear preguntas educativas de manera sencilla y rápida. Esta aplicación
-        se utilizará en la Facultad de Ingenieria de la UBA
-      </Typography>
-      <Grid container
-        justify="space-between"
-        alignItems="center"
-        direction="column"
-      >
-        <Grid
-          item
-          xs={9}
+    {props.context.state.isLogged ?
+      <TeacherHome /> :
+      <React.Fragment>
+        <main
+          className={style.body}
         >
-          <Button
-            variant="contained"
-            size="large"
-            color="primary"
-            onClick={() => { redirectTo("/create-questionary") }}
-            className={style.buttons}
-            fullWidth
+          <Typography
+            variant="h3"
+            align="center"
+            gutterBottom
+            marked="center"
+            style={{ color: 'white' }}
           >
-            <Send className={style.leftIcon} />
-            Crear AskQue
-            </Button>
+            ENCUESTAS SENCILLAS
+    </Typography>
+          <span
+            style={{ width: '73px', height: '5px', margin: '8px auto 8px', display: 'block', backgroundColor: '#0CAAF3' }}
+          >
 
-          <Button variant="contained" size="large" color="primary"
-            onClick={() => { redirectTo("/ask-questionary") }}
-            className={style.buttons}
-            fullWidth
+          </span>
+          <Typography variant="h6" align="center" paragraph style={{ color: 'white' }}>
+            Aplicación para crear preguntas educativas de manera sencilla y rápida. Esta aplicación
+            se utilizará en la Facultad de Ingenieria de la UBA
+    </Typography>
+          <Grid container
+            justify="space-between"
+            alignItems="center"
+            direction="column"
           >
-            <Pencil className={style.leftIcon} />
-            Responder AskQue
+            <Grid
+              item
+              xs={9}
+            >
+              <Button
+                variant="contained"
+                size="large"
+                color="primary"
+                onClick={() => { redirectTo("/create-questionary") }}
+                className={style.buttons}
+                fullWidth
+              >
+                <Send className={style.leftIcon} />
+                Crear AskQue
           </Button>
-        </Grid>
 
-      </Grid>
-    </main>
-    <Grid container spacing={2}>
-      <Grid item sm={4} xs={12}>
-        <Grid container alignItems="center" direction="column">
-          <Grid item>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph style={{ marginTop: '40px' }}>
-              Fácil
-            </Typography>
+              <Button variant="contained" size="large" color="primary"
+                onClick={() => { redirectTo("/ask-questionary") }}
+                className={style.buttons}
+                fullWidth
+              >
+                <Pencil className={style.leftIcon} />
+                Responder AskQue
+        </Button>
+            </Grid>
+
           </Grid>
-          <Grid item>
-            <ManitoArriba style={{ fontSize: '120px' }} color='secondary'>
-            </ManitoArriba>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" align="center" color="textSecondary" paragraph>
-              Muy facil de usar que obtener el código del askque y listo!
-            </Typography>
-          </Grid>
-        </Grid>
+        </main>
+        <Grid container spacing={2}>
+          <Grid item sm={4} xs={12}>
+            <Grid container alignItems="center" direction="column">
+              <Grid item>
+                <Typography variant="h5" align="center" color="textSecondary" paragraph style={{ marginTop: '40px' }}>
+                  Fácil
+          </Typography>
+              </Grid>
+              <Grid item>
+                <ManitoArriba style={{ fontSize: '120px' }} color='secondary'>
+                </ManitoArriba>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" align="center" color="textSecondary" paragraph>
+                  Muy facil de usar que obtener el código del askque y listo!
+          </Typography>
+              </Grid>
+            </Grid>
 
 
-      </Grid>
-      <Grid item sm={4} xs={12}>
-        <Grid container alignItems="center" direction="column">
-          <Grid item>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph style={{ marginTop: '40px' }}>
-              Rapido
-            </Typography>
           </Grid>
-          <Grid item>
-            <Speed style={{ fontSize: '120px' }} color='secondary'>
-            </Speed>
+          <Grid item sm={4} xs={12}>
+            <Grid container alignItems="center" direction="column">
+              <Grid item>
+                <Typography variant="h5" align="center" color="textSecondary" paragraph style={{ marginTop: '40px' }}>
+                  Rapido
+          </Typography>
+              </Grid>
+              <Grid item>
+                <Speed style={{ fontSize: '120px' }} color='secondary'>
+                </Speed>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" align="center" color="textSecondary" paragraph>
+                  No es necesario obtener ningún link, solo con el código ya podes completar el askque
+          </Typography>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="h6" align="center" color="textSecondary" paragraph>
-              No es necesario obtener ningún link, solo con el código ya podes completar el askque
-            </Typography>
+          <Grid item sm={4} xs={12}>
+            <Grid container alignItems="center" direction="column">
+              <Grid item>
+                <Typography variant="h5" align="center" color="textSecondary" paragraph style={{ marginTop: '40px' }}>
+                  Seguro
+          </Typography>
+              </Grid>
+              <Grid item>
+                <Seguro style={{ fontSize: '120px' }} color='secondary'>
+                </Seguro>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" align="center" color="textSecondary" paragraph>
+                  Muy facil de usar que obtener el código del askque y listo!
+          </Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid item sm={4} xs={12}>
-        <Grid container alignItems="center" direction="column">
-          <Grid item>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph style={{ marginTop: '40px' }}>
-              Seguro
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Seguro style={{ fontSize: '120px' }} color='secondary'>
-            </Seguro>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" align="center" color="textSecondary" paragraph>
-              Muy facil de usar que obtener el código del askque y listo!
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
-    <footer className={style.footer}>
-      <Typography variant="subtitle1" align="center" color="textSecondary">
-        Builded by CETEC
-        </Typography>
-    </footer>
-  </div >
+        <footer className={style.footer}>
+          <Typography variant="subtitle1" align="center" color="textSecondary">
+            Builded by CETEC
+      </Typography>
+        </footer>
+      </React.Fragment>
+    }
+  </React.Fragment>
 }
+
+export default withRouter((props) => (
+  <AppContextConsumer>
+    {
+      contextData => (<Home {...props} context={contextData} />)
+    }
+  </AppContextConsumer>))

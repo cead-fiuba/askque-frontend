@@ -14,6 +14,7 @@ import ExitToApp from '@material-ui/icons/ExitToAppRounded';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    marginBottom: '20%'
   },
   grow: {
     flexGrow: 1,
