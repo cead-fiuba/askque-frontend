@@ -25,6 +25,9 @@ const useStyles = makeStyles(theme => ({
   },
   rightButton: {
     marginLeft: theme.spacing(1)
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
   }
 }));
 
@@ -43,7 +46,7 @@ function AppBarCustom(props) {
   const style = useStyles();
 
   return <div className={style.root}>
-    <AppBar position={props.position}>
+    <AppBar position="fixed" className={style.appBar}>
       <Toolbar>
         <Typography variant="h6" color="inherit" className={style.grow}
           onClick={() => redirectTo("/")}

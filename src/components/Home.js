@@ -1,6 +1,5 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import AppBar from "./AppBar"
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Send, Pencil } from 'mdi-material-ui'
@@ -12,6 +11,7 @@ import Speed from '@material-ui/icons/ShutterSpeed'
 import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from "../context/context"
 import TeacherHome from './TeacherHome'
+import AppBarCustom from "./AppBar"
 
 
 
@@ -53,9 +53,7 @@ function Home(props) {
 
   const style = styles()
   return <React.Fragment>
-    <AppBar
-      position="fixed"
-    />
+    <AppBarCustom />
     {props.context.state.isLogged ?
       <TeacherHome /> :
       <React.Fragment>
