@@ -83,7 +83,10 @@ export default function Home(props) {
         <Grid item
 
         >
-          <Button variant="contained" color="secondary" size="large"
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
             onClick={() => { redirectTo("/create-questionary") }}
           >
             <Send className={style.leftIcon} />
@@ -93,7 +96,7 @@ export default function Home(props) {
         <Grid item
           className={style.buttons}
         >
-          <Button variant="contained" color="secondary" size="large"
+          <Button variant="contained" size="large" color="primary"
             onClick={() => { redirectTo("/ask-questionary") }}
           >
             <Pencil className={style.leftIcon} />
