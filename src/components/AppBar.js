@@ -65,6 +65,7 @@ function AppBarCustom(props) {
               <Button
                 onClick={() => redirectTo("/register")}
                 variant="outlined"
+                color="inherit"
                 style={{ marginRight: '1%' }}
               >
                 <Hidden only="xs">
@@ -75,6 +76,7 @@ function AppBarCustom(props) {
               <Button
                 onClick={() => { redirectTo("/login") }}
                 variant="outlined"
+                color="inherit"
               >
                 <Hidden only="xs">
                   Ingresar
