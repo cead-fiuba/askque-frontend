@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -230,7 +230,7 @@ function SignIn(props) {
           />
           <Button
             fullWidth
-            color="secondary"
+            color="primary"
             className={classes.submit}
             onClick={login}
             size="large"
