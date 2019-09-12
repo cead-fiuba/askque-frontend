@@ -5,7 +5,6 @@ export const initSessionStudent = (userData) => {
         const token = res.data.token
 
         console.log('token', token)
-        server.defaults.headers.common['Authorization'] = token
         return Promise.resolve(token)
     }).catch((e) => {
         return Promise.reject(e)
@@ -17,7 +16,6 @@ export const initSessionTeacher = (email) => {
         const token = res.data.token
         console.log('res.data.token', token);
         console.log('Aaaaaaa', token);
-        server.defaults.headers.common['Authorization'] = token
         return Promise.resolve(token)
     }).catch((error) => {
         return Promise.reject(error)

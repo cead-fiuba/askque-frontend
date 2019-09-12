@@ -167,6 +167,7 @@ function SignIn(props) {
     const email = res.w3.U3
     initSessionTeacher(email).then((token) => {
       props.context.setToken(token)
+      props.context.isTeacher()
       redirectTo('/my-askques')
     }).catch((e) => {
       console.log(e.response)

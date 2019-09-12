@@ -20,7 +20,7 @@ export function ShowResult(props) {
         })).catch((reason) => {
             console.log('no se pudo obtener la informacion')
         })
-    }, [])
+    }, [props.questionary.hash])
 
     const findCountOfOptionById = (optionId) => {
         console.log('results', results)

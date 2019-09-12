@@ -39,7 +39,7 @@ function AppBarCustom(props) {
   }
 
   function exit() {
-    props.context.setToken(null)
+    props.context.logout();
     redirectTo('/')
   }
 

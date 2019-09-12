@@ -54,7 +54,7 @@ function Home(props) {
   const style = styles()
   return <React.Fragment>
     <AppBarCustom />
-    {props.context.state.isLogged ?
+    {props.context.state.isLogged && props.context.state.isTeacher ?
       <TeacherHome /> :
       <React.Fragment>
         <main
@@ -87,17 +87,21 @@ function Home(props) {
               item
               xs={9}
             >
-              <Button
-                variant="contained"
-                size="large"
-                color="primary"
-                onClick={() => { redirectTo("/create-questionary") }}
-                className={style.buttons}
-                fullWidth
-              >
-                <Send className={style.leftIcon} />
-                Crear AskQue
-          </Button>
+
+              {(!props.context.state.isLogged || props.context.state.isTeacher) &&
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="primary"
+                  onClick={() => { redirectTo("/create-questionary") }}
+                  className={style.buttons}
+                  fullWidth
+                >
+                  <Send className={style.leftIcon} />
+                  Crear AskQue
+                </Button>
+              }
+
 
               <Button variant="contained" size="large" color="primary"
                 onClick={() => { redirectTo("/ask-questionary") }}

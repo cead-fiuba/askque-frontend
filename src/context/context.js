@@ -4,8 +4,6 @@ export const AppContext = React.createContext({});
 
 
 
-console.log('localStorage.getItem(token)', localStorage.getItem('token') !== "null")
-console.log('localStorage.getItem(token)', localStorage.getItem('token') !== null)
 const tokenIsNull = localStorage.getItem('token') === null
 const tokenIsNullString = localStorage.getItem('token') === "null"
 
@@ -16,12 +14,20 @@ export class AppContextProvider extends React.Component {
 
     state = {
         token: localStorage.getItem('token'),
-        isLogged: !tokenIsNull && !tokenIsNullString
+        isLogged: !tokenIsNull && !tokenIsNullString,
+        isTeacher: localStorage.getItem('isTeacher') === "true"
     }
 
     setToken = (token) => {
         this.setState({ token, isLogged: token !== null }, () => { localStorage.setItem('token', token) })
+    }
 
+    isTeacher = () => {
+        this.setState({ ...this.state, isTeacher: true }, () => { localStorage.setItem('isTeacher', true) })
+    }
+
+    logout = () => {
+        this.setState({ token: null, isLogged: false, isTeacher: false }, () => { localStorage.clear() })
     }
 
     render() {
@@ -29,7 +35,9 @@ export class AppContextProvider extends React.Component {
             <AppContext.Provider
                 value={{
                     state: this.state,
-                    setToken: this.setToken
+                    setToken: this.setToken,
+                    isTeacher: this.isTeacher,
+                    logout: this.logout
 
                 }}>
                 {this.props.children}
