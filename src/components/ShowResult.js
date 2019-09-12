@@ -58,7 +58,6 @@ export function ShowResult(props) {
                     >
                         <b>{question.text}</b>
                         <HorizontalBar data={data} />
-                        }
                     </div>
 
                 }) :
