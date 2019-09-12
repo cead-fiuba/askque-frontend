@@ -25,7 +25,7 @@ const styles = makeStyles(theme => ({
     backgroundColor: '#7fc7d9',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
-    paddingTop: '20%',
+    paddingTop: '10%',
     paddingBottom: '10%'
   },
   buttons: {

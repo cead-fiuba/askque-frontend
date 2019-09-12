@@ -21,8 +21,7 @@ const useStyles = makeStyles(theme => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        marginTop: theme.spacing(10)
+        alignItems: 'center'
     },
     createAskque: {
         marginTop: theme.spacing(2)
@@ -67,7 +66,6 @@ export default function MyAskques(props) {
         <AppBar
             position="static"
         />
-        <CssBaseline />
         <Container maxWidth="sm" component="main" className={classes.container}>
             {
                 values.showQuestionaryResult ?

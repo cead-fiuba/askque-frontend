@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Root from "./components/Root"
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { AppContextProvider } from '../src/context/context'
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 const theme = createMuiTheme({
   palette: {
@@ -21,6 +22,7 @@ class App extends Component {
   render() {
     return <MuiThemeProvider theme={theme}>
       <AppContextProvider>
+        <CssBaseline />
         <Root />
       </AppContextProvider>
     </MuiThemeProvider>
