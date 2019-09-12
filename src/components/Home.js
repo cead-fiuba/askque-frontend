@@ -104,7 +104,14 @@ function Home(props) {
 
 
               <Button variant="contained" size="large" color="primary"
-                onClick={() => { redirectTo("/ask-questionary") }}
+                onClick={() => {
+                  if (!props.context.state.isLogged) {
+                    redirectTo("/login")
+                  } else {
+                    redirectTo("/ask-questionary")
+                  }
+
+                }}
                 className={style.buttons}
                 fullWidth
               >
