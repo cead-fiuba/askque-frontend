@@ -8,6 +8,8 @@ import Button from '@material-ui/core/Button';
 import { Send } from 'mdi-material-ui'
 import { ShowResult } from "./ShowResult"
 import { getResultOfQuestionary } from '../service/TeacherService'
+import { GridList } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 
 
 const useStyles = makeStyles(theme => ({
@@ -20,10 +22,15 @@ const useStyles = makeStyles(theme => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: '8%'
     },
     createAskque: {
         marginTop: theme.spacing(2)
+    },
+    gridList: {
+        width: 500,
+        height: 450,
     }
 }));
 
@@ -65,7 +72,7 @@ export default function MyAskques(props) {
         <AppBar
             position="static"
         />
-        <Container maxWidth="sm" component="main" className={classes.container}>
+        <Container maxWidth="md" component="main" className={classes.container}>
             {
                 values.showQuestionaryResult ?
                     <ShowResult
@@ -89,17 +96,21 @@ export default function MyAskques(props) {
                             </Button>
                         </>
                         :
-                        values.questionaries.map((questionary) => (
-                            <AskqueResume
-                                key={questionary.hash}
-                                code={questionary.hash}
-                                name={questionary.name}
-                                module={questionary.module}
-                                creationDate={questionary.date}
-                                onClick={showQuestionaryResult(questionary.hash, questionary)}
-                                results={getResultOfQuestionary(questionary.hash)}
-                            />
-                        ))
+                        <Grid container spacing={10}>
+                            {
+                                values.questionaries.map((questionary) => (
+                                    <AskqueResume
+                                        key={questionary.hash}
+                                        code={questionary.hash}
+                                        name={questionary.name}
+                                        module={questionary.module}
+                                        creationDate={questionary.date}
+                                        onClick={showQuestionaryResult(questionary.hash, questionary)}
+                                        results={getResultOfQuestionary(questionary.hash)}
+                                    />
+                                ))}
+                        </Grid>
+
             }
         </Container >
     </div >

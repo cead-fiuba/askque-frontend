@@ -21,12 +21,14 @@ const useStyles = makeStyles(theme => ({
     },
     header: {
         textAlign: 'center'
+    }, item: {
+        height: '90%'
     }
 }));
 
 export default function AskqueResumen(props) {
     const classes = useStyles();
-    return <Grid item xs={12}>
+    return <Grid item xs className={classes.item}>
         <Paper className={classes.paper}
             onClick={props.onClick}
         >
