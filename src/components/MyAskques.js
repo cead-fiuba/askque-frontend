@@ -7,9 +7,8 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import { Send } from 'mdi-material-ui'
 import { ShowResult } from "./ShowResult"
-import { getResultOfQuestionary } from '../service/TeacherService'
-import { GridList } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles(theme => ({
@@ -49,10 +48,6 @@ export default function MyAskques(props) {
 
     function redirectTo(newPath) {
         props.history.push(newPath);
-    }
-
-    const showQuestionaryResult = (hash, questionarySelected) => () => {
-        setState({ ...values, showQuestionaryResult: true, questionaryHash: hash, questionarySelected: questionarySelected })
     }
 
     useEffect(() => {
@@ -105,8 +100,7 @@ export default function MyAskques(props) {
                                         name={questionary.name}
                                         module={questionary.module}
                                         creationDate={questionary.date}
-                                        onClick={showQuestionaryResult(questionary.hash, questionary)}
-                                        results={getResultOfQuestionary(questionary.hash)}
+                                        onClick={() => redirectTo("/ask-results/" + questionary.hash)}
                                     />
                                 ))}
                         </Grid>

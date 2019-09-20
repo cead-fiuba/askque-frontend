@@ -16,6 +16,10 @@ export const getAskquesOfTeacher = () => {
     return server.get('/questionaries')
 }
 
+export const getInformationOfQuestionary = (hash) => {
+    return server.get(`/questionaries/${hash}`)
+}
+
 export const saveQuestionary = (questionary) => {
     console.log('questionary', questionary)
     return server.post('/questionaries', questionary)
