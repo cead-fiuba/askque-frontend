@@ -31,15 +31,21 @@ export default function AskResults(props) {
 
     useEffect(() => {
         const informationPromise = getInformationOfQuestionary(props.match.params.hash)
-        const resultPromise = getResultOfQuestionary(props.match.params.hash)
-        Promise.all([informationPromise, resultPromise]).then((values) => {
-            const [informationResponse, resultResponse] = values
+        informationPromise.then((informationResponse) => {
             const information = informationResponse.data
-            const result = resultResponse.data
-            setResults(result)
             setQuestionary(information)
-            setLoading(false)
         })
+
+        const interval = setInterval(() => {
+            const resultPromise = getResultOfQuestionary(props.match.params.hash)
+            resultPromise.then((resultResponse) => {
+                const result = resultResponse.data
+                setResults(result)
+                setLoading(false)
+            })
+        }, 10000);
+        return () => clearInterval(interval);
+
     }, [props.match.params.hash])
 
 
