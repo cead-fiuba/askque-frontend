@@ -58,6 +58,7 @@ export default class AskQuestionary extends Component {
             <Grid container
                 alignItems='center'
                 justify='center'
+                style={{ marginTop: '10%' }}
             >
                 {
                     this.state.showInformation ?
