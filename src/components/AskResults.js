@@ -60,7 +60,7 @@ export default function AskResults(props) {
             {
                 loading ? <>Obteniendo información</> :
                     <>
-                        <>{questionary.name}</>
+                        <Typography variant="h3" style={{ marginBottom: '5%' }}>{questionary.name}</Typography>
                         <>{questionary.questions.map((question, questionId) => {
                             const data = {
                                 labels: question.options.map((option, idx) => abecedario[idx]),
