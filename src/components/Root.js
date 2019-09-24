@@ -16,7 +16,7 @@ export default class Root extends Component {
         <Route path="/register" component={Register} />
         <Route path="/create-questionary" component={CreateQuestionary} />
         <Route path="/ask-questionary" component={AskQuestionary} />
-        <Route path="/my-askques" component={MyAskques} />
+        <Route path="/my-questionaries" component={MyAskques} />
         <Route path="/ask-results/:hash" component={AskResults} />
         <Route path="/" component={Home} />
       </Switch>

@@ -168,7 +168,7 @@ function SignIn(props) {
     initSessionTeacher(email).then((token) => {
       props.context.setToken(token)
       props.context.isTeacher()
-      redirectTo('/my-askques')
+      redirectTo('/my-questionaries')
     }).catch((e) => {
       console.log(e.response)
       if (e.response !== undefined && e.response.status === 404) {
