@@ -40,7 +40,7 @@ export default function AskResults(props) {
             setQuestionary(information)
             setLoading(false)
         })
-    }, [])
+    }, [props.match.params.hash])
 
 
     const findCountOfOptionById = (optionId) => {

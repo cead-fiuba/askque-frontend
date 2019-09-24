@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Fab from '@material-ui/core/Fab';
@@ -20,7 +19,6 @@ import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -105,7 +103,6 @@ export default function CompleteQuestionary(props) {
     const [checked, setChecked] = useState([]);
     const [questionIdsMarked, setQuestionIdsMarked] = useState(new Set())
     const [showSendButton, setShowSendButton] = useState(false)
-    const [responseWasSended, setResponseWasSended] = useState(false)
     const [loading, setLoading] = useState(false)
     const [sucess, setSuccess] = useState(false)
     const [showMessageSuccess, setShowMessageSuccess] = useState(false)

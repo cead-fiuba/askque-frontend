@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import { Send } from 'mdi-material-ui'
 import { ShowResult } from "./ShowResult"
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Add';
 
