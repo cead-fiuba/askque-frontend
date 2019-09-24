@@ -146,7 +146,7 @@ export default function CreateQuestionary(props) {
       <AppBar
         position="static"
       />
-      <Typography component="div" variant="h4" style={{ margin: '10px' }}>
+      <Typography component="div" variant="h4" style={{ margin: '5%' }}>
         <Box textAlign="center">
           NUEVA ENCUESTA
       </Box>
@@ -234,7 +234,7 @@ export default function CreateQuestionary(props) {
                       <ButtonGroup
                         size="small"
                         aria-label="small outlined button group"
-                        color="secondary"
+                        color="primary"
                         variant="contained"
                       >
                         <Button>
@@ -288,7 +288,7 @@ export default function CreateQuestionary(props) {
         </Button>
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={save}
           >
             Guardar

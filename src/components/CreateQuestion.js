@@ -165,7 +165,7 @@ export default function CreateQuestion(props) {
 
     return (
         <div>
-            <Fab color="secondary" onClick={handleClickOpen}>
+            <Fab color="primary" onClick={handleClickOpen}>
                 <CreateIcon />
             </Fab>
             {
