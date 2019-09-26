@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const MAX_RESPONSE = 5
-const NEW_RESPONSE_TEXT = "Nueva opción..."
+const NEW_RESPONSE_TEXT = "Nueva respuesta ..."
 
 const INITIAL_STATE = {
     progressMessage: 'Escribe la pregunta',
@@ -72,7 +72,19 @@ export default function CreateQuestion(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
-    const [values, setValues] = React.useState({ ...INITIAL_STATE })
+    const [values, setValues] = React.useState({
+        progressMessage: 'Escribe la pregunta',
+        progress: 0,
+        question: '',
+        options: [
+            {
+                text: NEW_RESPONSE_TEXT,
+                isCorrect: false,
+                isNew: true
+            }],
+        responsesCreated: false,
+        aResponseWasMarkedAsCorrect: false
+    })
 
     const handleResponse = idx => event => {
         const oldResponses = values.options
