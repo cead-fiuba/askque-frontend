@@ -7,6 +7,7 @@ import CreateQuestionary from "./CreateQuestionary"
 import AskQuestionary from "./AskQuestionary"
 import MyAskques from "./MyAskques"
 import AskResults from "./AskResults"
+import EditQuestionary from './EditQuestionary'
 
 export default class Root extends Component {
   render() {
@@ -18,6 +19,7 @@ export default class Root extends Component {
         <Route path="/ask-questionary" component={AskQuestionary} />
         <Route path="/my-questionaries" component={MyAskques} />
         <Route path="/ask-results/:hash" component={AskResults} />
+        <Route path="/edit-questionary/:hash" component={EditQuestionary} />
         <Route path="/" component={Home} />
       </Switch>
     </Router>

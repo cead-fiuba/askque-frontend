@@ -61,7 +61,7 @@ export default function AskqueResumen(props) {
                         </IconButton>
                     </Grid>
                     <Grid item xs={12}>
-                        <IconButton aria-label="delete" color="primary">
+                        <IconButton aria-label="delete" color="primary" onClick={() => props.editQuestionary()}>
                             <EditIcon />
                         </IconButton>
                     </Grid>

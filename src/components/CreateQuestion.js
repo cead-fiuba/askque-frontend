@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, withStyles, lighten } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,13 +8,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import CreateIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 import ChecbokList from "./ChecbokList"
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save'
 
 const useStyles = makeStyles(theme => ({
@@ -38,20 +36,6 @@ const useStyles = makeStyles(theme => ({
 const MAX_RESPONSE = 5
 const NEW_RESPONSE_TEXT = "Nueva respuesta ..."
 
-const INITIAL_STATE = {
-    progressMessage: 'Escribe la pregunta',
-    progress: 0,
-    question: '',
-    options: [
-        {
-            text: NEW_RESPONSE_TEXT,
-            isCorrect: false,
-            isNew: true
-        }],
-    responsesCreated: false,
-    aResponseWasMarkedAsCorrect: false
-}
-
 
 const BorderLinearProgress = withStyles({
     root: {
@@ -70,30 +54,52 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function CreateQuestion(props) {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+
+    console.log('props', props)
+
+
+    useEffect(() => {
+        setValues({
+            progressMessage: 'Escribe la pregunta',
+            progress: props.question.text !== "" ? 100 : 0,
+            question: props.question.text,
+            options: props.asEdit ? props.question.options :
+                [
+                    {
+                        text: NEW_RESPONSE_TEXT,
+                        correct: false,
+                        isNew: true
+                    }],
+            responsesCreated: props.question.text !== "",
+            aResponseWasMarkedAsCorrect: false
+        })
+    }, [props.asEdit, props.question.options, props.question.text])
 
     const [values, setValues] = React.useState({
         progressMessage: 'Escribe la pregunta',
-        progress: 0,
-        question: '',
-        options: [
-            {
-                text: NEW_RESPONSE_TEXT,
-                isCorrect: false,
-                isNew: true
-            }],
-        responsesCreated: false,
+        progress: props.question.text !== "" ? 100 : 0,
+        question: props.question.text,
+        options: props.asEdit ? props.question.options :
+
+            [
+                {
+                    text: NEW_RESPONSE_TEXT,
+                    correct: false,
+                    isNew: true
+                }],
+        responsesCreated: props.question.text !== "",
         aResponseWasMarkedAsCorrect: false
     })
 
     const handleResponse = idx => event => {
+        console.log('handleResponse')
         const oldResponses = values.options
         oldResponses[idx].text = event.target.value === NEW_RESPONSE_TEXT ? "" : event.target.value
         oldResponses[idx].isNew = false
         if (theLastIsNotEmpty(oldResponses) && oldResponses.length < MAX_RESPONSE) {
             oldResponses.push({
                 text: NEW_RESPONSE_TEXT,
-                isCorrect: false,
+                correct: false,
                 isNew: true
             })
         }
@@ -104,14 +110,17 @@ export default function CreateQuestion(props) {
     }
 
     const theLastIsNotEmpty = (responses) => {
+        console.log('theLastIsNotEmpty')
         const size = responses.length
         const lastElement = responses[size - 1]
         return lastElement.text !== null && lastElement.text !== NEW_RESPONSE_TEXT && lastElement.text !== ""
     }
 
     const markResponse = (idx, value) => {
+        console.log('markResponse')
+
         const oldResponses = values.options.filter((option) => (option.text !== NEW_RESPONSE_TEXT && option.text !== ""))
-        oldResponses[idx].isCorrect = value
+        oldResponses[idx].correct = value
         if (!values.aResponseWasMarkedAsCorrect) {
             setValues({ ...values, options: oldResponses, aResponseWasMarkedAsCorrect: true, progress: 100, progressMessage: 'Listo' })
         } else {
@@ -120,6 +129,7 @@ export default function CreateQuestion(props) {
     }
 
     const exitTwoCompleteOptions = () => {
+        console.log('exitTwoCompleteOptions')
         return values.options.filter((response) => (
             response.text !== NEW_RESPONSE_TEXT && response.text !== ""
         )).length >= 2
@@ -127,6 +137,8 @@ export default function CreateQuestion(props) {
 
 
     const deleteResponse = idx => {
+        console.log('deleteResponse')
+
         if (values.options.length > 1) {
             const oldResponses = values.options
             oldResponses.splice(idx, 1)
@@ -134,23 +146,22 @@ export default function CreateQuestion(props) {
         }
     }
 
-    function handleClickOpen() {
-        setOpen(true);
-    }
-
-    function handleClose() {
-        console.log('handleClose')
-        setOpen(false);
-    }
 
     function save() {
         console.log('save', values)
         const toSave = {
             question: values.question,
-            options: values.options
+            options: values.options,
+            id: props.asEdit ? props.question.id : null
         }
-        props.saveQuestion(toSave)
-        console.log('initial state', INITIAL_STATE)
+        props.saveQuestion(toSave, props.asEdit)
+        cleanForm()
+        props.handleClose()
+    }
+
+
+    const cleanForm = () => {
+        console.log('clean form')
         setValues({
             progressMessage: 'Escribe la pregunta',
             progress: 0,
@@ -158,16 +169,15 @@ export default function CreateQuestion(props) {
             options: [
                 {
                     text: NEW_RESPONSE_TEXT,
-                    isCorrect: false,
+                    correct: false,
                     isNew: true
                 }],
             responsesCreated: false,
             aResponseWasMarkedAsCorrect: false
         })
-        setOpen(false);
     }
-
     const handleChange = prop => event => {
+        console.log('handleChange')
         if (prop === "question" && !values.responsesCreated && !values.aResponseWasMarkedAsCorrect) {
             setValues({ ...values, [prop]: event.target.value, progress: 25, progressMessage: 'Escriba todas las respuestas posibles' })
         } else {
@@ -175,78 +185,73 @@ export default function CreateQuestion(props) {
         }
     };
 
-    return (
-        <div>
-            <Fab color="primary" onClick={handleClickOpen}>
-                <CreateIcon />
-            </Fab>
-            {
-                open ?
-                    <Dialog fullScreen
-                        open={open}
-                        onClose={handleClose}
-                        TransitionComponent={Transition}
-                    >
-                        <AppBar className={classes.appBar}>
-                            <Toolbar>
-                                <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="Close">
-                                    <CloseIcon />
-                                </IconButton>
-                                <Typography variant="h6" className={classes.title}>
-                                    Nueva Pregunta
+    console.log('values', values)
+    return <Dialog fullScreen
+        open={props.open}
+        onClose={props.handleClose}
+        TransitionComponent={Transition}
+    >
+        <AppBar className={classes.appBar}>
+            <Toolbar>
+                <IconButton edge="start" color="inherit"
+                    onClick={() => {
+                        cleanForm()
+                        props.handleClose()
+                    }}
+                    aria-label="Close">
+                    <CloseIcon />
+                </IconButton>
+                <Typography variant="h6" className={classes.title}>
+                    Nueva Pregunta
                         </Typography>
-                                <Button
-                                    variant="outlined"
-                                    onClick={save}
-                                    disabled={!(values.responsesCreated && values.aResponseWasMarkedAsCorrect && values.question !== "")}
-                                >
-                                    guardar
-                                <SaveIcon className={classes.rightIcon} />
-                                </Button>
-                            </Toolbar>
-                        </AppBar>
-                        <Container>
-                            <Paper className={classes.progressPaper}>
-                                <Typography variant="h6" component="h2">
-                                    Progreso : <b>{values.progressMessage}</b>
-                                </Typography>
-                                <BorderLinearProgress
-                                    className={classes.margin}
-                                    variant="determinate"
-                                    color="secondary"
-                                    value={values.progress}
-                                />
-                            </Paper>
-                            <TextField
-                                id="outlined-full-width"
-                                label="Pregunta"
-                                style={{ marginTop: 30 }}
-                                placeholder="Escriba el texto..."
-                                multiline
-                                rows={6}
-                                margin="normal"
-                                variant="outlined"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                fullWidth
-                                onChange={handleChange('question')}
-                                value={values.question}
-                            />
-                            <ChecbokList
-                                handleChange={handleChange}
-                                responses={values.options}
-                                handleResponse={handleResponse}
-                                markResponse={markResponse}
-                                deleteResponse={deleteResponse}
-                                aResponseWasMarkedAsCorrect={values.aResponseWasMarkedAsCorrect}
-                                existTwoCompleteOptions={exitTwoCompleteOptions()}
-                            />
-                        </Container>
+                <Button
+                    variant="outlined"
+                    onClick={save}
+                    disabled={!(values.responsesCreated && values.aResponseWasMarkedAsCorrect && values.question !== "" || props.asEdit)}
+                >
+                    guardar
+                    <SaveIcon className={classes.rightIcon} />
+                </Button>
+            </Toolbar>
+        </AppBar>
+        <Container>
+            <Paper className={classes.progressPaper}>
+                <Typography variant="h6" component="h2">
+                    Progreso : <b>{values.progressMessage}</b>
+                </Typography>
+                <BorderLinearProgress
+                    className={classes.margin}
+                    variant="determinate"
+                    color="secondary"
+                    value={values.progress}
+                />
+            </Paper>
+            <TextField
+                id="outlined-full-width"
+                label="Pregunta"
+                style={{ marginTop: 30 }}
+                placeholder="Escriba el texto..."
+                multiline
+                rows={6}
+                margin="normal"
+                variant="outlined"
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                fullWidth
+                onChange={handleChange('question')}
+                value={values.question}
+            />
+            <ChecbokList
+                handleChange={handleChange}
+                responses={values.options}
+                handleResponse={handleResponse}
+                markResponse={markResponse}
+                deleteResponse={deleteResponse}
+                aResponseWasMarkedAsCorrect={values.aResponseWasMarkedAsCorrect || props.asEdit}
+                existTwoCompleteOptions={() => exitTwoCompleteOptions()}
+            />
+        </Container>
 
-                    </Dialog> :
-                    null
-            }
-        </div>
-    );
+    </Dialog>
 }

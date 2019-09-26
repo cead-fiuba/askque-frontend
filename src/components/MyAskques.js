@@ -4,8 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import AskqueResume from "./AskqueResume"
 import { getAskquesOfTeacher, deleteQuestionaryByHash } from '../service/TeacherService'
 import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
-import { Send } from 'mdi-material-ui'
 import { ShowResult } from "./ShowResult"
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
@@ -45,8 +43,9 @@ export default function MyAskques(props) {
         questionaryHash: null,
         questionarySelected: null
     })
-    const [showSnackBar, setShowSnackBar] = useState(false)
+
     const [snackBarConfig, setSnackBarConfig] = useState({})
+    const [loading, setLoading] = useState(true)
 
 
     function redirectTo(newPath) {
@@ -57,6 +56,7 @@ export default function MyAskques(props) {
         console.log('useEffect')
         getAskquesOfTeacher().then((res) => {
             setState({ ...values, questionaries: res.data.questionaries })
+            setLoading(false)
         }).catch((e) => {
             console.log(e)
             setState({ ...values, errorHappen: true })
@@ -83,7 +83,7 @@ export default function MyAskques(props) {
         />
         <Container maxWidth="md" component="main" className={classes.container}>
             {
-                values.showQuestionaryResult ?
+                loading ? <>Obteniendo información</> : <>{values.showQuestionaryResult ?
                     <ShowResult
                         questionary={values.questionarySelected}
                     />
@@ -105,23 +105,26 @@ export default function MyAskques(props) {
                                         creationDate={questionary.date}
                                         showQuestionaryResults={() => redirectTo("/ask-results/" + questionary.hash)}
                                         deleteQuestionary={() => deleteQuestionary(questionary.hash)}
+                                        editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
                                     />
                                 ))}
                         </Grid>
 
-            }
-            {
-                snackBarConfig.show ? < MySnackbarContentWrapper
-                    variant={snackBarConfig.state}
-                    message={snackBarConfig.message}
-                    open={snackBarConfig.show}
-                    onClose={() => { setSnackBarConfig({ show: false }) }}
-                /> : null
-            }
+                }
+                    {
+                        snackBarConfig.show ? < MySnackbarContentWrapper
+                            variant={snackBarConfig.state}
+                            message={snackBarConfig.message}
+                            open={snackBarConfig.show}
+                            onClose={() => { setSnackBarConfig({ show: false }) }}
+                        /> : null
+                    }
 
-            <Fab color="primary" onClick={() => { redirectTo("/create-questionary") }}>
-                <CreateIcon />
-            </Fab>
+                    <Fab color="primary" onClick={() => { redirectTo("/create-questionary") }}>
+                        <CreateIcon />
+                    </Fab>
+                </>
+            }
         </Container >
     </div >
 }

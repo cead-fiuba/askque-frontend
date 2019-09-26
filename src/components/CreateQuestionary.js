@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import AppBar from "./AppBar"
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,11 +17,12 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import VisilityIcon from '@material-ui/icons/Visibility';
 import Hidden from '@material-ui/core/Hidden';
 import { saveQuestionary } from '../service/TeacherService'
+import Fab from '@material-ui/core/Fab';
+import CreateIcon from '@material-ui/icons/Add';
 
 
 const ranges = [
@@ -43,6 +44,7 @@ const ranges = [
   }
 ];
 
+const NEW_RESPONSE_TEXT = "Nueva respuesta ..."
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -93,15 +95,17 @@ export default function CreateQuestionary(props) {
 
   const classes = useStyles();
 
+
   const [values, setValues] = React.useState({
-    name: '',
-    multiline: 'Controlled',
+    name: props.asEdit ? props.questionary.name : '',
     showCreateResponses: false,
     minutes: '3',
     open: false,
-    module: '',
-    questions: []
+    module: props.asEdit ? props.questionary.module : '',
+    questions: props.asEdit ? props.questionary.questions : []
   });
+
+  const [questionViewConfig, setQuestionViewConfig] = useState({ question: { text: '', options: [] }, showCreateQuestionForm: false })
 
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
@@ -112,20 +116,50 @@ export default function CreateQuestionary(props) {
   }
 
   const saveQuestion = (question) => {
-    const questions = values.questions
-    questions.push(question)
-    setValues({ ...values, questions: questions })
+    console.log('saveQuestion', question)
+    const questionToSave = {
+      id: question.id,
+      text: question.question,
+      options: question.options
+    }
+
+
+    if (questionViewConfig.asEdit) {
+      const mergedQuestions = questionViewConfig.asEdit && values.questions.reduce((arrayToPush, currentValue) => {
+        console.log('BEFORE arrayToPush', arrayToPush)
+        console.log(`${currentValue.id} === ${questionToSave.id}`)
+        if (currentValue.id === questionToSave.id) {
+          arrayToPush.push(questionToSave)
+        } else {
+          arrayToPush.push(currentValue)
+        }
+        console.log('AFTER arrayToPush', arrayToPush)
+        return arrayToPush
+      }, []);
+      setValues({ ...values, questions: mergedQuestions })
+    } else {
+      const questions = values.questions;
+      questions.push(questionToSave)
+      setValues({ ...values, questions: questions })
+    }
+  }
+
+  const showCreateQuestionView = (value) => {
+    setQuestionViewConfig({ ...questionViewConfig, showCreateQuestionForm: value })
   }
 
   const save = () => {
     const questionaryToSave = {
+      hash: props.asEdit ? props.questionary.hash : null,
       name: values.name,
       time: values.minutes,
       questions: values.questions.map((question) => ({
-        text: question.question,
+        text: question.text,
+        id: question.id,
         options: question.options.map((option) => ({
           text: option.text,
-          correct: option.isCorrect
+          correct: option.correct,
+          id: option.id
         }))
       })),
       module: values.module
@@ -177,6 +211,7 @@ export default function CreateQuestionary(props) {
               variant="outlined"
               style={{ width: '95%' }}
               onChange={handleChange('module')}
+              value={values.module}
             />
           </Grid>
           <Grid item xs={5} sm={4}>
@@ -221,7 +256,7 @@ export default function CreateQuestionary(props) {
                         variant="body1"
                         noWrap={true}
                       >
-                        {question.question.substring(0, 20) + '...'}
+                        {question.text.substring(0, 20) + '...'}
                       </Typography>
                     </TableCell>
                     <Hidden only="xs">
@@ -243,13 +278,10 @@ export default function CreateQuestionary(props) {
                             Eliminar
                           </Hidden>
                         </Button>
-                        <Button>
-                          <EditIcon className={classes.leftIcon} />
-                          <Hidden only="xs">
-                            Editar
-                          </Hidden>
-                        </Button>
-                        <Button>
+                        <Button
+                          onClick={() => {
+                            setQuestionViewConfig({ question: question, showCreateQuestionForm: true, asEdit: true })
+                          }}>
                           <VisilityIcon className={classes.leftIcon} />
                           <Hidden only="xs">
                             Ver
@@ -268,8 +300,31 @@ export default function CreateQuestionary(props) {
             alignItems="center"
             direction="row"
           >
+
+            <Fab color="primary"
+              onClick={() => {
+                setQuestionViewConfig({
+                  question: {
+                    text: '', options: [
+                      {
+                        text: NEW_RESPONSE_TEXT,
+                        correct: false,
+                        isNew: true
+                      }]
+                  },
+                  showCreateQuestionForm: true,
+                  asEdit: false
+                })
+              }}>
+              <CreateIcon />
+            </Fab>
+
             <CreateQuestion
               saveQuestion={saveQuestion}
+              open={questionViewConfig.showCreateQuestionForm}
+              handleClose={() => showCreateQuestionView(false)}
+              question={questionViewConfig.question}
+              asEdit={questionViewConfig.asEdit}
             />
           </Grid>
         </Grid>
@@ -298,6 +353,6 @@ export default function CreateQuestionary(props) {
 
 
       </Container>
-    </div>
+    </div >
   )
 }
