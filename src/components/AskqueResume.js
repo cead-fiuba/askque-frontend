@@ -3,9 +3,12 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
-import ShareIcon from '@material-ui/icons/Share'
+import ShareIcon from '@material-ui/icons/Share';
+import DeleteIcon from '@material-ui/icons/Delete';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 const useStyles = makeStyles(theme => ({
@@ -51,22 +54,32 @@ export default function AskqueResumen(props) {
 
 
                 </Grid>
-                {props.teacher ?
-                    <Grid item xs={2} container>
-                        <Grid item xs={12}>
-                            <IconButton aria-label="delete">
-                                <ShareIcon />
+                <Grid item xs={2} container>
+                    <Grid item xs={12}>
+                        <IconButton aria-label="delete" color="primary">
+                            <ShareIcon />
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <IconButton aria-label="delete" color="primary">
+                            <EditIcon />
+                        </IconButton>
+                    </Grid>
+                    <Grid item>
+                        <Tooltip title="Eliminar" placement="right">
+                            <IconButton aria-label="delete" onClick={() => props.deleteQuestionary()} color="primary">
+                                <DeleteIcon />
                             </IconButton>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <IconButton aria-label="delete">
-                                <EditIcon />
+                        </Tooltip>
+                    </Grid>
+                    <Grid item>
+                        <Tooltip title="Ver resultados" placement="right">
+                            <IconButton aria-label="delete" onClick={props.showQuestionaryResults} color="primary">
+                                <VisibilityIcon />
                             </IconButton>
-                        </Grid>
-                    </Grid> :
-                    null
-                }
-
+                        </Tooltip>
+                    </Grid>
+                </Grid>
             </Grid>
         </Paper>
     </Grid>

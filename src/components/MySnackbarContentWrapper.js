@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
 import { makeStyles } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const variantIcon = {
     success: CheckCircleIcon,
@@ -53,22 +54,34 @@ export function MySnackbarContentWrapper(props) {
     const Icon = variantIcon[variant];
 
     return (
-        <SnackbarContent
-            className={clsx(classes[variant], className, classes.disabledMinWith)}
-            aria-describedby="client-snackbar"
-            message={
-                <span id="client-snackbar" className={classes.message}>
-                    <Icon className={clsx(classes.icon, classes.iconVariant)} />
-                    {message}
-                </span>
-            }
-            action={[
-                <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
-                    <CloseIcon className={classes.icon} />
-                </IconButton>,
-            ]}
-            {...other}
-        />
+
+        <Snackbar
+            anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            open={props.open}
+            autoHideDuration={6000}
+            onClose={props.handleClose}
+            style={{ marginTop: '5%' }}
+        >
+            <SnackbarContent
+                className={clsx(classes[variant], className, classes.disabledMinWith)}
+                aria-describedby="client-snackbar"
+                message={
+                    <span id="client-snackbar" className={classes.message}>
+                        <Icon className={clsx(classes.icon, classes.iconVariant)} />
+                        {message}
+                    </span>
+                }
+                action={[
+                    <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
+                        <CloseIcon className={classes.icon} />
+                    </IconButton>,
+                ]}
+                {...other}
+            />
+        </Snackbar>
     );
 }
 

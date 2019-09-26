@@ -30,3 +30,8 @@ export const getResultOfQuestionary = (hash) => {
     return server.get(`/responses/questionaries/${hash}`)
 }
 
+export const deleteQuestionaryByHash = (hash) => {
+    console.log(`Delete questionary ${hash}`)
+    return server.delete(`/questionaries/${hash}`)
+}
+

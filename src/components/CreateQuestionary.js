@@ -131,13 +131,13 @@ export default function CreateQuestionary(props) {
       module: values.module
     }
     saveQuestionary(questionaryToSave).then((response) => {
-      redirectTo('/my-askques')
+      redirectTo('/my-questionaries')
     })
 
   }
 
   const cancelCreateQuestionary = () => {
-    redirectTo('/my-askques')
+    redirectTo('/my-questionaries')
   }
 
   return (

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AppBar from "./AppBar"
 import { makeStyles } from '@material-ui/core/styles';
 import AskqueResume from "./AskqueResume"
-import { getAskquesOfTeacher } from '../service/TeacherService'
+import { getAskquesOfTeacher, deleteQuestionaryByHash } from '../service/TeacherService'
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import { Send } from 'mdi-material-ui'
@@ -10,7 +10,7 @@ import { ShowResult } from "./ShowResult"
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Add';
-
+import { MySnackbarContentWrapper } from './MySnackbarContentWrapper'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -45,6 +45,8 @@ export default function MyAskques(props) {
         questionaryHash: null,
         questionarySelected: null
     })
+    const [showSnackBar, setShowSnackBar] = useState(false)
+    const [snackBarConfig, setSnackBarConfig] = useState({})
 
 
     function redirectTo(newPath) {
@@ -60,8 +62,19 @@ export default function MyAskques(props) {
             setState({ ...values, errorHappen: true })
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [snackBarConfig])
 
+
+    const deleteQuestionary = (hash) => {
+        deleteQuestionaryByHash(hash).then((response) => {
+            console.log('Se eliminó de manera correcta el cuestionario')
+            console.log('response.data', response.data)
+            setSnackBarConfig({ state: 'success', message: `Se eliminó el questionario ${response.data.hash}`, show: true })
+        }).catch((reason) => {
+            setSnackBarConfig({ state: 'error', message: 'No se pudo eliminar el questionario', show: true })
+
+        })
+    }
 
 
     return <div>
@@ -79,17 +92,6 @@ export default function MyAskques(props) {
                         <>
                             Ups! Todavia no creaste ningun askque!
                             No te preocupes, es muy fácil!
-
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                size="large"
-                                className={classes.createAskque}
-                                onClick={() => { redirectTo("/create-questionary") }}
-                            >
-                                <Send className={classes.leftIcon} />
-                                Crear AskQue
-                            </Button>
                         </>
                         :
                         <Grid container spacing={10}>
@@ -101,11 +103,20 @@ export default function MyAskques(props) {
                                         name={questionary.name}
                                         module={questionary.module}
                                         creationDate={questionary.date}
-                                        onClick={() => redirectTo("/ask-results/" + questionary.hash)}
+                                        showQuestionaryResults={() => redirectTo("/ask-results/" + questionary.hash)}
+                                        deleteQuestionary={() => deleteQuestionary(questionary.hash)}
                                     />
                                 ))}
                         </Grid>
 
+            }
+            {
+                snackBarConfig.show ? < MySnackbarContentWrapper
+                    variant={snackBarConfig.state}
+                    message={snackBarConfig.message}
+                    open={snackBarConfig.show}
+                    onClose={() => { setSnackBarConfig({ show: false }) }}
+                /> : null
             }
 
             <Fab color="primary" onClick={() => { redirectTo("/create-questionary") }}>
