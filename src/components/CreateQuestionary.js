@@ -153,15 +153,20 @@ export default function CreateQuestionary(props) {
       hash: props.asEdit ? props.questionary.hash : null,
       name: values.name,
       time: values.minutes,
-      questions: values.questions.map((question) => ({
-        text: question.text,
-        id: question.id,
-        options: question.options.map((option) => ({
-          text: option.text,
-          correct: option.correct,
-          id: option.id
-        }))
-      })),
+      questions: values.questions.map((question) => {
+        const questionToSend = {
+          text: question.text,
+          options: question.options.map((option) => ({
+            text: option.text,
+            correct: option.correct,
+            id: option.id
+          }))
+        }
+        if (question.id !== null && question.id !== undefined) {
+          questionToSend.id = question.id
+        }
+        return questionToSend;
+      }),
       module: values.module
     }
     saveQuestionary(questionaryToSave).then((response) => {
