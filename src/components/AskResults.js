@@ -90,7 +90,7 @@ export default function AskResults(props) {
                                 <HorizontalBar data={data} width={200} height={50} />
                                 <List>
                                     {
-                                        questionary.questions.map((option, idx) => (
+                                        question.options.map((option, idx) => (
                                             <ListItem key={idx}>
                                                 <ListItemText primary={
                                                     <Typography variant="body2">
