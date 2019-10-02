@@ -93,7 +93,13 @@ function Home(props) {
                   variant="contained"
                   size="large"
                   color="primary"
-                  onClick={() => { redirectTo("/create-questionary") }}
+                  onClick={() => {
+                    if (!props.context.state.isLogged) {
+                      redirectTo("/login")
+                    } else {
+                      redirectTo("/create-questionary")
+                    }
+                  }}
                   className={style.buttons}
                   fullWidth
                 >
