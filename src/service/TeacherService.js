@@ -20,6 +20,10 @@ export const getInformationOfQuestionary = (hash) => {
     return server.get(`/questionaries/${hash}`)
 }
 
+export const getInformationOfQuestionaryWithCache = (hash) => {
+    return server.get(`/questionaries/${hash}`, { 'headers': { 'X-Cache': true } })
+}
+
 export const saveQuestionary = (questionary) => {
     console.log('questionary', questionary)
     return server.post('/questionaries', questionary)

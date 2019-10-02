@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import AppBar from "./AppBar"
-import { getInformationOfQuestionary, getResultOfQuestionary } from '../service/TeacherService'
+import { getInformationOfQuestionaryWithCache, getResultOfQuestionary } from '../service/TeacherService'
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
-import { HorizontalBar } from 'react-chartjs-2';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Typography } from '@material-ui/core';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 
 const abecedario = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 
@@ -30,10 +30,17 @@ export default function AskResults(props) {
     const [results, setResults] = useState()
 
     useEffect(() => {
-        const informationPromise = getInformationOfQuestionary(props.match.params.hash)
+        const informationPromise = getInformationOfQuestionaryWithCache(props.match.params.hash)
         informationPromise.then((informationResponse) => {
             const information = informationResponse.data
             setQuestionary(information)
+        })
+
+        const resultPromise = getResultOfQuestionary(props.match.params.hash)
+        resultPromise.then((resultResponse) => {
+            const result = resultResponse.data
+            setResults(result)
+            setLoading(false)
         })
 
         const interval = setInterval(() => {
@@ -68,26 +75,30 @@ export default function AskResults(props) {
                     <>
                         <Typography variant="h3" style={{ marginBottom: '5%' }}>{questionary.name}</Typography>
                         <>{questionary.questions.map((question, questionId) => {
-                            const data = {
-                                labels: question.options.map((option, idx) => abecedario[idx]),
-                                datasets: [
-                                    {
-                                        label: `Pregunta ${questionId + 1}`,
-                                        backgroundColor: 'rgba(255,99,132,0.2)',
-                                        borderColor: 'rgba(255,99,132,1)',
-                                        borderWidth: 1,
-                                        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                                        hoverBorderColor: 'rgba(255,99,132,1)',
-                                        data: question.options.map((option) => findCountOfOptionById(option.id))
-                                    }
-                                ]
-                            }
+                            const data = question.options.map((option, idx) => {
+                                return {
+                                    name: abecedario[idx],
+                                    cantidad: findCountOfOptionById(option.id)
+                                }
+                            })
 
                             return <div
                                 key={questionId}
                             >
-                                <b>{question.text}</b>
-                                <HorizontalBar data={data} width={200} height={50} />
+                                <b style={{ margin: '5%' }}>{question.text}</b>
+                                <BarChart
+                                    width={600}
+                                    height={300}
+                                    data={data}
+                                    margin={{ top: 30, right: 30, left: 20, bottom: 5 }}
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="name" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Bar dataKey="cantidad" fill="#8884d8" />
+                                </BarChart>
                                 <List>
                                     {
                                         question.options.map((option, idx) => (
