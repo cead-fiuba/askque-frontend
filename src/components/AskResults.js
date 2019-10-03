@@ -31,16 +31,14 @@ export default function AskResults(props) {
     const [results, setResults] = useState()
 
     useEffect(() => {
-        const informationPromise = getInformationOfQuestionaryWithCache(props.match.params.hash)
-        informationPromise.then((informationResponse) => {
-            const information = informationResponse.data
-            setQuestionary(information)
-        })
+        const informationPromise = getInformationOfQuestionaryWithCache(props.match.params.hash);
+        const resultPromise = getResultOfQuestionary(props.match.params.hash);
 
-        const resultPromise = getResultOfQuestionary(props.match.params.hash)
-        resultPromise.then((resultResponse) => {
-            const result = resultResponse.data
-            setResults(result)
+        Promise.all([informationPromise, resultPromise]).then(([informationResponse, resultResponse]) => {
+            const information = informationResponse.data
+            const results = resultResponse.data
+            setQuestionary(information)
+            setResults(results)
             setLoading(false)
         })
 
