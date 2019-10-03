@@ -102,15 +102,17 @@ export default function AskResults(props) {
                                 </BarChart>
                                 <List>
                                     {
-                                        question.options.map((option, idx) => (
-                                            <ListItem key={idx}>
+                                        question.options.map((option, idx) => {
+                                            const message = option.correct ? 'Correcto' : 'Incorrecto'
+                                            return <ListItem key={idx}>
                                                 <ListItemText primary={
                                                     <Typography variant="body2">
-                                                        {abecedario[idx] + " - " + option.text}
+                                                        {abecedario[idx] + " - " + option.text} <b>{message}</b>
+
                                                     </Typography>
                                                 } />
                                             </ListItem>
-                                        ))
+                                        })
                                     }
                                 </List>
                             </div>
