@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import AskqueResume from "./AskqueResume"
 import { getAskquesOfTeacher, deleteQuestionaryByHash } from '../service/TeacherService'
 import Container from '@material-ui/core/Container';
-import { ShowResult } from "./ShowResult"
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Add';
@@ -39,7 +38,6 @@ export default function MyAskques(props) {
     const [values, setState] = useState({
         questionaries: [],
         errorHappen: false,
-        showQuestionaryResult: false,
         questionaryHash: null,
         questionarySelected: null
     })
@@ -83,34 +81,31 @@ export default function MyAskques(props) {
         />
         <Container maxWidth="md" component="main" className={classes.container}>
             {
-                loading ? <>Obteniendo información</> : <>{values.showQuestionaryResult ?
-                    <ShowResult
-                        questionary={values.questionarySelected}
-                    />
-                    :
-                    values.questionaries.length === 0 ?
-                        <>
-                            Ups! Todavia no creaste ningun askque!
-                            No te preocupes, es muy fácil!
+                loading ? <>Obteniendo información</> : <>
+                    {
+                        values.questionaries.length === 0 ?
+                            <>
+                                Ups! Todavia no creaste ningun askque!
+                                No te preocupes, es muy fácil!
                         </>
-                        :
-                        <Grid container spacing={10}>
-                            {
-                                values.questionaries.map((questionary) => (
-                                    <AskqueResume
-                                        key={questionary.hash}
-                                        code={questionary.hash}
-                                        name={questionary.name}
-                                        module={questionary.module}
-                                        creationDate={questionary.date}
-                                        showQuestionaryResults={() => redirectTo("/ask-results/" + questionary.hash)}
-                                        deleteQuestionary={() => deleteQuestionary(questionary.hash)}
-                                        editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
-                                    />
-                                ))}
-                        </Grid>
+                            :
+                            <Grid container spacing={10}>
+                                {
+                                    values.questionaries.map((questionary) => (
+                                        <AskqueResume
+                                            key={questionary.hash}
+                                            code={questionary.hash}
+                                            name={questionary.name}
+                                            module={questionary.module}
+                                            creationDate={questionary.date}
+                                            showQuestionaryResults={() => redirectTo("/ask-results/" + questionary.hash)}
+                                            deleteQuestionary={() => deleteQuestionary(questionary.hash)}
+                                            editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
+                                        />
+                                    ))}
+                            </Grid>
 
-                }
+                    }
                     {
                         snackBarConfig.show ? < MySnackbarContentWrapper
                             variant={snackBarConfig.state}
