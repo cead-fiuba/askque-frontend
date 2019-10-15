@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import { MyGoogleButton } from './GoogleButton'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const variantIcon = {
@@ -74,6 +75,9 @@ const useStyles = makeStyles(theme => ({
   googleButton: {
     width: '100% !important',
     marginTop: theme.spacing(2)
+  },
+  progress: {
+    margin: theme.spacing(2)
   }
 }));
 
@@ -138,6 +142,8 @@ function SignIn(props) {
     errorLoginMessage: 'Email o contraseña incorrecto'
   });
 
+  const [loading, setLoading] = React.useState(false)
+
   const redirectTo = (newPath) => {
     props.history.push(newPath);
   }
@@ -165,11 +171,13 @@ function SignIn(props) {
 
   const handleResponseGoogle = (res) => {
     const email = res.w3.U3
+    setLoading(true)
     initSessionTeacher(email).then((token) => {
       props.context.setToken(token)
       props.context.isTeacher()
       redirectTo('/my-questionaries')
     }).catch((e) => {
+      setLoading(false)
       console.log(e.response)
       if (e.response !== undefined && e.response.status === 404) {
         setValues({ ...values, showErrorLogin: true, errorLoginMessage: 'Gmail no válido' })
@@ -187,80 +195,92 @@ function SignIn(props) {
 
   return (
     <Container component="main" maxWidth="xs">
+
       <Paper className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Ingresar
+          {loading ? "Iniciando sesión" : "Ingresar"}
         </Typography>
-        <Typography variant="subtitle1" align='center' className={classes.signAsTeacherText}>
-          Ingrese como alumno
+
+        {
+          loading ?
+            <CircularProgress className={classes.progress} /> :
+            <>
+              <Typography variant="subtitle1" align='center' className={classes.signAsTeacherText}>
+                Ingrese como alumno
           </Typography>
-        <form className={classes.form} noValidate>
-          {
-            values.showErrorLogin ?
-              <MySnackbarContentWrapper
-                variant="error"
-                className={classes.margin}
-                message={values.errorLoginMessage}
-                onClose={handleOnClose}
-              /> :
-              null
-          }
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            onChange={onChange('email')}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Contraseña"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={onChange('password')}
-          />
-          <Button
-            fullWidth
-            color="primary"
-            className={classes.submit}
-            onClick={login}
-            size="large"
-            variant="contained"
-            onKeyPress={handleKeyPress}
-          >
-            Ingresar
+              <form className={classes.form} noValidate>
+                {
+                  values.showErrorLogin ?
+                    <MySnackbarContentWrapper
+                      variant="error"
+                      className={classes.margin}
+                      message={values.errorLoginMessage}
+                      onClose={handleOnClose}
+                    /> :
+                    null
+                }
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  onChange={onChange('email')}
+                />
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Contraseña"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={onChange('password')}
+                />
+                <Button
+                  fullWidth
+                  color="primary"
+                  className={classes.submit}
+                  onClick={login}
+                  size="large"
+                  variant="contained"
+                  onKeyPress={handleKeyPress}
+                >
+                  Ingresar
           </Button>
-          <Divider variant="middle" className={classes.divider} />
-          <Typography variant="subtitle1" align='center' className={classes.signAsTeacherText}>
-            Ingrese como docente
+                <Divider variant="middle" className={classes.divider} />
+                <Typography variant="subtitle1" align='center' className={classes.signAsTeacherText}>
+                  Ingrese como docente
           </Typography>
-          <MyGoogleButton
-            style={classes.googleButton}
-            handleResponseGoogle={handleResponseGoogle}
-          />
-        </form>
+                <MyGoogleButton
+                  style={classes.googleButton}
+                  handleResponseGoogle={handleResponseGoogle}
+                />
+              </form>
+            </>
+        }
+
       </Paper>
-      <Paper className={classes.noAccountPaper}>
-        <Typography variant="subtitle1">
-          Todavia no tenes cuenta?
+      {
+        !loading && <Paper className={classes.noAccountPaper}>
+          <Typography variant="subtitle1">
+            Todavia no tenes cuenta?
           <Link color="textSecondary" className={classes.linkToCreateAccount} href='/register'>
-            Crear cuenta
+              Crear cuenta
           </Link>
-        </Typography>
-      </Paper>
+          </Typography>
+        </Paper>
+      }
+
     </Container>
   );
 }
