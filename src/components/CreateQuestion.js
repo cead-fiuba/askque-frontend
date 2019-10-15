@@ -55,8 +55,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function CreateQuestion(props) {
     const classes = useStyles();
 
-    console.log('props', props)
-
 
     useEffect(() => {
         setValues({
@@ -92,7 +90,6 @@ export default function CreateQuestion(props) {
     })
 
     const handleResponse = idx => event => {
-        console.log('handleResponse')
         const oldResponses = values.options
         oldResponses[idx].text = event.target.value === NEW_RESPONSE_TEXT ? "" : event.target.value
         oldResponses[idx].isNew = false
@@ -110,15 +107,12 @@ export default function CreateQuestion(props) {
     }
 
     const theLastIsNotEmpty = (responses) => {
-        console.log('theLastIsNotEmpty')
         const size = responses.length
         const lastElement = responses[size - 1]
         return lastElement.text !== null && lastElement.text !== NEW_RESPONSE_TEXT && lastElement.text !== ""
     }
 
     const markResponse = (idx, value) => {
-        console.log('markResponse')
-
         const oldResponses = values.options.filter((option) => (option.text !== NEW_RESPONSE_TEXT && option.text !== ""))
         oldResponses[idx].correct = value
         if (!values.aResponseWasMarkedAsCorrect) {
@@ -129,7 +123,6 @@ export default function CreateQuestion(props) {
     }
 
     const exitTwoCompleteOptions = () => {
-        console.log('exitTwoCompleteOptions')
         return values.options.filter((response) => (
             response.text !== NEW_RESPONSE_TEXT && response.text !== ""
         )).length >= 2
@@ -137,8 +130,6 @@ export default function CreateQuestion(props) {
 
 
     const deleteResponse = idx => {
-        console.log('deleteResponse')
-
         if (values.options.length > 1) {
             const oldResponses = values.options
             oldResponses.splice(idx, 1)
@@ -148,7 +139,6 @@ export default function CreateQuestion(props) {
 
 
     function save() {
-        console.log('save', values)
         const toSave = {
             question: values.question,
             options: values.options,
@@ -161,7 +151,6 @@ export default function CreateQuestion(props) {
 
 
     const cleanForm = () => {
-        console.log('clean form')
         setValues({
             progressMessage: 'Escribe la pregunta',
             progress: 0,
@@ -177,7 +166,6 @@ export default function CreateQuestion(props) {
         })
     }
     const handleChange = prop => event => {
-        console.log('handleChange')
         if (prop === "question" && !values.responsesCreated && !values.aResponseWasMarkedAsCorrect) {
             setValues({ ...values, [prop]: event.target.value, progress: 25, progressMessage: 'Escriba todas las respuestas posibles' })
         } else {
@@ -185,7 +173,6 @@ export default function CreateQuestion(props) {
         }
     };
 
-    console.log('values', values)
     return <Dialog fullScreen
         open={props.open}
         onClose={props.handleClose}
