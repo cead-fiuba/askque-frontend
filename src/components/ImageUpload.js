@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ImageIcon from '@material-ui/icons/Image';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export default function ImageUpload() {
 
@@ -64,14 +65,16 @@ export default function ImageUpload() {
                         type="file"
                     />
                     <label htmlFor="raised-button-file">
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            component="span"
-                            style={{ position: 'absolute', right: 125, marginTop: '1%' }}
-                        >
-                            <ImageIcon />
-                        </Button>
+                        <Tooltip title="Subir imagen desde la computadora">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                component="span"
+                                style={{ position: 'absolute', right: 125, marginTop: '1%' }}
+                            >
+                                <ImageIcon />
+                            </Button>
+                        </Tooltip>
                     </label>
                 </form>
                 <Grid container
