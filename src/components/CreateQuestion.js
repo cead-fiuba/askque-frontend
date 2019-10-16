@@ -14,6 +14,10 @@ import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import SaveIcon from '@material-ui/icons/Save'
+import ImageUpload from '../components/ImageUpload'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+
 
 const useStyles = makeStyles(theme => ({
     appBar: {
@@ -54,6 +58,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function CreateQuestion(props) {
     const classes = useStyles();
+
+    const [withImage, setWithImage] = React.useState(false)
 
 
     useEffect(() => {
@@ -213,6 +219,22 @@ export default function CreateQuestion(props) {
                     value={values.progress}
                 />
             </Paper>
+
+            <FormControlLabel
+                control={
+                    <Switch
+                        checked={withImage}
+                        color="primary"
+                        onChange={() => setWithImage(!withImage)} value="checkedA" />
+                }
+                label={"Con imagen"}
+            />
+
+            {
+                withImage &&
+                <ImageUpload />
+            }
+
             <TextField
                 id="outlined-full-width"
                 label="Texto"
