@@ -215,7 +215,7 @@ export default function CreateQuestion(props) {
             </Paper>
             <TextField
                 id="outlined-full-width"
-                label="Pregunta"
+                label="Texto"
                 style={{ marginTop: 30 }}
                 placeholder="Escriba el texto..."
                 multiline
