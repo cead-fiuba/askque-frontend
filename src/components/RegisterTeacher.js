@@ -9,6 +9,7 @@ import { createTeacher } from "../service/TeacherService"
 import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from '../context/context'
 import { MyGoogleButton } from './GoogleButton'
+import { MySnackbarContentWrapper } from './common/MySnackbarContentWrapper'
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -54,8 +55,17 @@ function RegisterTeacher(props) {
         showGoogleButton: true,
         name: '',
         ocupation: '',
-        email: ''
+        email: '',
+        showInicialMessage: true,
+        showForm: false
     });
+
+    const [errorConf, setErrorConf] = React.useState({
+        showErrorMessage: false,
+        errorMessage: '',
+        showSnackbarError: false
+    })
+
 
     function redirectTo(newPath) {
         props.history.push(newPath);
@@ -68,7 +78,14 @@ function RegisterTeacher(props) {
     const responseGoogle = (response) => {
         console.log(response);
         console.log(response.w3.U3);
-        setValue({ ...values, showGoogleButton: false, name: response.w3.ig, email: response.w3.U3 })
+        const email = response.w3.U3;
+        if (!email.endsWith("fi.uba.ar")) {
+            setValue({ ...values, showInicialMessage: false, name: response.w3.ig, email: response.w3.U3 })
+            setErrorConf({ showErrorMessage: true, showSnackbarError: true })
+        } else {
+            setValue({ ...values, showGoogleButton: false, showForm: true, showInicialMessage: false, name: response.w3.ig, email: response.w3.U3 })
+
+        }
     }
 
     const createAccount = () => {
@@ -91,18 +108,33 @@ function RegisterTeacher(props) {
     const classes = useStyles();
     return <div>
         <Container component="main" >
-            {values.showGoogleButton ?
+            {values.showInicialMessage &&
+                <Typography variant="body2" gutterBottom>
+                    Para ingresar como docente es necesario que ingrese con el email institucional de la
+                        facultad <b>@fi.uba.ar</b>
+                </Typography>
+            }
+            {
+                errorConf.showErrorMessage &&
                 <>
-                    <Typography variant="body2" gutterBottom>
-                        Para ingresar como docente es necesario que ingrese con el email institucional de la
-                        facultad @fi.uba.ar
-                    </Typography>
-                    <MyGoogleButton
-                        handleResponseGoogle={responseGoogle}
-                        style={classes.googleButton}
+                    <MySnackbarContentWrapper
+                        variant="error"
+                        message={"Email inválido"}
+                        open={errorConf.showSnackbarError}
+                        onClose={() => { setErrorConf({ ...errorConf, showSnackbarError: false }) }}
                     />
+                    <Typography variant="body2" gutterBottom>
+                        El email ingresado {values.email} no pertenece a la facultad. Por favor ingrese con un email <b>@fi.uba.ar</b>
+                    </Typography>
+
+                    <Typography variant="body2" gutterBottom>
+                        Por favor, reintente de nuevo.
+                    </Typography>
+
                 </>
-                : <div>
+            }
+            {values.showForm &&
+                <div>
                     Hola {values.name}! estamos a un paso de terminar!
 
                     <TextField
@@ -149,6 +181,12 @@ function RegisterTeacher(props) {
                         Crear cuenta AskQue
                     </Button>
                 </div>}
+
+
+            {values.showGoogleButton && <MyGoogleButton
+                handleResponseGoogle={responseGoogle}
+                style={classes.googleButton}
+            />}
         </Container>
     </div >
 }

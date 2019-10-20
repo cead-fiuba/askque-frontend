@@ -8,8 +8,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Typography } from '@material-ui/core';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
-import { AccessAlarm, ThreeDRotation } from '@material-ui/icons';
-import ClearIcon from '@material-ui/icons/Clear';
+
 const abecedario = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 
 

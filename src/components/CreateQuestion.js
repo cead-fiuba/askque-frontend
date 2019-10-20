@@ -200,7 +200,7 @@ export default function CreateQuestion(props) {
                 <Button
                     variant="outlined"
                     onClick={save}
-                    disabled={!(values.responsesCreated && values.aResponseWasMarkedAsCorrect && values.question !== "" || props.asEdit)}
+                    disabled={!((values.responsesCreated && values.aResponseWasMarkedAsCorrect && values.question !== "") || props.asEdit)}
                 >
                     guardar
                     <SaveIcon className={classes.rightIcon} />

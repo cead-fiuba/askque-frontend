@@ -7,7 +7,7 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Add';
-import { MySnackbarContentWrapper } from './MySnackbarContentWrapper'
+import { MySnackbarContentWrapper } from './common/MySnackbarContentWrapper'
 
 const useStyles = makeStyles(theme => ({
     root: {
