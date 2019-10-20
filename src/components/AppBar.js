@@ -52,7 +52,7 @@ function AppBarCustom(props) {
   return <div className={style.root}>
     <AppBar position="fixed" className={style.appBar}>
       <Toolbar>
-        <img src={logo} alt="Logo" />
+        <img src={logo} alt="Logo" style={{ width: '50px', marginRight: '5px' }} />
         <Typography variant="h6" color="inherit" className={style.grow}
           onClick={() => redirectTo("/")}
         >
