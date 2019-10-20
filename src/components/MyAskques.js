@@ -85,7 +85,7 @@ export default function MyAskques(props) {
                     {
                         values.questionaries.length === 0 ?
                             <>
-                                Ups! Todavia no creaste ningun askque!
+                                Ups! No tenes ningún cuestionario creado.
                                 No te preocupes, es muy fácil!
                         </>
                             :
@@ -115,7 +115,7 @@ export default function MyAskques(props) {
                         /> : null
                     }
 
-                    <Fab color="primary" onClick={() => { redirectTo("/create-questionary") }}>
+                    <Fab color="primary" style={{ margin: '10%' }} onClick={() => { redirectTo("/create-questionary") }}>
                         <CreateIcon />
                     </Fab>
                 </>
