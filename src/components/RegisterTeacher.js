@@ -141,7 +141,7 @@ function RegisterTeacher(props) {
 
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="primary"
                         fullWidth
                         className={classes.createAcccountButton}
                         onClick={createAccount}
