@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Send, Pencil } from 'mdi-material-ui'
 import { makeStyles } from '@material-ui/core/styles';
-import Image from "../images/image1.jpg"
+import Image from "../images/2.png"
 import ManitoArriba from '@material-ui/icons/ThumbUpAlt'
 import Seguro from '@material-ui/icons/VerifiedUser'
 import Speed from '@material-ui/icons/ShutterSpeed'
@@ -24,7 +24,7 @@ const styles = makeStyles(theme => ({
     backgroundImage: ` url(${Image})`,
     backgroundColor: '#7fc7d9',
     backgroundPosition: 'center',
-    backgroundSize: 'cover',
+    backgroundSize: 'conver',
     paddingTop: '10%',
     paddingBottom: '10%'
   },
@@ -61,13 +61,13 @@ function Home(props) {
           className={style.body}
         >
           <Typography
-            variant="h3"
+            variant="h2"
             align="center"
             gutterBottom
             marked="center"
             style={{ color: 'white' }}
           >
-            ENCUESTAS SENCILLAS
+            QuizFIUBA
     </Typography>
           <span
             style={{ width: '73px', height: '5px', margin: '8px auto 8px', display: 'block', backgroundColor: '#0CAAF3' }}

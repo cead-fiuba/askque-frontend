@@ -56,7 +56,7 @@ function AppBarCustom(props) {
         <Typography variant="h6" color="inherit" className={style.grow}
           onClick={() => redirectTo("/")}
         >
-          ASKQUE
+          QuizFIUBA
           </Typography>
         {
           props.context.state.isLogged ?
