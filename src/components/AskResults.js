@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import AppBar from "./AppBar"
-import { getInformationOfQuestionaryWithCache, getResultOfQuestionary } from '../service/TeacherService'
+import { getInformationOfQuestionary, getResultOfQuestionary } from '../service/TeacherService'
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -30,7 +30,7 @@ export default function AskResults(props) {
     const [results, setResults] = useState()
 
     useEffect(() => {
-        const informationPromise = getInformationOfQuestionaryWithCache(props.match.params.hash);
+        const informationPromise = getInformationOfQuestionary(props.match.params.hash);
         const resultPromise = getResultOfQuestionary(props.match.params.hash);
 
         Promise.all([informationPromise, resultPromise]).then(([informationResponse, resultResponse]) => {
