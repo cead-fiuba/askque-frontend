@@ -29,10 +29,21 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+
+/***
+ * 
+ * PROPS
+ * 
+ * date: fecha de creación de la encuesta
+ * 
+ * 
+ * 
+ */
+
 export default function AskqueResumen(props) {
 
-    function formatDate(dateString) {
-        const date = new Date(dateString)
+    function formatDate() {
+        const date = new Date(props.date)
         console.log('date', date)
         var monthNames = [
             "Enero", "Febrero", "Marzo",
@@ -68,36 +79,37 @@ export default function AskqueResumen(props) {
                         <b>Módulo</b> {props.module}
                     </Typography>
                     <Typography variant="body1" color="textSecondary">
-                        {formatDate(props.creationDate)}
+                        {formatDate()}
                     </Typography>
 
 
                 </Grid>
                 <Grid item xs={2} container>
-                    <Grid item >
+                    {props.showActions && <><Grid item >
                         <IconButton aria-label="delete" color="primary">
                             <ShareIcon />
                         </IconButton>
                     </Grid>
-                    <Grid item >
-                        <IconButton aria-label="delete" color="primary" onClick={() => props.editQuestionary()}>
-                            <EditIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item>
-                        <Tooltip title="Eliminar" placement="right">
-                            <IconButton aria-label="delete" onClick={() => props.deleteQuestionary()} color="primary">
-                                <DeleteIcon />
+                        <Grid item >
+                            <IconButton aria-label="delete" color="primary" onClick={() => props.editQuestionary()}>
+                                <EditIcon />
                             </IconButton>
-                        </Tooltip>
-                    </Grid>
-                    <Grid item>
-                        <Tooltip title="Ver resultados" placement="right">
-                            <IconButton aria-label="delete" onClick={props.showQuestionaryResults} color="primary">
-                                <VisibilityIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </Grid>
+                        </Grid>
+                        <Grid item>
+                            <Tooltip title="Eliminar" placement="right">
+                                <IconButton aria-label="delete" onClick={() => props.deleteQuestionary()} color="primary">
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
+                        <Grid item>
+                            <Tooltip title="Ver resultados" placement="right">
+                                <IconButton aria-label="delete" onClick={props.showQuestionaryResults} color="primary">
+                                    <VisibilityIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid></>}
+
                 </Grid>
             </Grid>
         </Paper>

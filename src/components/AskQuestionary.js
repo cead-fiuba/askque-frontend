@@ -87,6 +87,7 @@ export default class AskQuestionary extends Component {
                                 module={this.state.questionaryModulo}
                                 code={this.state.questionaryHash}
                                 time={this.state.questionaryTime}
+                                date={this.state.questionary.date}
                                 quantityQuestions={this.state.quantityQuestions}
                             />
 
@@ -95,9 +96,9 @@ export default class AskQuestionary extends Component {
                             </Typography>
                             <Button
                                 variant="contained"
-                                color="secondary"
+                                color="primary"
                                 fullWidth
-                                style={{ marginTop: '8px', marginBottom: '10px' }}
+                                style={{ margin: '5%' }}
                                 onClick={this.startCompleteQuestionary}
                             >
                                 Estoy listo

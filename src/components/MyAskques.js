@@ -97,10 +97,11 @@ export default function MyAskques(props) {
                                             code={questionary.hash}
                                             name={questionary.name}
                                             module={questionary.module}
-                                            creationDate={questionary.date}
+                                            date={questionary.date}
                                             showQuestionaryResults={() => redirectTo("/ask-results/" + questionary.hash)}
                                             deleteQuestionary={() => deleteQuestionary(questionary.hash)}
                                             editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
+                                            showActions={true}
                                         />
                                     ))}
                             </Grid>
