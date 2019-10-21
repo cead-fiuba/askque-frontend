@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Add';
 import { MySnackbarContentWrapper } from './common/MySnackbarContentWrapper'
+import AlertDialog from './common/AlertDialog';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -44,6 +45,8 @@ export default function MyAskques(props) {
 
     const [snackBarConfig, setSnackBarConfig] = useState({})
     const [loading, setLoading] = useState(true)
+    const [showAlertDialog, setShowAlertDialog] = useState(false)
+    const [questionaryToDelete, setQuestionaryToDelete] = useState('')
 
 
     function redirectTo(newPath) {
@@ -64,6 +67,7 @@ export default function MyAskques(props) {
 
 
     const deleteQuestionary = (hash) => {
+        setShowAlertDialog(false)
         deleteQuestionaryByHash(hash).then((response) => {
             console.log('Se eliminó de manera correcta el cuestionario')
             console.log('response.data', response.data)
@@ -74,6 +78,11 @@ export default function MyAskques(props) {
         })
     }
 
+    const handleDeleteQuestionary = (hash) => {
+        setQuestionaryToDelete(hash)
+        setShowAlertDialog(true)
+    }
+
 
     return <div>
         <AppBar
@@ -81,13 +90,12 @@ export default function MyAskques(props) {
         />
         <Container maxWidth="md" component="main" className={classes.container}>
             {
-                loading ? <>Obteniendo información</> : <>
+                loading ? "Obteniendo información" : <>
                     {
                         values.questionaries.length === 0 ?
-                            <>
-                                Ups! No tenes ningún cuestionario creado.
-                                No te preocupes, es muy fácil!
-                        </>
+                            "Ups! No tenes ningún cuestionario creado.\n" +
+                            "No te preocupes, es muy fácil!"
+
                             :
                             <Grid container spacing={10}>
                                 {
@@ -99,7 +107,7 @@ export default function MyAskques(props) {
                                             module={questionary.module}
                                             date={questionary.date}
                                             showQuestionaryResults={() => redirectTo("/ask-results/" + questionary.hash)}
-                                            deleteQuestionary={() => deleteQuestionary(questionary.hash)}
+                                            deleteQuestionary={() => handleDeleteQuestionary(questionary.hash)}
                                             editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
                                             showActions={true}
                                         />
@@ -108,17 +116,27 @@ export default function MyAskques(props) {
 
                     }
                     {
-                        snackBarConfig.show ? < MySnackbarContentWrapper
+                        snackBarConfig.show && < MySnackbarContentWrapper
                             variant={snackBarConfig.state}
                             message={snackBarConfig.message}
                             open={snackBarConfig.show}
                             onClose={() => { setSnackBarConfig({ show: false }) }}
-                        /> : null
+                        />
                     }
 
                     <Fab color="primary" style={{ margin: '10%' }} onClick={() => { redirectTo("/create-questionary") }}>
                         <CreateIcon />
                     </Fab>
+                    <AlertDialog
+                        open={showAlertDialog}
+                        handleClose={() => { setShowAlertDialog(false) }}
+                        title={`Eliminar cuestionario ${questionaryToDelete}`}
+                        content={'¿Está seguro que desea eliminar el cuestionario?'}
+                        buttonTextOk="Eliminar"
+                        buttonTextCancel="Cancelar"
+                        handleOk={() => { deleteQuestionary(questionaryToDelete) }}
+
+                    />
                 </>
             }
         </Container >
