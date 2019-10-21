@@ -9,6 +9,8 @@ import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Add';
 import { MySnackbarContentWrapper } from './common/MySnackbarContentWrapper'
 import AlertDialog from './common/AlertDialog';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -130,10 +132,20 @@ export default function MyAskques(props) {
                     <AlertDialog
                         open={showAlertDialog}
                         handleClose={() => { setShowAlertDialog(false) }}
-                        title={`Eliminar cuestionario ${questionaryToDelete}`}
-                        content={'¿Está seguro que desea eliminar el cuestionario?'}
-                        buttonTextOk="Eliminar"
-                        buttonTextCancel="Cancelar"
+                        title={<Typography variant="h5" gutterBottom>Eliminar cuestionario</Typography>}
+                        content={
+                            <>
+                                <Typography variant="body1" gutterBottom>
+                                    ¿Está seguro que desea eliminar el cuestionario <b>{questionaryToDelete}</b>?
+                                </Typography>
+                                <Typography variant="body2" gutterBottom>
+                                    Eliminar el cuestionario, implica borrar todos los resultados de la encuesta.
+                                </Typography>
+
+                            </>
+                        }
+                        buttonTextOk={<b>Eliminar</b>}
+                        buttonTextCancel={<b>Cancelar</b>}
                         handleOk={() => { deleteQuestionary(questionaryToDelete) }}
 
                     />
