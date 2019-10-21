@@ -73,14 +73,6 @@ export function MyAskques2(props) {
 
     const deleteQuestionary = (hash) => {
         setShowAlertDialog(false)
-        // deleteQuestionaryByHash(hash).then((response) => {
-        //     console.log('Se eliminó de manera correcta el cuestionario')
-        //     console.log('response.data', response.data)
-        //     setSnackBarConfig({ state: 'success', message: `Se eliminó el questionario ${response.data.hash}`, show: true })
-        // }).catch((reason) => {
-        //     setSnackBarConfig({ state: 'error', message: 'No se pudo eliminar el questionario', show: true })
-
-        // })
         const variant = 'success'
         const errorVariant = 'error'
         deleteQuestionaryByHash(hash)
@@ -159,16 +151,12 @@ export function MyAskques2(props) {
                     <AlertDialog
                         open={showAlertDialog}
                         handleClose={() => { setShowAlertDialog(false) }}
-                        title={<Typography variant="h5" gutterBottom>Eliminar cuestionario</Typography>}
+                        title={"Eliminar cuestionario"}
                         content={
                             <>
-                                <Typography variant="body1" gutterBottom>
-                                    ¿Está seguro que desea eliminar el cuestionario <b>{questionaryToDelete}</b>?
+                                <Typography variant="body1" gutterBottom component={'span'}>
+                                    {"¿Está seguro que desea eliminar el cuestionario?\n"}
                                 </Typography>
-                                <Typography variant="body2" gutterBottom>
-                                    Eliminar el cuestionario, implica borrar todos los resultados de la encuesta.
-                                </Typography>
-
                             </>
                         }
                         buttonTextOk={<b>Eliminar</b>}

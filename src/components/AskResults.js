@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import AppBar from "./AppBar"
-import { getInformationOfQuestionary, getResultOfQuestionary } from '../service/TeacherService'
+import { getResultOfQuestionary } from '../service/TeacherService'
 import { getInformationOfQuestionaryWithCache } from '../service/QuestionaryService'
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';

@@ -44,7 +44,6 @@ export default function AskqueResumen(props) {
 
     function formatDate() {
         const date = new Date(props.date)
-        console.log('date', date)
         var monthNames = [
             "Enero", "Febrero", "Marzo",
             "Abril", "Mayo", "Junio", "Julio",
