@@ -10,7 +10,8 @@ import CreateIcon from '@material-ui/icons/Add';
 import { MySnackbarContentWrapper } from './common/MySnackbarContentWrapper'
 import AlertDialog from './common/AlertDialog';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+import { useSnackbar, SnackbarProvider } from 'notistack';
+import { deleteQuestionaryResponses } from '../service/ResponseService';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -36,8 +37,10 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function MyAskques(props) {
+export function MyAskques2(props) {
     const classes = useStyles();
+    const { enqueueSnackbar } = useSnackbar();
+
     const [values, setState] = useState({
         questionaries: [],
         errorHappen: false,
@@ -70,14 +73,38 @@ export default function MyAskques(props) {
 
     const deleteQuestionary = (hash) => {
         setShowAlertDialog(false)
-        deleteQuestionaryByHash(hash).then((response) => {
-            console.log('Se eliminó de manera correcta el cuestionario')
-            console.log('response.data', response.data)
-            setSnackBarConfig({ state: 'success', message: `Se eliminó el questionario ${response.data.hash}`, show: true })
-        }).catch((reason) => {
-            setSnackBarConfig({ state: 'error', message: 'No se pudo eliminar el questionario', show: true })
+        // deleteQuestionaryByHash(hash).then((response) => {
+        //     console.log('Se eliminó de manera correcta el cuestionario')
+        //     console.log('response.data', response.data)
+        //     setSnackBarConfig({ state: 'success', message: `Se eliminó el questionario ${response.data.hash}`, show: true })
+        // }).catch((reason) => {
+        //     setSnackBarConfig({ state: 'error', message: 'No se pudo eliminar el questionario', show: true })
 
-        })
+        // })
+        const variant = 'success'
+        const errorVariant = 'error'
+        deleteQuestionaryByHash(hash)
+
+            .then((value) => {
+                enqueueSnackbar(`El cuestionario ${hash} fue eliminado`, { variant });
+                setLoading(true)
+                getAskquesOfTeacher().then((res) => {
+                    setState({ ...values, questionaries: res.data.questionaries })
+                    setLoading(false)
+                })
+            })
+            .catch((reason) => {
+                enqueueSnackbar(`No se pudo eliminar el cuestionario ${hash}`, { errorVariant });
+            })
+        deleteQuestionaryResponses(hash)
+            .then((value) => {
+                enqueueSnackbar(`Se eliminaron las respuestas del cuestionario ${hash}`, { variant });
+            })
+            .catch((reason) => {
+                enqueueSnackbar(`No se pudo eliminar las respuestas del cuestionario ${hash}`, { errorVariant });
+            })
+
+
     }
 
     const handleDeleteQuestionary = (hash) => {
@@ -153,4 +180,12 @@ export default function MyAskques(props) {
             }
         </Container >
     </div >
+}
+
+
+export default function MyAskques(props) {
+    return (<SnackbarProvider maxSnack={3}>
+        <MyAskques2 {...props} />
+    </SnackbarProvider>
+    )
 }
