@@ -73,8 +73,7 @@ export function MyAskques2(props) {
 
     const deleteQuestionary = (hash) => {
         setShowAlertDialog(false)
-        const variant = 'success'
-        const errorVariant = 'error'
+        let variant = 'success'
         deleteQuestionaryByHash(hash)
 
             .then((value) => {
@@ -86,14 +85,16 @@ export function MyAskques2(props) {
                 })
             })
             .catch((reason) => {
-                enqueueSnackbar(`No se pudo eliminar el cuestionario ${hash}`, { errorVariant });
+                variant = 'error'
+                enqueueSnackbar(`No se pudo eliminar el cuestionario ${hash}`, { variant });
             })
         deleteQuestionaryResponses(hash)
             .then((value) => {
                 enqueueSnackbar(`Se eliminaron las respuestas del cuestionario ${hash}`, { variant });
             })
             .catch((reason) => {
-                enqueueSnackbar(`No se pudo eliminar las respuestas del cuestionario ${hash}`, { errorVariant });
+                variant = 'error'
+                enqueueSnackbar(`No se pudo eliminar las respuestas del cuestionario ${hash}`, { variant });
             })
 
 
