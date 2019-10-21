@@ -195,7 +195,7 @@ export default function CompleteQuestionary(props) {
                 maxWidth={'xs'}
             >
                 <DialogTitle id="customized-dialog-title">
-                    Encuesta XAA
+                    Encuesta {props.questionary.hash}
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography gutterBottom>
