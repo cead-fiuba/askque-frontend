@@ -26,6 +26,9 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center'
     }, item: {
         height: '90%'
+    },
+    rightIcon: {
+        marginLeft: theme.spacing(1)
     }
 }));
 

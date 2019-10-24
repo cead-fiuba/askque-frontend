@@ -198,7 +198,8 @@ export default function CreateQuestion(props) {
                     Nueva Pregunta
                         </Typography>
                 <Button
-                    variant="outlined"
+                    variant="contained"
+                    color="primary"
                     onClick={save}
                     disabled={!((values.responsesCreated && values.aResponseWasMarkedAsCorrect && values.question !== "") || props.asEdit)}
                 >

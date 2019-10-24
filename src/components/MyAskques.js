@@ -12,6 +12,9 @@ import AlertDialog from './common/AlertDialog';
 import Typography from '@material-ui/core/Typography';
 import { useSnackbar, SnackbarProvider } from 'notistack';
 import { deleteQuestionaryResponses } from '../service/ResponseService';
+import RecipeReviewCard from './common/RecipeReviewCard';
+import Icon from '@material-ui/core/Icon';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -121,18 +124,17 @@ export function MyAskques2(props) {
                             :
                             <Grid container spacing={10}>
                                 {
-                                    values.questionaries.map((questionary) => (
-                                        <AskqueResume
-                                            key={questionary.hash}
-                                            code={questionary.hash}
-                                            name={questionary.name}
-                                            module={questionary.module}
-                                            date={questionary.date}
-                                            showQuestionaryResults={() => redirectTo("/ask-results/" + questionary.hash)}
-                                            deleteQuestionary={() => handleDeleteQuestionary(questionary.hash)}
-                                            editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
-                                            showActions={true}
-                                        />
+                                    values.questionaries.map((questionary, idx) => (
+                                        <Grid item xs key={idx}>
+                                            <RecipeReviewCard
+                                                key={idx}
+                                                questionary={questionary}
+                                                deleteQuestionary={() => { handleDeleteQuestionary(questionary.hash) }}
+                                                editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
+                                                showQuestionaryResults={() => { redirectTo(`ask-results/${questionary.hash}`) }}
+                                            />
+                                        </Grid>
+
                                     ))}
                             </Grid>
 
