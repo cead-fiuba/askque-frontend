@@ -7,3 +7,8 @@ export const getInformationOfQuestionaryWithCache = (hash) => {
 export const getInformationOfQuestionary = (hash) => {
     return server.get(`/questionaries/${hash}`)
 }
+
+
+export const updateQuantityResponses = (hash) => {
+    return server.put(`/questionaries/${hash}/increment`)
+}

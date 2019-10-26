@@ -21,6 +21,7 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import { updateQuantityResponses } from '../service/QuestionaryService';
 
 const useStyles = makeStyles(theme => ({
     text: {
@@ -155,7 +156,9 @@ export default function CompleteQuestionary(props) {
             ))
         }
         setLoading(true)
-        saveResponse(response).then((res) => {
+        const saveResponsePromise = saveResponse(response);
+        const updateQuantityResponsesPromise = updateQuantityResponses(props.questionary.hash);
+        Promise.all([saveResponsePromise, updateQuantityResponsesPromise]).then(([saveResponseResult, updateQuatity]) => {
             setSuccess(true)
             setLoading(false)
             setTimeout(() => { setShowMessageSuccess(true) }, 1000)
