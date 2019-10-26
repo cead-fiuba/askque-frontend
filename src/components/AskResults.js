@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import AppBar from "./AppBar"
 import { getResultOfQuestionary } from '../service/TeacherService'
-import { getInformationOfQuestionaryWithCache } from '../service/QuestionaryService'
+import { getInformationOfQuestionaryWithCache, getInformationOfQuestionary } from '../service/QuestionaryService'
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -31,7 +31,7 @@ export default function AskResults(props) {
     const [results, setResults] = useState()
 
     useEffect(() => {
-        const informationPromise = getInformationOfQuestionaryWithCache(props.match.params.hash);
+        const informationPromise = getInformationOfQuestionary(props.match.params.hash);
         const resultPromise = getResultOfQuestionary(props.match.params.hash);
 
         Promise.all([informationPromise, resultPromise]).then(([informationResponse, resultResponse]) => {
@@ -73,6 +73,8 @@ export default function AskResults(props) {
                 loading ? <>Obteniendo información</> :
                     <>
                         <Typography variant="h3" style={{ marginBottom: '5%' }}>{questionary.name}</Typography>
+                        <Typography variant="h5" style={{ marginBottom: '5%' }}>Cantidad de respuestas {questionary.quantity_respones}</Typography>
+
                         <>{questionary.questions.map((question, questionId) => {
                             const data = question.options.map((option, idx) => {
                                 return {
