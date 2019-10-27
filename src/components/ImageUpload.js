@@ -1,17 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ImageIcon from '@material-ui/icons/Image';
 import Tooltip from '@material-ui/core/Tooltip';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { makeStyles } from '@material-ui/core/styles';
 
-export default function ImageUpload() {
+const useStyles = makeStyles(theme => ({
+    rightIcon: {
+        marginLeft: theme.spacing(1)
+    },
+    uploadButton: {
+        marginTop: theme.spacing(2)
+    },
+    imagePreviewContainer: {
+        height: '100%'
+    }
+}))
 
-    const [state, setState] = React.useState({
+export default function ImageUpload(props) {
+
+    const [state, setState] = useState({
         file: '',
         imagePreviewUrl: ''
     })
+
+    const [imageWasSelected, setImageWasSelect] = useState(false)
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -30,6 +46,8 @@ export default function ImageUpload() {
                 file: file,
                 imagePreviewUrl: reader.result
             });
+            setImageWasSelect(true)
+            props.saveImage(file)
         }
 
         reader.readAsDataURL(file)
@@ -38,8 +56,14 @@ export default function ImageUpload() {
 
     const imagePreviewUrl = state.imagePreviewUrl;
     let imagePreview = null;
-    if (imagePreviewUrl) {
-        imagePreview = (<img src={imagePreviewUrl} alt="" />);
+    if (imagePreviewUrl || props.imageUrl) {
+        let src;
+        if (props.imageUrl) {
+            src = props.imageUrl
+        } else {
+            src = imagePreviewUrl
+        }
+        imagePreview = (<img src={src} alt="" style={{ objectFit: 'contain', maxWidth: '100%', height: 'auto' }} />);
     } else {
         imagePreview = (
             <>
@@ -50,6 +74,8 @@ export default function ImageUpload() {
             </>
         );
     }
+
+    const classes = useStyles()
 
     return (
         <div>
@@ -81,15 +107,13 @@ export default function ImageUpload() {
                     justify="center"
                     alignItems="center"
                     direction="column"
-                    style={{ height: '100%' }}
+                    className={classes.imagePreviewContainer}
                 >
                     <Grid item>
                         {imagePreview}
                     </Grid>
                 </Grid>
-
-
             </Paper>
-        </div>
+        </div >
     )
 }
