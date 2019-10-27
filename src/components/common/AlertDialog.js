@@ -12,7 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
  * props
  * 
  * open
- * handleCancel
+ * handleClose
  * handleOk
  * title: Titulo de AlertDialog
  * content: Contenido, texto del dialogo
@@ -31,16 +31,19 @@ export default function AlertDialog(props) {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {props.content}
-                    </DialogContentText>
+                <DialogContent dividers>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            {props.content}
+                        </DialogContentText>
+                    </DialogContent>
                 </DialogContent>
+
                 <DialogActions>
-                    <Button onClick={props.handleClose} color="primary">
+                    <Button onClick={props.handleClose} variant='contained'>
                         {props.buttonTextCancel}
                     </Button>
-                    <Button onClick={props.handleOk} color="primary" autoFocus>
+                    <Button onClick={props.handleOk} color="primary" variant='contained'>
                         {props.buttonTextOk}
                     </Button>
                 </DialogActions>
