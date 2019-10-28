@@ -13,8 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { useSnackbar, SnackbarProvider } from 'notistack';
 import { deleteQuestionaryResponses } from '../service/ResponseService';
 import RecipeReviewCard from './common/RecipeReviewCard';
-import Icon from '@material-ui/core/Icon';
-import DeleteIcon from '@material-ui/icons/Delete';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -55,6 +54,7 @@ export function MyAskques2(props) {
     const [loading, setLoading] = useState(true)
     const [showAlertDialog, setShowAlertDialog] = useState(false)
     const [questionaryToDelete, setQuestionaryToDelete] = useState('')
+    const [showLoadingAlertDialog, setShowLoadingAlertDialog] = useState(false)
 
 
     function redirectTo(newPath) {
@@ -75,7 +75,9 @@ export function MyAskques2(props) {
 
 
     const deleteQuestionary = (hash) => {
+        console.log('deleteQuestionary', showLoadingAlertDialog)
         setShowAlertDialog(false)
+        setShowLoadingAlertDialog(true)
         let variant = 'success'
         deleteQuestionaryByHash(hash)
 
@@ -86,18 +88,22 @@ export function MyAskques2(props) {
                     setState({ ...values, questionaries: res.data.questionaries })
                     setLoading(false)
                 })
+                setShowLoadingAlertDialog(false)
             })
             .catch((reason) => {
                 variant = 'error'
                 enqueueSnackbar(`No se pudo eliminar el cuestionario ${hash}`, { variant });
+                setShowLoadingAlertDialog(false)
             })
         deleteQuestionaryResponses(hash)
             .then((value) => {
                 enqueueSnackbar(`Se eliminaron las respuestas del cuestionario ${hash}`, { variant });
+                setShowLoadingAlertDialog(false)
             })
             .catch((reason) => {
                 variant = 'error'
                 enqueueSnackbar(`No se pudo eliminar las respuestas del cuestionario ${hash}`, { variant });
+                setShowLoadingAlertDialog(false)
             })
 
 
@@ -165,6 +171,7 @@ export function MyAskques2(props) {
                         buttonTextOk={<b>Eliminar</b>}
                         buttonTextCancel={<b>Cancelar</b>}
                         handleOk={() => { deleteQuestionary(questionaryToDelete) }}
+                        loading={showLoadingAlertDialog}
 
                     />
                 </>

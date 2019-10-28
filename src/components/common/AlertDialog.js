@@ -5,6 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CustomLinearProgress from './CustomLinearProgress';
 
 
 /***
@@ -19,6 +20,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
  * 
  * buttonTextOk
  * buttonTextCancel
+ * loading: props para mostrar la barra de loading
 */
 
 export default function AlertDialog(props) {
@@ -29,7 +31,17 @@ export default function AlertDialog(props) {
                 onClose={props.handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                fullWidth
+                maxWidth='xs'
             >
+                {
+                    props.loading && <CustomLinearProgress
+                        variant='indeterminate'
+                        color="secondary"
+                        value={10}
+                    />
+                }
+
                 <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
                 <DialogContent dividers>
                     <DialogContent>
@@ -40,12 +52,17 @@ export default function AlertDialog(props) {
                 </DialogContent>
 
                 <DialogActions>
-                    <Button onClick={props.handleClose} variant='contained'>
-                        {props.buttonTextCancel}
-                    </Button>
-                    <Button onClick={props.handleOk} color="primary" variant='contained'>
-                        {props.buttonTextOk}
-                    </Button>
+                    {
+                        !props.loading && <>
+                            <Button onClick={props.handleClose} variant='contained'>
+                                {props.buttonTextCancel}
+                            </Button>
+                            <Button onClick={props.handleOk} color="primary" variant='contained' disabled={props.loading} >
+                                {props.buttonTextOk}
+                            </Button>
+                        </>
+                    }
+
                 </DialogActions>
             </Dialog>
         </div>

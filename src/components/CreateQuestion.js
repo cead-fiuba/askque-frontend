@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, withStyles, lighten } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -56,11 +56,24 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
+
+/***
+ * 
+ * props = {
+ *   asEdit:boolean
+ * }
+ * 
+ * @param asEdit: indica si el componente se esta usando en modo edición o no
+ * @param question: si asEdit === true entonces como prop deberia venir el question
+ * 
+*/
 export default function CreateQuestion(props) {
     const classes = useStyles();
 
-    const [withImage, setWithImage] = React.useState(false)
 
+    const [withImage, setWithImage] = useState(false)
+    const [fileImage, setFileImage] = useState(null)
 
     useEffect(() => {
         setValues({
@@ -77,7 +90,8 @@ export default function CreateQuestion(props) {
             responsesCreated: props.question.text !== "",
             aResponseWasMarkedAsCorrect: false
         })
-    }, [props.asEdit, props.question.options, props.question.text])
+        setWithImage(props.question.has_image === true)
+    }, [props.asEdit, props.question.options, props.question.text, props.question.has_image])
 
     const [values, setValues] = React.useState({
         progressMessage: 'Escribe la pregunta',
@@ -92,8 +106,14 @@ export default function CreateQuestion(props) {
                     isNew: true
                 }],
         responsesCreated: props.question.text !== "",
-        aResponseWasMarkedAsCorrect: false
+        aResponseWasMarkedAsCorrect: false,
     })
+
+
+    const saveImage = (formDataOfImage) => {
+        console.log('Saving image...', formDataOfImage)
+        setFileImage(formDataOfImage)
+    }
 
     const handleResponse = idx => event => {
         const oldResponses = values.options
@@ -147,8 +167,11 @@ export default function CreateQuestion(props) {
     function save() {
         const toSave = {
             question: values.question,
+            fileImage: fileImage,
             options: values.options,
-            id: props.asEdit ? props.question.id : null
+        }
+        if (props.asEdit) {
+            toSave.id = props.question.id
         }
         props.saveQuestion(toSave, props.asEdit)
         cleanForm()
@@ -233,7 +256,10 @@ export default function CreateQuestion(props) {
 
             {
                 withImage &&
-                <ImageUpload />
+                <ImageUpload
+                    saveImage={saveImage}
+                    imageUrl={props.question.image_url}
+                />
             }
 
             <TextField

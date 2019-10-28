@@ -23,7 +23,8 @@ import Hidden from '@material-ui/core/Hidden';
 import { saveQuestionary } from '../service/TeacherService'
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Add';
-
+import { uploadImage } from '../service/ImageUploaderService'
+import AlertDialog from './common/AlertDialog'
 
 const ranges = [
   {
@@ -107,6 +108,10 @@ export default function CreateQuestionary(props) {
 
   const [questionViewConfig, setQuestionViewConfig] = useState({ question: { text: '', options: [] }, showCreateQuestionForm: false })
 
+  const [showAlertDialog, setShowAlertDialog] = useState(false)
+  const [loadingCreateQuestionary, setLoadingCreateQuestionary] = useState(false)
+  const [alertDialogMessage, setAlertDialogMessage] = useState('¡Esta acción creará un nuevo cuestionario!')
+
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -116,24 +121,22 @@ export default function CreateQuestionary(props) {
   }
 
   const saveQuestion = (question) => {
-    console.log('saveQuestion', question)
     const questionToSave = {
       id: question.id,
       text: question.question,
-      options: question.options
+      options: question.options,
+      fileImage: question.fileImage
     }
 
 
     if (questionViewConfig.asEdit) {
       const mergedQuestions = questionViewConfig.asEdit && values.questions.reduce((arrayToPush, currentValue) => {
-        console.log('BEFORE arrayToPush', arrayToPush)
         console.log(`${currentValue.id} === ${questionToSave.id}`)
         if (currentValue.id === questionToSave.id) {
           arrayToPush.push(questionToSave)
         } else {
           arrayToPush.push(currentValue)
         }
-        console.log('AFTER arrayToPush', arrayToPush)
         return arrayToPush
       }, []);
       setValues({ ...values, questions: mergedQuestions })
@@ -149,31 +152,60 @@ export default function CreateQuestionary(props) {
   }
 
   const save = () => {
+    console.log('saving questionary...')
+    setLoadingCreateQuestionary(true)
     const questionaryToSave = {
       hash: props.asEdit ? props.questionary.hash : null,
       name: values.name,
       time: values.minutes,
-      questions: values.questions.map((question) => {
-        const questionToSend = {
-          text: question.text,
-          options: question.options.map((option) => ({
-            text: option.text,
-            correct: option.correct,
-            id: option.id
-          }))
-        }
-        if (question.id !== null && question.id !== undefined) {
-          questionToSend.id = question.id
-        }
-        return questionToSend;
-      }),
-      module: values.module
+      module: values.module,
+      is_new: props.asEdit ? false : true
     }
-    saveQuestionary(questionaryToSave).then((response) => {
-      redirectTo('/my-questionaries')
+
+    setAlertDialogMessage('Guardando imagenes')
+    const questions = values.questions.map(async (question) => {
+      const questionToSend = {
+        text: question.text,
+        options: question.options.map((option) => ({
+          text: option.text,
+          correct: option.correct,
+          id: option.id
+        }))
+      }
+      if (question.id !== null && question.id !== undefined) {
+        questionToSend.id = question.id
+      }
+
+      /** 
+       * 
+       * solo si debe guardar la imagen devuelvo la pregunta
+      */
+      if (question.fileImage) {
+        const response = await uploadImage(question.fileImage);
+        console.log('response', response);
+        questionToSend.image_url = response.data.image_url;
+        questionToSend.has_image = true;
+      }
+      return questionToSend;
     })
 
+
+    Promise.all(questions).then((values) => {
+      questionaryToSave.questions = values;
+      setAlertDialogMessage('Guardando preguntas ...')
+      saveQuestionary(questionaryToSave).then((response) => {
+        const newMessage = <>Se creo el questionario <b>{response.data.hash}</b></>
+        setAlertDialogMessage(newMessage)
+
+        setTimeout(() => { redirectTo('/my-questionaries') }, 3000)
+      })
+    })
+
+
   }
+
+
+
 
   const cancelCreateQuestionary = () => {
     redirectTo('/my-questionaries')
@@ -349,12 +381,23 @@ export default function CreateQuestionary(props) {
           <Button
             variant="contained"
             color="primary"
-            onClick={save}
+            onClick={() => setShowAlertDialog(true)}
           >
             Guardar
         </Button>
         </Grid>
 
+
+        <AlertDialog
+          open={showAlertDialog}
+          title={'Crear nuevo cuestionario'}
+          content={alertDialogMessage}
+          handleOk={save}
+          handleClose={() => { setShowAlertDialog(false) }}
+          buttonTextOk='Crear'
+          buttonTextCancel='Cancelar'
+          loading={loadingCreateQuestionary}
+        />
 
 
       </Container>
