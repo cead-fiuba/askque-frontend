@@ -25,6 +25,7 @@ import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Add';
 import { uploadImage } from '../service/ImageUploaderService'
 import AlertDialog from './common/AlertDialog'
+import EditIcon from '@material-ui/icons/Edit';
 
 const ranges = [
   {
@@ -319,9 +320,9 @@ export default function CreateQuestionary(props) {
                           onClick={() => {
                             setQuestionViewConfig({ question: question, showCreateQuestionForm: true, asEdit: true })
                           }}>
-                          <VisilityIcon className={classes.leftIcon} />
+                          <EditIcon className={classes.leftIcon} />
                           <Hidden only="xs">
-                            Ver
+                            Editar
                           </Hidden>
                         </Button>
                       </ButtonGroup>
