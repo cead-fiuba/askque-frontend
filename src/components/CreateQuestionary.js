@@ -18,7 +18,6 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import VisilityIcon from '@material-ui/icons/Visibility';
 import Hidden from '@material-ui/core/Hidden';
 import { saveQuestionary } from '../service/TeacherService'
 import Fab from '@material-ui/core/Fab';
@@ -26,6 +25,7 @@ import CreateIcon from '@material-ui/icons/Add';
 import { uploadImage } from '../service/ImageUploaderService'
 import AlertDialog from './common/AlertDialog'
 import EditIcon from '@material-ui/icons/Edit';
+import { deleteQuestion } from '../service/QuestionaryService'
 
 const ranges = [
   {
@@ -109,9 +109,17 @@ export default function CreateQuestionary(props) {
 
   const [questionViewConfig, setQuestionViewConfig] = useState({ question: { text: '', options: [] }, showCreateQuestionForm: false })
 
-  const [showAlertDialog, setShowAlertDialog] = useState(false)
-  const [loadingCreateQuestionary, setLoadingCreateQuestionary] = useState(false)
-  const [alertDialogMessage, setAlertDialogMessage] = useState('¡Esta acción creará un nuevo cuestionario!')
+
+  const [alertDialogValues, setAlertDialogValues] = useState({
+    title: '',
+    content: '',
+    okButtonText: '',
+    cancelButtonText: '',
+    open: false,
+    onOk: null,
+    onCancel: null,
+    loading: false
+  })
 
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
@@ -148,13 +156,24 @@ export default function CreateQuestionary(props) {
     }
   }
 
+
+  const deleteQuestion = (questionIdx) => {
+    const questions = values.questions;
+    const questionToDelete = questions[questionIdx]
+    const updatedQuestions = questions.splice(questionIdx);
+    setValues({ ...values, questions: updatedQuestions })
+    if (props.asEdit) {
+      deleteQuestion(questionToDelete.id).then((response) => { })
+    }
+  }
+
   const showCreateQuestionView = (value) => {
     setQuestionViewConfig({ ...questionViewConfig, showCreateQuestionForm: value })
   }
 
   const save = () => {
-    console.log('saving questionary...')
-    setLoadingCreateQuestionary(true)
+    setAlertDialogValues({ ...alertDialogValues, loading: true })
+    console.log('set loading...', alertDialogValues)
     const questionaryToSave = {
       hash: props.asEdit ? props.questionary.hash : null,
       name: values.name,
@@ -162,8 +181,6 @@ export default function CreateQuestionary(props) {
       module: values.module,
       is_new: props.asEdit ? false : true
     }
-
-    setAlertDialogMessage('Guardando imagenes')
     const questions = values.questions.map(async (question) => {
       const questionToSend = {
         text: question.text,
@@ -179,11 +196,12 @@ export default function CreateQuestionary(props) {
 
       /** 
        * 
-       * solo si debe guardar la imagen devuelvo la pregunta
+       * solo si debe guardar la imagen, devuelvo la pregunta
       */
       if (question.fileImage) {
+        console.log('guardando imagenes ...', alertDialogValues)
+        setAlertDialogValues({ ...alertDialogValues, content: 'Guardando imagenes ...' })
         const response = await uploadImage(question.fileImage);
-        console.log('response', response);
         questionToSend.image_url = response.data.image_url;
         questionToSend.has_image = true;
       }
@@ -192,12 +210,13 @@ export default function CreateQuestionary(props) {
 
 
     Promise.all(questions).then((values) => {
+      console.log('ya se guardaron las imagenes...', alertDialogValues)
+      setAlertDialogValues({ ...alertDialogValues, content: 'Guardando preguntas ...' })
       questionaryToSave.questions = values;
-      setAlertDialogMessage('Guardando preguntas ...')
       saveQuestionary(questionaryToSave).then((response) => {
-        const newMessage = <>Se creo el questionario <b>{response.data.hash}</b></>
-        setAlertDialogMessage(newMessage)
-
+        const newContent = <>Se creo el questionario <b>{response.data.hash}</b></>
+        console.log('dasdasdas', alertDialogValues)
+        setAlertDialogValues({ ...alertDialogValues, content: newContent })
         setTimeout(() => { redirectTo('/my-questionaries') }, 3000)
       })
     })
@@ -294,7 +313,7 @@ export default function CreateQuestionary(props) {
                         variant="body1"
                         noWrap={true}
                       >
-                        {question.text.substring(0, 20) + '...'}
+                        {question.text.substring(0, 23) + '...'}
                       </Typography>
                     </TableCell>
                     <Hidden only="xs">
@@ -310,7 +329,18 @@ export default function CreateQuestionary(props) {
                         color="primary"
                         variant="contained"
                       >
-                        <Button>
+                        <Button
+                          onClick={() => setAlertDialogValues({
+                            title: 'Eliminar Pregunta',
+                            content: '¿Desea eliminar la pregunta?',
+                            okButtonText: 'Eliminar',
+                            cancelButtonText: 'Cancelar',
+                            open: true,
+                            onOk: () => { deleteQuestion(idx) },
+                            onCancel: () => { setAlertDialogValues({ open: false }) }
+                          })}
+
+                        >
                           <DeleteIcon className={classes.leftIcon} />
                           <Hidden only="xs">
                             Eliminar
@@ -382,7 +412,20 @@ export default function CreateQuestionary(props) {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => setShowAlertDialog(true)}
+            onClick={() => {
+              console.log('on click en save', alertDialogValues);
+              setAlertDialogValues({
+                ...alertDialogValues,
+                title: 'Guardar cuestionario',
+                content: '¿Desea guardar el cuestionario?',
+                okButtonText: 'Guardar',
+                cancelButtonText: 'Cancelar',
+                open: true,
+                onOk: save,
+                onCancel: () => { setAlertDialogValues({ open: false }) }
+              })
+              console.log('on click en save (2)', alertDialogValues);
+            }}
           >
             Guardar
         </Button>
@@ -390,14 +433,14 @@ export default function CreateQuestionary(props) {
 
 
         <AlertDialog
-          open={showAlertDialog}
-          title={'Crear nuevo cuestionario'}
-          content={alertDialogMessage}
-          handleOk={save}
-          handleClose={() => { setShowAlertDialog(false) }}
-          buttonTextOk='Crear'
-          buttonTextCancel='Cancelar'
-          loading={loadingCreateQuestionary}
+          open={alertDialogValues.open}
+          title={alertDialogValues.title}
+          content={alertDialogValues.content}
+          handleOk={alertDialogValues.onOk}
+          handleClose={alertDialogValues.onCancel}
+          buttonTextOk={alertDialogValues.okButtonText}
+          buttonTextCancel={alertDialogValues.cancelButtonText}
+          loading={alertDialogValues.loading}
         />
 
 

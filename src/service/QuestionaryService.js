@@ -12,3 +12,7 @@ export const getInformationOfQuestionary = (hash) => {
 export const updateQuantityResponses = (hash) => {
     return server.put(`/questionaries/${hash}/increment`)
 }
+
+export const deleteQuestion = (questionId) => {
+    return server.delete(`/questions/${questionId}`)
+}
