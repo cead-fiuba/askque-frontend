@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import AppBar from "./AppBar"
 import { makeStyles } from '@material-ui/core/styles';
@@ -121,6 +121,19 @@ export default function CreateQuestionary(props) {
     loading: false
   })
 
+  const [loadingAlertSave, setLoadingAlertSave] = useState(false)
+
+  const [alertDialogValuesDelete, setAlertDialogValuesDelete] = useState({
+    title: 'Eliminar pregunta',
+    content: '¿Está seguro que desea eliminar la pregunta?',
+    okButtonText: 'Eliminar',
+    cancelButtonText: 'Cancelar',
+    open: false,
+    onOk: null,
+    onCancel: () => { setAlertDialogValuesDelete({ open: false }) },
+    loading: false
+  })
+
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -172,8 +185,9 @@ export default function CreateQuestionary(props) {
   }
 
   const save = () => {
-    setAlertDialogValues({ ...alertDialogValues, loading: true })
     console.log('set loading...', alertDialogValues)
+    setLoadingAlertSave(true)
+    debugger;
     const questionaryToSave = {
       hash: props.asEdit ? props.questionary.hash : null,
       name: values.name,
@@ -208,12 +222,13 @@ export default function CreateQuestionary(props) {
       return questionToSend;
     })
 
-
     Promise.all(questions).then((values) => {
+      debugger;
       console.log('ya se guardaron las imagenes...', alertDialogValues)
       setAlertDialogValues({ ...alertDialogValues, content: 'Guardando preguntas ...' })
       questionaryToSave.questions = values;
       saveQuestionary(questionaryToSave).then((response) => {
+        debugger;
         const newContent = <>Se creo el questionario <b>{response.data.hash}</b></>
         console.log('dasdasdas', alertDialogValues)
         setAlertDialogValues({ ...alertDialogValues, content: newContent })
@@ -421,7 +436,6 @@ export default function CreateQuestionary(props) {
                 okButtonText: 'Guardar',
                 cancelButtonText: 'Cancelar',
                 open: true,
-                onOk: save,
                 onCancel: () => { setAlertDialogValues({ open: false }) }
               })
               console.log('on click en save (2)', alertDialogValues);
@@ -436,11 +450,22 @@ export default function CreateQuestionary(props) {
           open={alertDialogValues.open}
           title={alertDialogValues.title}
           content={alertDialogValues.content}
-          handleOk={alertDialogValues.onOk}
+          handleOk={save}
           handleClose={alertDialogValues.onCancel}
           buttonTextOk={alertDialogValues.okButtonText}
           buttonTextCancel={alertDialogValues.cancelButtonText}
-          loading={alertDialogValues.loading}
+          loading={loadingAlertSave}
+        />
+
+        <AlertDialog
+          open={alertDialogValuesDelete.open}
+          title={alertDialogValuesDelete.title}
+          content={alertDialogValuesDelete.content}
+          handleOk={save}
+          handleClose={alertDialogValuesDelete.onCancel}
+          buttonTextOk={alertDialogValuesDelete.okButtonText}
+          buttonTextCancel={alertDialogValuesDelete.cancelButtonText}
+          loading={alertDialogValuesDelete.loading}
         />
 
 
