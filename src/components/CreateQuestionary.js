@@ -26,6 +26,7 @@ import { uploadImage } from '../service/ImageUploaderService'
 import AlertDialog from './common/AlertDialog'
 import EditIcon from '@material-ui/icons/Edit';
 import { deleteQuestion } from '../service/QuestionaryService'
+import { useSnackbar, SnackbarProvider } from 'notistack';
 
 const ranges = [
   {
@@ -93,9 +94,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function CreateQuestionary(props) {
+function CreateQuestionary2(props) {
 
   const classes = useStyles();
+
+  const { enqueueSnackbar } = useSnackbar();
 
 
   const [values, setValues] = React.useState({
@@ -131,7 +134,8 @@ export default function CreateQuestionary(props) {
     open: false,
     onOk: null,
     onCancel: () => { setAlertDialogValuesDelete({ open: false }) },
-    loading: false
+    loading: false,
+    questionIdxToDelete: null
   })
 
   const handleChange = prop => event => {
@@ -169,14 +173,36 @@ export default function CreateQuestionary(props) {
     }
   }
 
+  /***
+   * 
+   * questionIdx es el idx dentro del array.
+   * 
+  */
 
-  const deleteQuestion = (questionIdx) => {
-    const questions = values.questions;
-    const questionToDelete = questions[questionIdx]
-    const updatedQuestions = questions.splice(questionIdx);
-    setValues({ ...values, questions: updatedQuestions })
+  const handleDeleteQuestion = () => {
+    console.log('deleting questions ....')
     if (props.asEdit) {
-      deleteQuestion(questionToDelete.id).then((response) => { })
+      console.log('It is edit mode')
+      console.log('questions de los values', values.questions)
+      const questions = values.questions;
+      const questionIdxToDelete = alertDialogValuesDelete.questionIdxToDelete;
+      const questionToDelete = questions[questionIdxToDelete]
+      questions.splice(questionIdxToDelete);
+      const deleteQuestionPromise = deleteQuestion(questionToDelete.id);
+      setAlertDialogValuesDelete({ ...alertDialogValuesDelete, loading: true })
+      deleteQuestionPromise.then((response) => {
+        console.log('question deleted...')
+        setValues({ ...values, questions: questions })
+        setAlertDialogValuesDelete({ ...alertDialogValuesDelete, open: false })
+        enqueueSnackbar('La pregunta fue eliminada', { variant: 'success' })
+      })
+    } else {
+      console.log('It is not edit mode')
+      const questions = values.questions;
+      const questionIdxToDelete = alertDialogValuesDelete.questionIdxToDelete;
+      questions.splice(questionIdxToDelete);
+      setValues({ ...values, questions: questions })
+      enqueueSnackbar('La pregunta fue eliminada', { variant: 'success' })
     }
   }
 
@@ -187,7 +213,6 @@ export default function CreateQuestionary(props) {
   const save = () => {
     console.log('set loading...', alertDialogValues)
     setLoadingAlertSave(true)
-    debugger;
     const questionaryToSave = {
       hash: props.asEdit ? props.questionary.hash : null,
       name: values.name,
@@ -345,14 +370,10 @@ export default function CreateQuestionary(props) {
                         variant="contained"
                       >
                         <Button
-                          onClick={() => setAlertDialogValues({
-                            title: 'Eliminar Pregunta',
-                            content: '¿Desea eliminar la pregunta?',
-                            okButtonText: 'Eliminar',
-                            cancelButtonText: 'Cancelar',
+                          onClick={() => setAlertDialogValuesDelete({
+                            ...alertDialogValuesDelete,
                             open: true,
-                            onOk: () => { deleteQuestion(idx) },
-                            onCancel: () => { setAlertDialogValues({ open: false }) }
+                            questionIdxToDelete: idx
                           })}
 
                         >
@@ -461,8 +482,8 @@ export default function CreateQuestionary(props) {
           open={alertDialogValuesDelete.open}
           title={alertDialogValuesDelete.title}
           content={alertDialogValuesDelete.content}
-          handleOk={save}
-          handleClose={alertDialogValuesDelete.onCancel}
+          handleOk={handleDeleteQuestion}
+          handleClose={() => setAlertDialogValuesDelete({ ...alertDialogValuesDelete, open: false })}
           buttonTextOk={alertDialogValuesDelete.okButtonText}
           buttonTextCancel={alertDialogValuesDelete.cancelButtonText}
           loading={alertDialogValuesDelete.loading}
@@ -471,5 +492,14 @@ export default function CreateQuestionary(props) {
 
       </Container>
     </div >
+  )
+}
+
+
+
+export default function CreateQuestionary(props) {
+  return (<SnackbarProvider maxSnack={3}>
+    <CreateQuestionary2 {...props} />
+  </SnackbarProvider>
   )
 }
