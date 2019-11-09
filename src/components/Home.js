@@ -14,7 +14,8 @@ import TeacherHome from './TeacherHome'
 import AppBarCustom from "./AppBar"
 import CreateIcon from '@material-ui/icons/Create';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-
+import MyButton from './common/MyButton'
+import CommentIcon from '@material-ui/icons/Comment';
 const styles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -87,71 +88,29 @@ function Home(props) {
               item
               xs={9}
             >
-
-              {(!props.context.state.isLogged || props.context.state.isTeacher) &&
-
-
-                <Button
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  onClick={() => {
-                    if (!props.context.state.isLogged) {
-                      redirectTo("/login")
-                    } else {
-                      redirectTo("/create-questionary")
-                    }
-                  }}
-                  className={style.buttons}
-                  fullWidth
-                >
-                  <CreateIcon className={style.leftIcon} />
-                  Crear cuestionario
-                </Button>
-              }
-              {
-                (props.context.state.isLogged && props.context.state.isTeacher) &&
-                < Button
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  onClick={() => {
-                    if (!props.context.state.isLogged) {
-                      redirectTo("/login")
-                    } else {
-                      redirectTo("/my-questionaries")
-                    }
-                  }}
-                  className={style.buttons}
-                  fullWidth
-                >
-                  <QuestionAnswerIcon className={style.leftIcon} />
-                  Mis cuestionarios
-                </Button>
-
-
-              }
-
-              {
-                !(props.context.state.isLogged && props.context.state.isTeacher) &&
-                <Button variant="contained" size="large" color="primary"
-                  onClick={() => {
-                    if (!props.context.state.isLogged) {
-                      redirectTo("/login")
-                    } else {
-                      redirectTo("/ask-questionary")
-                    }
-
-                  }}
-                  className={style.buttons}
-                  fullWidth
-                >
-                  <Pencil className={style.leftIcon} />
-                  Responder cuestionario
-              </Button>
-              }
-
-
+              <MyButton
+                onClick={() => redirectTo(props.context.isLogged ? "/create-questionary" : "/login")}
+                fullWidth={true}
+                className={style.buttons}
+                text="Crear cuestionario"
+                leftIcon={<CreateIcon />}
+                show={!props.context.state.isLogged || props.context.state.isTeacher}
+              />
+              <MyButton
+                onClick={() => redirectTo(props.context.state.isLogged ? "/my-questionaries" : "/login")}
+                leftIcon={<QuestionAnswerIcon />}
+                text="Mis cuestionarios"
+                className={style.buttons}
+                show={props.context.state.isLogged && props.context.state.isTeacher}
+              />
+              <MyButton
+                onClick={() => redirectTo(props.context.state.isLogged ? "/ask-questionary" : "/login")}
+                fullWidth={true}
+                leftIcon={<CommentIcon />}
+                text="Responder cuestionario"
+                className={style.buttons}
+                show={!(props.context.state.isLogged && props.context.state.isTeacher)}
+              />
             </Grid>
 
           </Grid>
