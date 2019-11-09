@@ -104,7 +104,7 @@ function Home(props) {
                   fullWidth
                 >
                   <Send className={style.leftIcon} />
-                  Crear AskQue
+                  Crear cuestionario
                 </Button>
               }
 
@@ -123,7 +123,7 @@ function Home(props) {
                   fullWidth
                 >
                   <Pencil className={style.leftIcon} />
-                  Responder AskQue
+                  Responder cuestionario
               </Button>
               }
 
