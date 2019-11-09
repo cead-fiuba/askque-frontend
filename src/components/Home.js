@@ -12,8 +12,8 @@ import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from "../context/context"
 import TeacherHome from './TeacherHome'
 import AppBarCustom from "./AppBar"
-
-
+import CreateIcon from '@material-ui/icons/Create';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 
 const styles = makeStyles(theme => ({
   root: {
@@ -89,23 +89,44 @@ function Home(props) {
             >
 
               {(!props.context.state.isLogged || props.context.state.isTeacher) &&
-                <Button
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  onClick={() => {
-                    if (!props.context.state.isLogged) {
-                      redirectTo("/login")
-                    } else {
-                      redirectTo("/create-questionary")
-                    }
-                  }}
-                  className={style.buttons}
-                  fullWidth
-                >
-                  <Send className={style.leftIcon} />
-                  Crear cuestionario
+
+                <>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    color="primary"
+                    onClick={() => {
+                      if (!props.context.state.isLogged) {
+                        redirectTo("/login")
+                      } else {
+                        redirectTo("/create-questionary")
+                      }
+                    }}
+                    className={style.buttons}
+                    fullWidth
+                  >
+                    <CreateIcon className={style.leftIcon} />
+                    Crear cuestionario
                 </Button>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    color="primary"
+                    onClick={() => {
+                      if (!props.context.state.isLogged) {
+                        redirectTo("/login")
+                      } else {
+                        redirectTo("/my-questionaries")
+                      }
+                    }}
+                    className={style.buttons}
+                    fullWidth
+                  >
+                    <QuestionAnswerIcon className={style.leftIcon} />
+                    Mis cuestionarios
+                </Button>
+                </>
+
               }
 
               {
