@@ -27,7 +27,6 @@ import AlertDialog from './common/AlertDialog'
 import EditIcon from '@material-ui/icons/Edit';
 import { deleteQuestion } from '../service/QuestionaryService'
 import { useSnackbar, SnackbarProvider } from 'notistack';
-import conf from '../model/urlConfiguration'
 
 const ranges = [
   {
@@ -269,7 +268,7 @@ function CreateQuestionary2(props) {
 
 
   const cancelCreateQuestionary = () => {
-    redirectTo(conf.QUESTIONARIES_URL)
+    redirectTo('/my-questionaries')
   }
 
   return (

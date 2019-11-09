@@ -8,19 +8,18 @@ import AskQuestionary from "./AskQuestionary"
 import MyAskques from "./MyAskques"
 import AskResults from "./AskResults"
 import EditQuestionary from './EditQuestionary'
-import conf from '../model/urlConfiguration'
 
 export default class Root extends Component {
   render() {
     return <Router>
       <Switch>
-        <Route path={conf.LOGIN_URL} component={Login} />
-        <Route path={conf.REGISTER_URL} component={Register} />
-        <Route path={conf.CREATE_QUESTIONARY_URL} component={CreateQuestionary} />
-        <Route path={conf.ASK_QUESTIONARY} component={AskQuestionary} />
-        <Route path={conf.QUESTIONARIES_URL} component={MyAskques} />
-        <Route path={conf.QUESTIONARY_RESULTS_URL} component={AskResults} />
-        <Route path={conf.EDIT_QUESTIONARY_URL} component={EditQuestionary} />
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route path="/create-questionary" component={CreateQuestionary} />
+        <Route path="/ask-questionary" component={AskQuestionary} />
+        <Route path="/my-questionaries" component={MyAskques} />
+        <Route path="/ask-results/:hash" component={AskResults} />
+        <Route path="/edit-questionary/:hash" component={EditQuestionary} />
         <Route path="/" component={Home} />
       </Switch>
     </Router>
