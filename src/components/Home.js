@@ -12,8 +12,9 @@ import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from "../context/context"
 import TeacherHome from './TeacherHome'
 import AppBarCustom from "./AppBar"
-
-
+import CreateIcon from '@material-ui/icons/Create';
+import ForumIcon from '@material-ui/icons/Forum';
+import conf from '../model/urlConfiguration'
 
 const styles = makeStyles(theme => ({
   root: {
@@ -89,23 +90,42 @@ function Home(props) {
             >
 
               {(!props.context.state.isLogged || props.context.state.isTeacher) &&
-                <Button
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  onClick={() => {
-                    if (!props.context.state.isLogged) {
-                      redirectTo("/login")
-                    } else {
-                      redirectTo("/create-questionary")
-                    }
-                  }}
-                  className={style.buttons}
-                  fullWidth
-                >
-                  <Send className={style.leftIcon} />
-                  Crear AskQue
+                <>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    color="primary"
+                    onClick={() => {
+                      if (!props.context.state.isLogged) {
+                        redirectTo(conf.LOGIN_URL)
+                      } else {
+                        redirectTo(conf.CREATE_QUESTIONARY_URL)
+                      }
+                    }}
+                    className={style.buttons}
+                    fullWidth
+                  >
+                    <CreateIcon className={style.leftIcon} />
+                    Crear cuestionario
                 </Button>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    color="primary"
+                    onClick={() => {
+                      if (!props.context.state.isLogged) {
+                        redirectTo(conf.LOGIN_URL)
+                      } else {
+                        redirectTo(conf.QUESTIONARIES_URL)
+                      }
+                    }}
+                    className={style.buttons}
+                    fullWidth
+                  >
+                    <ForumIcon className={style.leftIcon} />
+                    Mis cuestionarios
+              </Button>
+                </>
               }
 
               {
@@ -113,9 +133,9 @@ function Home(props) {
                 <Button variant="contained" size="large" color="primary"
                   onClick={() => {
                     if (!props.context.state.isLogged) {
-                      redirectTo("/login")
+                      redirectTo(conf.LOGIN_URL)
                     } else {
-                      redirectTo("/ask-questionary")
+                      redirectTo(conf.ASK_QUESTIONARY)
                     }
 
                   }}
@@ -123,7 +143,7 @@ function Home(props) {
                   fullWidth
                 >
                   <Pencil className={style.leftIcon} />
-                  Responder AskQue
+                  Responder cuestionario
               </Button>
               }
 

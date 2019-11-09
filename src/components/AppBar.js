@@ -10,6 +10,7 @@ import Hidden from '@material-ui/core/Hidden';
 import { AppContextConsumer } from "../context/context"
 import ExitToApp from '@material-ui/icons/ExitToAppRounded';
 import logo from '../images/logo.png'
+import conf from '../model/urlConfiguration'
 
 
 const useStyles = makeStyles(theme => ({
@@ -44,7 +45,7 @@ function AppBarCustom(props) {
 
   function exit() {
     props.context.logout();
-    redirectTo('/')
+    redirectTo(conf.HOME_URL)
   }
 
   const style = useStyles();
@@ -54,7 +55,7 @@ function AppBarCustom(props) {
       <Toolbar>
         <img src={logo} alt="Logo" style={{ width: '50px', marginRight: '5px' }} />
         <Typography variant="h6" color="inherit" className={style.grow}
-          onClick={() => redirectTo("/")}
+          onClick={() => redirectTo(conf.HOME_URL)}
         >
           QuizFIUBA
           </Typography>
@@ -73,7 +74,7 @@ function AppBarCustom(props) {
             :
             <>
               <Button
-                onClick={() => redirectTo("/register")}
+                onClick={() => redirectTo(conf.REGISTER_URL)}
                 variant="outlined"
                 color="inherit"
                 style={{ marginRight: '1%' }}
@@ -84,7 +85,7 @@ function AppBarCustom(props) {
                 <AccountPlus className={style.rightButton} />
               </Button>
               <Button
-                onClick={() => { redirectTo("/login") }}
+                onClick={() => { redirectTo(conf.LOGIN_URL) }}
                 variant="outlined"
                 color="inherit"
               >

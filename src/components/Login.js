@@ -21,6 +21,7 @@ import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import { MyGoogleButton } from './GoogleButton'
 import CircularProgress from '@material-ui/core/CircularProgress';
+import conf from '../model/urlConfiguration';
 
 
 const variantIcon = {
@@ -155,7 +156,7 @@ function SignIn(props) {
   const login = () => {
     initSessionStudent({ email: values.email, password: values.password }).then((token) => {
       props.context.setToken(token)
-      redirectTo("/ask-questionary")
+      redirectTo(conf.ASK_QUESTIONARY)
     }).catch((e) => {
       setValues({ ...values, showErrorLogin: true })
     });
@@ -175,7 +176,7 @@ function SignIn(props) {
     initSessionTeacher(email).then((token) => {
       props.context.setToken(token)
       props.context.isTeacher()
-      redirectTo('/my-questionaries')
+      redirectTo(conf.QUESTIONARIES_URL)
     }).catch((e) => {
       setLoading(false)
       console.log(e.response)
