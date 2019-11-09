@@ -90,42 +90,45 @@ function Home(props) {
 
               {(!props.context.state.isLogged || props.context.state.isTeacher) &&
 
-                <>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    color="primary"
-                    onClick={() => {
-                      if (!props.context.state.isLogged) {
-                        redirectTo("/login")
-                      } else {
-                        redirectTo("/create-questionary")
-                      }
-                    }}
-                    className={style.buttons}
-                    fullWidth
-                  >
-                    <CreateIcon className={style.leftIcon} />
-                    Crear cuestionario
+
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="primary"
+                  onClick={() => {
+                    if (!props.context.state.isLogged) {
+                      redirectTo("/login")
+                    } else {
+                      redirectTo("/create-questionary")
+                    }
+                  }}
+                  className={style.buttons}
+                  fullWidth
+                >
+                  <CreateIcon className={style.leftIcon} />
+                  Crear cuestionario
                 </Button>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    color="primary"
-                    onClick={() => {
-                      if (!props.context.state.isLogged) {
-                        redirectTo("/login")
-                      } else {
-                        redirectTo("/my-questionaries")
-                      }
-                    }}
-                    className={style.buttons}
-                    fullWidth
-                  >
-                    <QuestionAnswerIcon className={style.leftIcon} />
-                    Mis cuestionarios
+              }
+              {
+                (props.context.state.isLogged && props.context.state.isTeacher) &&
+                < Button
+                  variant="contained"
+                  size="large"
+                  color="primary"
+                  onClick={() => {
+                    if (!props.context.state.isLogged) {
+                      redirectTo("/login")
+                    } else {
+                      redirectTo("/my-questionaries")
+                    }
+                  }}
+                  className={style.buttons}
+                  fullWidth
+                >
+                  <QuestionAnswerIcon className={style.leftIcon} />
+                  Mis cuestionarios
                 </Button>
-                </>
+
 
               }
 
@@ -218,7 +221,7 @@ function Home(props) {
         </footer>
       </React.Fragment>
     }
-  </React.Fragment>
+  </React.Fragment >
 }
 
 export default withRouter((props) => (
