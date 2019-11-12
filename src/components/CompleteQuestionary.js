@@ -207,7 +207,7 @@ export default function CompleteQuestionary(props) {
                     </Typography>
                 </DialogContent>
             </Dialog>
-            <Grid container xs={12}>
+            <Grid container>
                 <Paper square className={classes.paper}>
                     <Grid
                         container
