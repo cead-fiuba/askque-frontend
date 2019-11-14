@@ -89,7 +89,7 @@ function Home(props) {
               xs={9}
             >
               <MyButton
-                onClick={() => redirectTo(props.context.isLogged ? "/create-questionary" : "/login")}
+                onClick={() => redirectTo(props.context.state.isLogged ? "/create-questionary" : "/login")}
                 fullWidth={true}
                 className={style.buttons}
                 text="Crear cuestionario"
@@ -100,6 +100,7 @@ function Home(props) {
                 onClick={() => redirectTo(props.context.state.isLogged ? "/my-questionaries" : "/login")}
                 leftIcon={<QuestionAnswerIcon />}
                 text="Mis cuestionarios"
+                fullWidth={true}
                 className={style.buttons}
                 show={props.context.state.isLogged && props.context.state.isTeacher}
               />
