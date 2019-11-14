@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import AppBar from "./AppBar"
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,12 +18,15 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import VisilityIcon from '@material-ui/icons/Visibility';
 import Hidden from '@material-ui/core/Hidden';
 import { saveQuestionary } from '../service/TeacherService'
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Add';
-
+import { uploadImage } from '../service/ImageUploaderService'
+import AlertDialog from './common/AlertDialog'
+import EditIcon from '@material-ui/icons/Edit';
+import { deleteQuestion } from '../service/QuestionaryService'
+import { useSnackbar, SnackbarProvider } from 'notistack';
 
 const ranges = [
   {
@@ -91,9 +94,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function CreateQuestionary(props) {
+function CreateQuestionary2(props) {
 
   const classes = useStyles();
+
+  const { enqueueSnackbar } = useSnackbar();
 
 
   const [values, setValues] = React.useState({
@@ -107,6 +112,32 @@ export default function CreateQuestionary(props) {
 
   const [questionViewConfig, setQuestionViewConfig] = useState({ question: { text: '', options: [] }, showCreateQuestionForm: false })
 
+
+  const [alertDialogValues, setAlertDialogValues] = useState({
+    title: '',
+    content: '',
+    okButtonText: '',
+    cancelButtonText: '',
+    open: false,
+    onOk: null,
+    onCancel: null,
+    loading: false
+  })
+
+  const [loadingAlertSave, setLoadingAlertSave] = useState(false)
+
+  const [alertDialogValuesDelete, setAlertDialogValuesDelete] = useState({
+    title: 'Eliminar pregunta',
+    content: '¿Está seguro que desea eliminar la pregunta?',
+    okButtonText: 'Eliminar',
+    cancelButtonText: 'Cancelar',
+    open: false,
+    onOk: null,
+    onCancel: () => { setAlertDialogValuesDelete({ open: false }) },
+    loading: false,
+    questionIdxToDelete: null
+  })
+
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -116,24 +147,22 @@ export default function CreateQuestionary(props) {
   }
 
   const saveQuestion = (question) => {
-    console.log('saveQuestion', question)
     const questionToSave = {
       id: question.id,
       text: question.question,
-      options: question.options
+      options: question.options,
+      fileImage: question.fileImage
     }
 
 
     if (questionViewConfig.asEdit) {
       const mergedQuestions = questionViewConfig.asEdit && values.questions.reduce((arrayToPush, currentValue) => {
-        console.log('BEFORE arrayToPush', arrayToPush)
         console.log(`${currentValue.id} === ${questionToSave.id}`)
         if (currentValue.id === questionToSave.id) {
           arrayToPush.push(questionToSave)
         } else {
           arrayToPush.push(currentValue)
         }
-        console.log('AFTER arrayToPush', arrayToPush)
         return arrayToPush
       }, []);
       setValues({ ...values, questions: mergedQuestions })
@@ -144,36 +173,99 @@ export default function CreateQuestionary(props) {
     }
   }
 
+  /***
+   * 
+   * questionIdx es el idx dentro del array.
+   * 
+  */
+
+  const handleDeleteQuestion = () => {
+    console.log('deleting questions ....')
+    if (props.asEdit) {
+      console.log('It is edit mode')
+      console.log('questions de los values', values.questions)
+      const questions = values.questions;
+      const questionIdxToDelete = alertDialogValuesDelete.questionIdxToDelete;
+      const questionToDelete = questions[questionIdxToDelete]
+      questions.splice(questionIdxToDelete);
+      const deleteQuestionPromise = deleteQuestion(questionToDelete.id);
+      setAlertDialogValuesDelete({ ...alertDialogValuesDelete, loading: true })
+      deleteQuestionPromise.then((response) => {
+        console.log('question deleted...')
+        setValues({ ...values, questions: questions })
+        setAlertDialogValuesDelete({ ...alertDialogValuesDelete, open: false })
+        enqueueSnackbar('La pregunta fue eliminada', { variant: 'success' })
+      })
+    } else {
+      console.log('It is not edit mode')
+      const questions = values.questions;
+      const questionIdxToDelete = alertDialogValuesDelete.questionIdxToDelete;
+      questions.splice(questionIdxToDelete);
+      setValues({ ...values, questions: questions })
+      enqueueSnackbar('La pregunta fue eliminada', { variant: 'success' })
+    }
+  }
+
   const showCreateQuestionView = (value) => {
     setQuestionViewConfig({ ...questionViewConfig, showCreateQuestionForm: value })
   }
 
   const save = () => {
+    console.log('set loading...', alertDialogValues)
+    setLoadingAlertSave(true)
     const questionaryToSave = {
       hash: props.asEdit ? props.questionary.hash : null,
       name: values.name,
       time: values.minutes,
-      questions: values.questions.map((question) => {
-        const questionToSend = {
-          text: question.text,
-          options: question.options.map((option) => ({
-            text: option.text,
-            correct: option.correct,
-            id: option.id
-          }))
-        }
-        if (question.id !== null && question.id !== undefined) {
-          questionToSend.id = question.id
-        }
-        return questionToSend;
-      }),
-      module: values.module
+      module: values.module,
+      is_new: props.asEdit ? false : true
     }
-    saveQuestionary(questionaryToSave).then((response) => {
-      redirectTo('/my-questionaries')
+    const questions = values.questions.map(async (question) => {
+      const questionToSend = {
+        text: question.text,
+        options: question.options.map((option) => ({
+          text: option.text,
+          correct: option.correct,
+          id: option.id
+        }))
+      }
+      if (question.id !== null && question.id !== undefined) {
+        questionToSend.id = question.id
+      }
+
+      /** 
+       * 
+       * solo si debe guardar la imagen, devuelvo la pregunta
+      */
+      if (question.fileImage) {
+        console.log('guardando imagenes ...', alertDialogValues)
+        setAlertDialogValues({ ...alertDialogValues, content: 'Guardando imagenes ...' })
+        const response = await uploadImage(question.fileImage);
+        questionToSend.image_url = response.data.image_url;
+        questionToSend.has_image = true;
+      }
+      return questionToSend;
     })
 
+    Promise.all(questions).then((values) => {
+      debugger;
+      console.log('ya se guardaron las imagenes...', alertDialogValues)
+      setAlertDialogValues({ ...alertDialogValues, content: 'Guardando preguntas ...' })
+      questionaryToSave.questions = values;
+      saveQuestionary(questionaryToSave).then((response) => {
+        debugger;
+        const newContent = <>Se creo el questionario <b>{response.data.hash}</b></>
+        console.log('dasdasdas', alertDialogValues)
+        setAlertDialogValues({ ...alertDialogValues, content: newContent })
+        setTimeout(() => { redirectTo('/my-questionaries') }, 3000)
+      })
+    })
+
+
   }
+
+
+
 
   const cancelCreateQuestionary = () => {
     redirectTo('/my-questionaries')
@@ -261,7 +353,7 @@ export default function CreateQuestionary(props) {
                         variant="body1"
                         noWrap={true}
                       >
-                        {question.text.substring(0, 20) + '...'}
+                        {question.text.substring(0, 23) + '...'}
                       </Typography>
                     </TableCell>
                     <Hidden only="xs">
@@ -277,7 +369,14 @@ export default function CreateQuestionary(props) {
                         color="primary"
                         variant="contained"
                       >
-                        <Button>
+                        <Button
+                          onClick={() => setAlertDialogValuesDelete({
+                            ...alertDialogValuesDelete,
+                            open: true,
+                            questionIdxToDelete: idx
+                          })}
+
+                        >
                           <DeleteIcon className={classes.leftIcon} />
                           <Hidden only="xs">
                             Eliminar
@@ -287,9 +386,9 @@ export default function CreateQuestionary(props) {
                           onClick={() => {
                             setQuestionViewConfig({ question: question, showCreateQuestionForm: true, asEdit: true })
                           }}>
-                          <VisilityIcon className={classes.leftIcon} />
+                          <EditIcon className={classes.leftIcon} />
                           <Hidden only="xs">
-                            Ver
+                            Editar
                           </Hidden>
                         </Button>
                       </ButtonGroup>
@@ -349,15 +448,58 @@ export default function CreateQuestionary(props) {
           <Button
             variant="contained"
             color="primary"
-            onClick={save}
+            onClick={() => {
+              console.log('on click en save', alertDialogValues);
+              setAlertDialogValues({
+                ...alertDialogValues,
+                title: 'Guardar cuestionario',
+                content: '¿Desea guardar el cuestionario?',
+                okButtonText: 'Guardar',
+                cancelButtonText: 'Cancelar',
+                open: true,
+                onCancel: () => { setAlertDialogValues({ open: false }) }
+              })
+              console.log('on click en save (2)', alertDialogValues);
+            }}
           >
             Guardar
         </Button>
         </Grid>
 
 
+        <AlertDialog
+          open={alertDialogValues.open}
+          title={alertDialogValues.title}
+          content={alertDialogValues.content}
+          handleOk={save}
+          handleClose={alertDialogValues.onCancel}
+          buttonTextOk={alertDialogValues.okButtonText}
+          buttonTextCancel={alertDialogValues.cancelButtonText}
+          loading={loadingAlertSave}
+        />
+
+        <AlertDialog
+          open={alertDialogValuesDelete.open}
+          title={alertDialogValuesDelete.title}
+          content={alertDialogValuesDelete.content}
+          handleOk={handleDeleteQuestion}
+          handleClose={() => setAlertDialogValuesDelete({ ...alertDialogValuesDelete, open: false })}
+          buttonTextOk={alertDialogValuesDelete.okButtonText}
+          buttonTextCancel={alertDialogValuesDelete.cancelButtonText}
+          loading={alertDialogValuesDelete.loading}
+        />
+
 
       </Container>
     </div >
+  )
+}
+
+
+
+export default function CreateQuestionary(props) {
+  return (<SnackbarProvider maxSnack={3}>
+    <CreateQuestionary2 {...props} />
+  </SnackbarProvider>
   )
 }

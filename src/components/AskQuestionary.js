@@ -4,7 +4,7 @@ import AppBar from "./AppBar"
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import AskqueResumen from './AskqueResume';
-import { getInformationOfQuestionary } from '../service/StudentService'
+import { getInformationOfQuestionaryWithCache } from '../service/QuestionaryService'
 import Button from '@material-ui/core/Button';
 import CompleteQuestionary from "./CompleteQuestionary"
 
@@ -27,8 +27,7 @@ export default class AskQuestionary extends Component {
         const isComplete = hash.length === 3
         this.setState({ questionaryHash: hash })
         if (isComplete) {
-            getInformationOfQuestionary(hash).then((response) => {
-                console.log('response', response.data)
+            getInformationOfQuestionaryWithCache(hash).then((response) => {
                 this.setState(
                     {
                         showResume: true,
@@ -63,7 +62,7 @@ export default class AskQuestionary extends Component {
                 {
                     this.state.showInformation ?
                         <Typography variant="h4" align="center" color="textPrimary" gutterBottom style={{ marginTop: '1em' }}>
-                            Ingrese la clave del ASKQUE
+                            Ingrese la clave del cuestionario
                         </Typography> : null
                 }
 
@@ -87,6 +86,7 @@ export default class AskQuestionary extends Component {
                                 module={this.state.questionaryModulo}
                                 code={this.state.questionaryHash}
                                 time={this.state.questionaryTime}
+                                date={this.state.questionary.date}
                                 quantityQuestions={this.state.quantityQuestions}
                             />
 
@@ -95,9 +95,9 @@ export default class AskQuestionary extends Component {
                             </Typography>
                             <Button
                                 variant="contained"
-                                color="secondary"
+                                color="primary"
                                 fullWidth
-                                style={{ marginTop: '8px', marginBottom: '10px' }}
+                                style={{ margin: '5%' }}
                                 onClick={this.startCompleteQuestionary}
                             >
                                 Estoy listo

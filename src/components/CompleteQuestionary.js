@@ -21,6 +21,7 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import { updateQuantityResponses } from '../service/QuestionaryService';
 
 const useStyles = makeStyles(theme => ({
     text: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         paddingBottom: 50,
+        height: '100%'
     },
     list: {
         marginBottom: theme.spacing(2),
@@ -155,7 +157,9 @@ export default function CompleteQuestionary(props) {
             ))
         }
         setLoading(true)
-        saveResponse(response).then((res) => {
+        const saveResponsePromise = saveResponse(response);
+        const updateQuantityResponsesPromise = updateQuantityResponses(props.questionary.hash);
+        Promise.all([saveResponsePromise, updateQuantityResponsesPromise]).then(([saveResponseResult, updateQuatity]) => {
             setSuccess(true)
             setLoading(false)
             setTimeout(() => { setShowMessageSuccess(true) }, 1000)
@@ -195,7 +199,7 @@ export default function CompleteQuestionary(props) {
                 maxWidth={'xs'}
             >
                 <DialogTitle id="customized-dialog-title">
-                    Encuesta XAA
+                    Encuesta {props.questionary.hash}
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography gutterBottom>
@@ -203,54 +207,59 @@ export default function CompleteQuestionary(props) {
                     </Typography>
                 </DialogContent>
             </Dialog>
+            <Grid container>
+                <Paper square className={classes.paper}>
+                    <Grid
+                        container
+                        direction="column"
+                        justify="center"
+                        alignItems="flex-start"
+                        className={classes.root}
+                    >
 
-            <Paper square className={classes.paper}>
-                <Grid
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="flex-start"
-                    className={classes.root}
-                >
-
-                    {props.questionary.questions.map(({ id, text, options }) => (
-                        <Grid
-                            item
-                            key={id}
-                        >
-
-                            <Typography variant="body2" gutterBottom>
-                                <b> {text} </b>
-                            </Typography>
-                            <List className={classes.list}>
-                                {createOptions(options, id)}
-                            </List>
-                        </Grid>
-                    ))}
-
-                </Grid>
-            </Paper>
-            <AppBar position="fixed" color="primary" className={classes.appBar}>
-                <Toolbar>
-                    {showSendButton ?
-                        <>
-                            <Fab
-                                color="primary"
-                                aria-label="add"
-                                className={classes.fabButton}
-                                onClick={sendResponse}
+                        {props.questionary.questions.map(({ id, text, options, has_image, image_url }) => (
+                            <Grid
+                                item
+                                key={id}
                             >
-                                {sucess ? <CheckIcon /> : <SendIcon />}
-                            </Fab>
+
+                                <div >{has_image && <img src={image_url} style={{ objectFit: 'contain', maxWidth: '100%', height: 'auto' }} />}
+                                </div>
+
+                                <Typography variant="body2" gutterBottom>
+                                    <b> {text} </b>
+                                </Typography>
+                                <List className={classes.list}>
+                                    {createOptions(options, id)}
+                                </List>
+                            </Grid>
+                        ))}
+
+                    </Grid>
+                </Paper>
+                <AppBar position="fixed" color="primary" className={classes.appBar}>
+                    <Toolbar>
+                        {showSendButton ?
                             <>
-                                {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+                                <Fab
+                                    color="primary"
+                                    aria-label="add"
+                                    className={classes.fabButton}
+                                    onClick={sendResponse}
+                                >
+                                    {sucess ? <CheckIcon /> : <SendIcon />}
+                                </Fab>
+                                <>
+                                    {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+                                </>
                             </>
-                        </>
-                        :
-                        <b>Asegurate de marcar alguna opcion cada pregunta</b>
-                    }
-                </Toolbar>
-            </AppBar>
-        </React.Fragment>
+                            :
+                            <b>Asegurate de marcar alguna opcion cada pregunta</b>
+                        }
+                    </Toolbar>
+                </AppBar>
+            </Grid>
+
+        </React.Fragment >
     );
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import AppBar from "./AppBar"
-import { getInformationOfQuestionaryWithCache, getResultOfQuestionary } from '../service/TeacherService'
+import { getResultOfQuestionary } from '../service/TeacherService'
+import { getInformationOfQuestionaryWithCache, getInformationOfQuestionary } from '../service/QuestionaryService'
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -8,8 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Typography } from '@material-ui/core';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
-import { AccessAlarm, ThreeDRotation } from '@material-ui/icons';
-import ClearIcon from '@material-ui/icons/Clear';
+
 const abecedario = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 
 
@@ -31,7 +31,7 @@ export default function AskResults(props) {
     const [results, setResults] = useState()
 
     useEffect(() => {
-        const informationPromise = getInformationOfQuestionaryWithCache(props.match.params.hash);
+        const informationPromise = getInformationOfQuestionary(props.match.params.hash);
         const resultPromise = getResultOfQuestionary(props.match.params.hash);
 
         Promise.all([informationPromise, resultPromise]).then(([informationResponse, resultResponse]) => {
@@ -73,6 +73,8 @@ export default function AskResults(props) {
                 loading ? <>Obteniendo información</> :
                     <>
                         <Typography variant="h3" style={{ marginBottom: '5%' }}>{questionary.name}</Typography>
+                        <Typography variant="h5" style={{ marginBottom: '5%' }}>Cantidad de respuestas {questionary.quantity_respones}</Typography>
+
                         <>{questionary.questions.map((question, questionId) => {
                             const data = question.options.map((option, idx) => {
                                 return {

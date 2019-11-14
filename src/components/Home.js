@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Send, Pencil } from 'mdi-material-ui'
 import { makeStyles } from '@material-ui/core/styles';
-import Image from "../images/image1.jpg"
+import Image from "../images/2.png"
 import ManitoArriba from '@material-ui/icons/ThumbUpAlt'
 import Seguro from '@material-ui/icons/VerifiedUser'
 import Speed from '@material-ui/icons/ShutterSpeed'
@@ -12,9 +12,10 @@ import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from "../context/context"
 import TeacherHome from './TeacherHome'
 import AppBarCustom from "./AppBar"
-
-
-
+import CreateIcon from '@material-ui/icons/Create';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import MyButton from './common/MyButton'
+import CommentIcon from '@material-ui/icons/Comment';
 const styles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -24,7 +25,7 @@ const styles = makeStyles(theme => ({
     backgroundImage: ` url(${Image})`,
     backgroundColor: '#7fc7d9',
     backgroundPosition: 'center',
-    backgroundSize: 'cover',
+    backgroundSize: 'conver',
     paddingTop: '10%',
     paddingBottom: '10%'
   },
@@ -61,13 +62,13 @@ function Home(props) {
           className={style.body}
         >
           <Typography
-            variant="h3"
+            variant="h2"
             align="center"
             gutterBottom
             marked="center"
             style={{ color: 'white' }}
           >
-            ENCUESTAS SENCILLAS
+            QuizFIUBA
     </Typography>
           <span
             style={{ width: '73px', height: '5px', margin: '8px auto 8px', display: 'block', backgroundColor: '#0CAAF3' }}
@@ -87,47 +88,30 @@ function Home(props) {
               item
               xs={9}
             >
-
-              {(!props.context.state.isLogged || props.context.state.isTeacher) &&
-                <Button
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  onClick={() => {
-                    if (!props.context.state.isLogged) {
-                      redirectTo("/login")
-                    } else {
-                      redirectTo("/create-questionary")
-                    }
-                  }}
-                  className={style.buttons}
-                  fullWidth
-                >
-                  <Send className={style.leftIcon} />
-                  Crear AskQue
-                </Button>
-              }
-
-              {
-                !(props.context.state.isLogged && props.context.state.isTeacher) &&
-                <Button variant="contained" size="large" color="primary"
-                  onClick={() => {
-                    if (!props.context.state.isLogged) {
-                      redirectTo("/login")
-                    } else {
-                      redirectTo("/ask-questionary")
-                    }
-
-                  }}
-                  className={style.buttons}
-                  fullWidth
-                >
-                  <Pencil className={style.leftIcon} />
-                  Responder AskQue
-              </Button>
-              }
-
-
+              <MyButton
+                onClick={() => redirectTo(props.context.state.isLogged ? "/create-questionary" : "/login")}
+                fullWidth={true}
+                className={style.buttons}
+                text="Crear cuestionario"
+                leftIcon={<CreateIcon />}
+                show={!props.context.state.isLogged || props.context.state.isTeacher}
+              />
+              <MyButton
+                onClick={() => redirectTo(props.context.state.isLogged ? "/my-questionaries" : "/login")}
+                leftIcon={<QuestionAnswerIcon />}
+                text="Mis cuestionarios"
+                fullWidth={true}
+                className={style.buttons}
+                show={props.context.state.isLogged && props.context.state.isTeacher}
+              />
+              <MyButton
+                onClick={() => redirectTo(props.context.state.isLogged ? "/ask-questionary" : "/login")}
+                fullWidth={true}
+                leftIcon={<CommentIcon />}
+                text="Responder cuestionario"
+                className={style.buttons}
+                show={!(props.context.state.isLogged && props.context.state.isTeacher)}
+              />
             </Grid>
 
           </Grid>
@@ -197,7 +181,7 @@ function Home(props) {
         </footer>
       </React.Fragment>
     }
-  </React.Fragment>
+  </React.Fragment >
 }
 
 export default withRouter((props) => (

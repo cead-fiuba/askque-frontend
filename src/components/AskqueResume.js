@@ -26,10 +26,42 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center'
     }, item: {
         height: '90%'
+    },
+    rightIcon: {
+        marginLeft: theme.spacing(1)
     }
 }));
 
+
+/***
+ * 
+ * PROPS
+ * 
+ * date: fecha de creación de la encuesta
+ * 
+ * 
+ * 
+ */
+
 export default function AskqueResumen(props) {
+
+    function formatDate() {
+        const date = new Date(props.date)
+        var monthNames = [
+            "Enero", "Febrero", "Marzo",
+            "Abril", "Mayo", "Junio", "Julio",
+            "Agosto", "Septiembre", "Octubre",
+            "Noviembre", "Diciembre"
+        ];
+
+        var day = date.getDate();
+        var monthIndex = date.getMonth();
+        var year = date.getFullYear();
+
+        return day + ' ' + monthNames[monthIndex] + ' ' + year;
+    }
+
+
     const classes = useStyles();
     return <Grid item xs className={classes.item}>
         <Paper className={classes.paper}
@@ -39,46 +71,47 @@ export default function AskqueResumen(props) {
                 <Grid item xs={10}>
                     <div className={classes.header}>
                         <Typography gutterBottom variant="h6">
-                            {props.name}
+                            <b>{props.name}</b>
                         </Typography>
                         <Typography variant="subtitle1" gutterBottom>
                             Código {props.code} - MultipleChoice
                 </Typography>
                     </div>
                     <Typography variant="body1" color="textSecondary">
-                        Módulo {props.module}
+                        <b>Módulo</b> {props.module}
                     </Typography>
                     <Typography variant="body1" color="textSecondary">
-                        {props.creationDate}
+                        {formatDate()}
                     </Typography>
 
 
                 </Grid>
                 <Grid item xs={2} container>
-                    <Grid item xs={12}>
+                    {props.showActions && <><Grid item >
                         <IconButton aria-label="delete" color="primary">
                             <ShareIcon />
                         </IconButton>
                     </Grid>
-                    <Grid item xs={12}>
-                        <IconButton aria-label="delete" color="primary" onClick={() => props.editQuestionary()}>
-                            <EditIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item>
-                        <Tooltip title="Eliminar" placement="right">
-                            <IconButton aria-label="delete" onClick={() => props.deleteQuestionary()} color="primary">
-                                <DeleteIcon />
+                        <Grid item >
+                            <IconButton aria-label="delete" color="primary" onClick={() => props.editQuestionary()}>
+                                <EditIcon />
                             </IconButton>
-                        </Tooltip>
-                    </Grid>
-                    <Grid item>
-                        <Tooltip title="Ver resultados" placement="right">
-                            <IconButton aria-label="delete" onClick={props.showQuestionaryResults} color="primary">
-                                <VisibilityIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </Grid>
+                        </Grid>
+                        <Grid item>
+                            <Tooltip title="Eliminar" placement="right">
+                                <IconButton aria-label="delete" onClick={() => props.deleteQuestionary()} color="primary">
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
+                        <Grid item>
+                            <Tooltip title="Ver resultados" placement="right">
+                                <IconButton aria-label="delete" onClick={props.showQuestionaryResults} color="primary">
+                                    <VisibilityIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid></>}
+
                 </Grid>
             </Grid>
         </Paper>

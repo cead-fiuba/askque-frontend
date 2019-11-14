@@ -7,7 +7,13 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Add';
-import { MySnackbarContentWrapper } from './MySnackbarContentWrapper'
+import { MySnackbarContentWrapper } from './common/MySnackbarContentWrapper'
+import AlertDialog from './common/AlertDialog';
+import Typography from '@material-ui/core/Typography';
+import { useSnackbar, SnackbarProvider } from 'notistack';
+import { deleteQuestionaryResponses } from '../service/ResponseService';
+import RecipeReviewCard from './common/RecipeReviewCard';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -33,8 +39,10 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function MyAskques(props) {
+export function MyAskques2(props) {
     const classes = useStyles();
+    const { enqueueSnackbar } = useSnackbar();
+
     const [values, setState] = useState({
         questionaries: [],
         errorHappen: false,
@@ -44,6 +52,9 @@ export default function MyAskques(props) {
 
     const [snackBarConfig, setSnackBarConfig] = useState({})
     const [loading, setLoading] = useState(true)
+    const [showAlertDialog, setShowAlertDialog] = useState(false)
+    const [questionaryToDelete, setQuestionaryToDelete] = useState('')
+    const [showLoadingAlertDialog, setShowLoadingAlertDialog] = useState(false)
 
 
     function redirectTo(newPath) {
@@ -64,14 +75,43 @@ export default function MyAskques(props) {
 
 
     const deleteQuestionary = (hash) => {
-        deleteQuestionaryByHash(hash).then((response) => {
-            console.log('Se eliminó de manera correcta el cuestionario')
-            console.log('response.data', response.data)
-            setSnackBarConfig({ state: 'success', message: `Se eliminó el questionario ${response.data.hash}`, show: true })
-        }).catch((reason) => {
-            setSnackBarConfig({ state: 'error', message: 'No se pudo eliminar el questionario', show: true })
+        console.log('deleteQuestionary', showLoadingAlertDialog)
+        setShowAlertDialog(false)
+        setShowLoadingAlertDialog(true)
+        let variant = 'success'
+        deleteQuestionaryByHash(hash)
 
-        })
+            .then((value) => {
+                enqueueSnackbar(`El cuestionario ${hash} fue eliminado`, { variant });
+                setLoading(true)
+                getAskquesOfTeacher().then((res) => {
+                    setState({ ...values, questionaries: res.data.questionaries })
+                    setLoading(false)
+                })
+                setShowLoadingAlertDialog(false)
+            })
+            .catch((reason) => {
+                variant = 'error'
+                enqueueSnackbar(`No se pudo eliminar el cuestionario ${hash}`, { variant });
+                setShowLoadingAlertDialog(false)
+            })
+        deleteQuestionaryResponses(hash)
+            .then((value) => {
+                enqueueSnackbar(`Se eliminaron las respuestas del cuestionario ${hash}`, { variant });
+                setShowLoadingAlertDialog(false)
+            })
+            .catch((reason) => {
+                variant = 'error'
+                enqueueSnackbar(`No se pudo eliminar las respuestas del cuestionario ${hash}`, { variant });
+                setShowLoadingAlertDialog(false)
+            })
+
+
+    }
+
+    const handleDeleteQuestionary = (hash) => {
+        setQuestionaryToDelete(hash)
+        setShowAlertDialog(true)
     }
 
 
@@ -81,45 +121,69 @@ export default function MyAskques(props) {
         />
         <Container maxWidth="md" component="main" className={classes.container}>
             {
-                loading ? <>Obteniendo información</> : <>
+                loading ? "Obteniendo información" : <>
                     {
                         values.questionaries.length === 0 ?
-                            <>
-                                Ups! Todavia no creaste ningun askque!
-                                No te preocupes, es muy fácil!
-                        </>
+                            "Ups! No tenes ningún cuestionario creado.\n" +
+                            "No te preocupes, es muy fácil!"
+
                             :
                             <Grid container spacing={10}>
                                 {
-                                    values.questionaries.map((questionary) => (
-                                        <AskqueResume
-                                            key={questionary.hash}
-                                            code={questionary.hash}
-                                            name={questionary.name}
-                                            module={questionary.module}
-                                            creationDate={questionary.date}
-                                            showQuestionaryResults={() => redirectTo("/ask-results/" + questionary.hash)}
-                                            deleteQuestionary={() => deleteQuestionary(questionary.hash)}
-                                            editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
-                                        />
+                                    values.questionaries.map((questionary, idx) => (
+                                        <Grid item xs key={idx}>
+                                            <RecipeReviewCard
+                                                key={idx}
+                                                questionary={questionary}
+                                                deleteQuestionary={() => { handleDeleteQuestionary(questionary.hash) }}
+                                                editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
+                                                showQuestionaryResults={() => { redirectTo(`ask-results/${questionary.hash}`) }}
+                                            />
+                                        </Grid>
+
                                     ))}
                             </Grid>
 
                     }
                     {
-                        snackBarConfig.show ? < MySnackbarContentWrapper
+                        snackBarConfig.show && < MySnackbarContentWrapper
                             variant={snackBarConfig.state}
                             message={snackBarConfig.message}
                             open={snackBarConfig.show}
                             onClose={() => { setSnackBarConfig({ show: false }) }}
-                        /> : null
+                        />
                     }
 
-                    <Fab color="primary" onClick={() => { redirectTo("/create-questionary") }}>
+                    <Fab color="primary" style={{ margin: '10%' }} onClick={() => { redirectTo("/create-questionary") }}>
                         <CreateIcon />
                     </Fab>
+                    <AlertDialog
+                        open={showAlertDialog}
+                        handleClose={() => { setShowAlertDialog(false) }}
+                        title={"Eliminar cuestionario"}
+                        content={
+                            <>
+                                <Typography variant="body1" gutterBottom component={'span'}>
+                                    {"¿Está seguro que desea eliminar el cuestionario?\n"}
+                                </Typography>
+                            </>
+                        }
+                        buttonTextOk={<b>Eliminar</b>}
+                        buttonTextCancel={<b>Cancelar</b>}
+                        handleOk={() => { deleteQuestionary(questionaryToDelete) }}
+                        loading={showLoadingAlertDialog}
+
+                    />
                 </>
             }
         </Container >
     </div >
+}
+
+
+export default function MyAskques(props) {
+    return (<SnackbarProvider maxSnack={3}>
+        <MyAskques2 {...props} />
+    </SnackbarProvider>
+    )
 }

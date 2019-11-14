@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, withStyles, lighten } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,6 +14,10 @@ import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import SaveIcon from '@material-ui/icons/Save'
+import ImageUpload from '../components/ImageUpload'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+
 
 const useStyles = makeStyles(theme => ({
     appBar: {
@@ -52,9 +56,24 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
+
+/***
+ * 
+ * props = {
+ *   asEdit:boolean
+ * }
+ * 
+ * @param asEdit: indica si el componente se esta usando en modo edición o no
+ * @param question: si asEdit === true entonces como prop deberia venir el question
+ * 
+*/
 export default function CreateQuestion(props) {
     const classes = useStyles();
 
+
+    const [withImage, setWithImage] = useState(false)
+    const [fileImage, setFileImage] = useState(null)
 
     useEffect(() => {
         setValues({
@@ -71,7 +90,8 @@ export default function CreateQuestion(props) {
             responsesCreated: props.question.text !== "",
             aResponseWasMarkedAsCorrect: false
         })
-    }, [props.asEdit, props.question.options, props.question.text])
+        setWithImage(props.question.has_image === true)
+    }, [props.asEdit, props.question.options, props.question.text, props.question.has_image])
 
     const [values, setValues] = React.useState({
         progressMessage: 'Escribe la pregunta',
@@ -86,8 +106,14 @@ export default function CreateQuestion(props) {
                     isNew: true
                 }],
         responsesCreated: props.question.text !== "",
-        aResponseWasMarkedAsCorrect: false
+        aResponseWasMarkedAsCorrect: false,
     })
+
+
+    const saveImage = (formDataOfImage) => {
+        console.log('Saving image...', formDataOfImage)
+        setFileImage(formDataOfImage)
+    }
 
     const handleResponse = idx => event => {
         const oldResponses = values.options
@@ -141,8 +167,11 @@ export default function CreateQuestion(props) {
     function save() {
         const toSave = {
             question: values.question,
+            fileImage: fileImage,
             options: values.options,
-            id: props.asEdit ? props.question.id : null
+        }
+        if (props.asEdit) {
+            toSave.id = props.question.id
         }
         props.saveQuestion(toSave, props.asEdit)
         cleanForm()
@@ -192,9 +221,10 @@ export default function CreateQuestion(props) {
                     Nueva Pregunta
                         </Typography>
                 <Button
-                    variant="outlined"
+                    variant="contained"
+                    color="primary"
                     onClick={save}
-                    disabled={!(values.responsesCreated && values.aResponseWasMarkedAsCorrect && values.question !== "" || props.asEdit)}
+                    disabled={!((values.responsesCreated && values.aResponseWasMarkedAsCorrect && values.question !== "") || props.asEdit)}
                 >
                     guardar
                     <SaveIcon className={classes.rightIcon} />
@@ -213,9 +243,28 @@ export default function CreateQuestion(props) {
                     value={values.progress}
                 />
             </Paper>
+
+            <FormControlLabel
+                control={
+                    <Switch
+                        checked={withImage}
+                        color="primary"
+                        onChange={() => setWithImage(!withImage)} value="checkedA" />
+                }
+                label={"Con imagen"}
+            />
+
+            {
+                withImage &&
+                <ImageUpload
+                    saveImage={saveImage}
+                    imageUrl={props.question.image_url}
+                />
+            }
+
             <TextField
                 id="outlined-full-width"
-                label="Pregunta"
+                label="Texto"
                 style={{ marginTop: 30 }}
                 placeholder="Escriba el texto..."
                 multiline

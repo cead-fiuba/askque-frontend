@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom'
 import Hidden from '@material-ui/core/Hidden';
 import { AppContextConsumer } from "../context/context"
 import ExitToApp from '@material-ui/icons/ExitToAppRounded';
+import logo from '../images/logo.png'
 
 
 const useStyles = makeStyles(theme => ({
@@ -28,6 +29,9 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+  },
+  sas: {
+
   }
 }));
 
@@ -48,10 +52,11 @@ function AppBarCustom(props) {
   return <div className={style.root}>
     <AppBar position="fixed" className={style.appBar}>
       <Toolbar>
+        <img src={logo} alt="Logo" style={{ width: '50px', marginRight: '5px' }} />
         <Typography variant="h6" color="inherit" className={style.grow}
           onClick={() => redirectTo("/")}
         >
-          ASKQUE
+          QuizFIUBA
           </Typography>
         {
           props.context.state.isLogged ?

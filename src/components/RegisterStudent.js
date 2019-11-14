@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createStudent } from "../service/StudentService"
 import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from '../context/context'
-import { MySnackbarContentWrapper } from './MySnackbarContentWrapper'
+import { MySnackbarContentWrapper } from './common/MySnackbarContentWrapper'
 
 const useStyles = makeStyles(theme => ({
     createAcccountButton: {
@@ -90,11 +90,14 @@ function RegisterStudent(props) {
             </Typography>
 
             {
-                values.showSnackbarError ?
+                values.showSnackbarError &&
+                <>
                     <MySnackbarContentWrapper
                         variant="error"
                         message={values.snackbarErrorMessage}
-                    /> : null
+                        open={values.showSnackbarError}
+                    />
+                </>
             }
             <TextField
                 id="padron"
@@ -140,8 +143,8 @@ function RegisterStudent(props) {
             />
 
             <Button
-                variant="contained"
-                color="secondary"
+                variant='contained'
+                color="primary"
                 fullWidth
                 className={classes.createAcccountButton}
                 onClick={createStudentAccount}
