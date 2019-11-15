@@ -39,3 +39,8 @@ export const deleteQuestionaryByHash = (hash) => {
     return server.delete(`/questionaries/${hash}`)
 }
 
+
+export const isAdmin = () => {
+    return server.get("/admin")
+}
+

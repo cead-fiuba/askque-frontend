@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { initSessionStudent, initSessionTeacher } from "../service/LoginService"
+import { isAdmin } from "../service/TeacherService"
+
 import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from '../context/context'
 import { red } from '@material-ui/core/colors';
@@ -175,6 +177,15 @@ function SignIn(props) {
     initSessionTeacher(email).then((token) => {
       props.context.setToken(token)
       props.context.isTeacher()
+      isAdmin().then((response) => {
+        if ("ADMIN" === response.data) {
+          props.context.isAdmin(true)
+        } else {
+          props.context.isAdmin(false)
+        }
+      }).catch((reason) => {
+        props.context.isAdmin(false)
+      })
       redirectTo('/my-questionaries')
     }).catch((e) => {
       setLoading(false)
