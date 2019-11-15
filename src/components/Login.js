@@ -178,7 +178,7 @@ function SignIn(props) {
       props.context.setToken(token)
       props.context.isTeacher()
       isAdmin().then((response) => {
-        if ("ADMIN" === response.data) {
+        if ("ADMIN" === response.data.permissions) {
           props.context.isAdmin(true)
         } else {
           props.context.isAdmin(false)
