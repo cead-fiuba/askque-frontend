@@ -7,6 +7,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import prettyFormatDate from '../util/PrettyFormatDate'
+import { withRouter } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -32,11 +33,19 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function ResponseCard(props) {
+const ResponseCard = (props) => {
     const classes = useStyles();
 
+
+    function redirectTo(newPath) {
+        props.history.push(newPath);
+    }
+
     return (
-        <Card className={classes.card}>
+        <Card
+            className={classes.card}
+            onClick={() => { redirectTo(`/answers-questionary/${props.answer.questionary.hash}`) }}
+        >
             <CardHeader
                 avatar={
                     <Typography variant="h3">
@@ -57,3 +66,7 @@ export default function ResponseCard(props) {
         </Card>
     );
 }
+
+export default withRouter((props) => (
+    <ResponseCard {...props} />
+))
