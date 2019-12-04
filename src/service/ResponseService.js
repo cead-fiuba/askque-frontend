@@ -14,3 +14,9 @@ export const deleteQuestionaryResponses = (hash) => {
     console.log(`Delete responses of questionary ${hash}`)
     return server.delete(`/responses/questionaries/${hash}`)
 }
+
+
+export const getResponseOfStudent = () => {
+    console.log('Get responses of student')
+    return server.get('/responses')
+}

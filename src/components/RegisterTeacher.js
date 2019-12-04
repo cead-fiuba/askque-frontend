@@ -79,7 +79,7 @@ function RegisterTeacher(props) {
         console.log(response);
         console.log(response.w3.U3);
         const email = response.w3.U3;
-        if (!email.endsWith("fi.uba.ar")) {
+        if (email.endsWith("fi.uba.ar")) {
             setValue({ ...values, showInicialMessage: false, name: response.w3.ig, email: response.w3.U3 })
             setErrorConf({ showErrorMessage: true, showSnackbarError: true })
         } else {
@@ -178,7 +178,7 @@ function RegisterTeacher(props) {
                         className={classes.createAcccountButton}
                         onClick={createAccount}
                     >
-                        Crear cuenta AskQue
+                        Crear cuenta
                     </Button>
                 </div>}
 

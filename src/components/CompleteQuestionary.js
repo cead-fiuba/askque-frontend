@@ -22,6 +22,8 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { updateQuantityResponses } from '../service/QuestionaryService';
+import Link from '@material-ui/core/Link';
+
 
 const useStyles = makeStyles(theme => ({
     text: {
@@ -204,6 +206,11 @@ export default function CompleteQuestionary(props) {
                 <DialogContent dividers>
                     <Typography gutterBottom>
                         Su respuesta fue enviada, gracias por participar
+                    </Typography>
+                    <Typography gutterBottom>
+                        Para ver todas sus  <Link href={'/my-answers'}>
+                            respuestas
+                            </Link>
                     </Typography>
                 </DialogContent>
             </Dialog>

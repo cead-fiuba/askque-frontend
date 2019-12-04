@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AppBar from "./AppBar"
 import { makeStyles } from '@material-ui/core/styles';
-import AskqueResume from "./AskqueResume"
 import { getAskquesOfTeacher, deleteQuestionaryByHash } from '../service/TeacherService'
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
