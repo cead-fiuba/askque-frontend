@@ -20,3 +20,9 @@ export const getResponseOfStudent = () => {
     console.log('Get responses of student')
     return server.get('/responses')
 }
+
+
+export const getAnswersOfQuestionary = (questionaryHash) => {
+    console.log('Get responses of student')
+    return server.get(`/responses?with_answers=true&questionary_hash=${questionaryHash}`)
+}
