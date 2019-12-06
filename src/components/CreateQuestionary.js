@@ -316,7 +316,7 @@ function CreateQuestionary2(props) {
               value={values.module}
             />
           </Grid>
-          <Grid item xs={5} sm={4}>
+          {/* <Grid item xs={5} sm={4}>
             <TextField
               select
               label="Tiempo"
@@ -336,7 +336,7 @@ function CreateQuestionary2(props) {
                 </MenuItem>
               ))}
             </TextField>
-          </Grid>
+          </Grid> */}
           <Table
           >
             <TableHead>

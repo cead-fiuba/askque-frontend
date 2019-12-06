@@ -11,7 +11,7 @@ import { withRouter } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     card: {
-        maxWidth: 345,
+        width: 320,
         marginBottom: theme.spacing(3)
     },
     media: {
@@ -45,6 +45,7 @@ const ResponseCard = (props) => {
         <Card
             className={classes.card}
             onClick={() => { redirectTo(`/answers-questionary/${props.answer.questionary.hash}`) }}
+            style={{ cursor: 'pointer' }}
         >
             <CardHeader
                 avatar={

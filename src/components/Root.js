@@ -6,7 +6,7 @@ import Register from './Register'
 import CreateQuestionary from "./CreateQuestionary"
 import AskQuestionaryView from "./AskQuestionaryView"
 import MyAskques from "./MyAskques"
-import AskResults from "./AskResults"
+import QuestionnaireStatistics from "./QuestionnaireStatistics"
 import EditQuestionary from './EditQuestionary'
 import MyAnswersView from './MyAnswersView'
 import AnswerOfQuestionaryView from './AnswerOfQuestionaryView'
@@ -21,7 +21,7 @@ export default class Root extends Component {
         <Route path="/ask-questionary" component={AskQuestionaryView} />
         <Route path="/my-questionaries" component={MyAskques} />
         <Route path="/my-answers" component={MyAnswersView} />
-        <Route path="/ask-results/:hash" component={AskResults} />
+        <Route path="/ask-results/:hash" component={QuestionnaireStatistics} />
         <Route path="/edit-questionary/:hash" component={EditQuestionary} />
         <Route path="/answers-questionary/:hash" component={AnswerOfQuestionaryView} />
         <Route path="/" component={Home} />

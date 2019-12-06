@@ -31,7 +31,7 @@ export const saveQuestionary = (questionary) => {
 
 export const getResultOfQuestionary = (hash) => {
     console.log(`Get result of questionary ${hash}`)
-    return server.get(`/responses/questionaries/${hash}`)
+    return server.get(`/responses?questionary_hash=${hash}&with_answers=true&process=true`)
 }
 
 export const deleteQuestionaryByHash = (hash) => {

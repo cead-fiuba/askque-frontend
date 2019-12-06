@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function AskResults(props) {
+export default function QuestionnaireStatistics(props) {
 
     const classes = useStyles();
 
@@ -36,7 +36,7 @@ export default function AskResults(props) {
 
         Promise.all([informationPromise, resultPromise]).then(([informationResponse, resultResponse]) => {
             const information = informationResponse.data
-            const results = resultResponse.data
+            const results = resultResponse.data.answers
             setQuestionary(information)
             setResults(results)
             setLoading(false)
@@ -45,7 +45,7 @@ export default function AskResults(props) {
         const interval = setInterval(() => {
             const resultPromise = getResultOfQuestionary(props.match.params.hash)
             resultPromise.then((resultResponse) => {
-                const result = resultResponse.data
+                const result = resultResponse.data.answers
                 setResults(result)
                 setLoading(false)
             })
@@ -79,7 +79,7 @@ export default function AskResults(props) {
                             const data = question.options.map((option, idx) => {
                                 return {
                                     name: abecedario[idx],
-                                    cantidad: findCountOfOptionById(option.id)
+                                    cantidad: results[option.id]
                                 }
                             })
 

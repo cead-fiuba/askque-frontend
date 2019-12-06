@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function RecipeReviewCard(props) {
+export default function QuestionaryCard(props) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
 
@@ -76,7 +76,7 @@ export default function RecipeReviewCard(props) {
                                 </Typography>
 
                             }
-                            title={props.questionary.name}
+                            title={props.questionary.name.slice(0, 25)}
                             subheader={formatDate()}
                             action={
                                 <Tooltip title="Ver resultados" placement="right">

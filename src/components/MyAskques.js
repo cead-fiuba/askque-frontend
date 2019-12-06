@@ -11,7 +11,7 @@ import AlertDialog from './common/AlertDialog';
 import Typography from '@material-ui/core/Typography';
 import { useSnackbar, SnackbarProvider } from 'notistack';
 import { deleteQuestionaryResponses } from '../service/ResponseService';
-import RecipeReviewCard from './common/RecipeReviewCard';
+import QuestionaryCard from './common/QuestionaryCard';
 
 
 const useStyles = makeStyles(theme => ({
@@ -131,7 +131,7 @@ export function MyAskques2(props) {
                                 {
                                     values.questionaries.map((questionary, idx) => (
                                         <Grid item xs key={idx}>
-                                            <RecipeReviewCard
+                                            <QuestionaryCard
                                                 key={idx}
                                                 questionary={questionary}
                                                 deleteQuestionary={() => { handleDeleteQuestionary(questionary.hash) }}
