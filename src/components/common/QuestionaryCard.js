@@ -43,8 +43,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function QuestionaryCard(props) {
     const classes = useStyles();
-    const [expanded, setExpanded] = React.useState(false);
-
 
     function formatDate() {
         const date = new Date(props.questionary.date)
