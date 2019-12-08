@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import AppBar from "./AppBar"
 import { getResultOfQuestionary } from '../service/TeacherService'
-import { getInformationOfQuestionaryWithCache, getInformationOfQuestionary } from '../service/QuestionaryService'
+import { getInformationOfQuestionary } from '../service/QuestionaryService'
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -9,6 +9,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Typography } from '@material-ui/core';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
+import Grid from '@material-ui/core/Grid'
+import AddIcon from '@material-ui/icons/Add';
+import Button from '@material-ui/core/Button';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { withRouter } from 'react-router-dom'
+
 
 const abecedario = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 
@@ -18,11 +24,23 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginTop: '8%'
+        marginTop: theme.spacing(4)
+    },
+    navigationButtons: {
+        marginLeft: theme.spacing(2)
+    },
+    buttonContainer: {
+        marginTop: theme.spacing(10)
+    },
+    leftIcon: {
+        marginRight: theme.spacing(1)
+    },
+    rightIcon: {
+        marginLeft: theme.spacing(1)
     }
 }));
 
-export default function QuestionnaireStatistics(props) {
+function QuestionnaireStatistics(props) {
 
     const classes = useStyles();
 
@@ -54,20 +72,43 @@ export default function QuestionnaireStatistics(props) {
 
     }, [props.match.params.hash])
 
-
-    const findCountOfOptionById = (optionId) => {
-        const resultFiltered = results.filter(result => result.optionid === optionId)
-        if (resultFiltered.length === 1) {
-            const result = resultFiltered[0]
-            return parseInt(result.count)
-        }
-        return 0
-    }
-
     return <div>
         <AppBar
             position="static"
         />
+        <Grid
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+            className={classes.buttonContainer}
+        >
+            <Grid item xs={2}>
+                <Button
+                    className={classes.navigationButtons}
+                    color="primary"
+                    variant="contained"
+                    onClick={() => props.history.push('/my-questionaries')}
+                >
+                    <ArrowBackIcon className={classes.leftIcon} />
+                    Regresar
+                    </Button>
+            </Grid>
+            <Grid item xs={8} />
+            <Grid item xs={2}>
+                <Button
+                    className={classes.navigationButtons}
+                    color="primary"
+                    variant="contained"
+                    onClick={() => props.history.push('/create-questionary')}
+                >
+                    Crear encuesta
+                    <AddIcon className={classes.rightIcon} />
+                </Button>
+            </Grid>
+
+
+        </Grid>
         <Container maxWidth="md" component="main" className={classes.container}>
             {
                 loading ? <>Obteniendo información</> :
@@ -125,3 +166,8 @@ export default function QuestionnaireStatistics(props) {
 
     </div>
 }
+
+
+export default withRouter((props) => (
+    <QuestionnaireStatistics {...props} />
+))
