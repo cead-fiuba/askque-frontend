@@ -109,10 +109,10 @@ const MakeCopyAlertContent = (props) => {
 const MakeCopyAlertDialog = (props) => {
 
     const [sharedWith, setSharedWith] = useState()
-    const [makeCopyForMe, setMakeCopyForMe] = useState()
+    const [makeCopyForMe, setMakeCopyForMe] = useState(true)
 
     const makeCopy = () => {
-        console.log('makeCopy')
+        console.log('makeCopy', makeCopyForMe)
         props.handleOk(makeCopyForMe, sharedWith)
     }
 
