@@ -8,7 +8,7 @@ import { getInformationOfQuestionaryWithCache } from '../service/QuestionaryServ
 import Button from '@material-ui/core/Button';
 import CompleteQuestionary from "./CompleteQuestionary"
 
-export default class AskQuestionary extends Component {
+export default class AskQuestionaryView extends Component {
 
     state = {
         questionaryHash: '',

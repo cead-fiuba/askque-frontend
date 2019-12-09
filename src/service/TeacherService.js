@@ -1,16 +1,12 @@
 import server from '../Server';
 
 export const createTeacher = (teacher) => {
-    return server.post('/teachers', teacher).then((res) => {
-        const token = res.data.token
-        console.log('token', token)
-        server.defaults.headers.common['Authorization'] = token
-        return Promise.resolve(res)
-    }).catch((error) => {
-        return Promise.reject(error)
-    })
+    return server.post('/teachers', teacher);
 }
 
+export const findTeacherByEmail = (email) => {
+    return server.get(`/teachers/${email}`)
+}
 
 export const getAskquesOfTeacher = () => {
     return server.get('/questionaries')
@@ -31,11 +27,24 @@ export const saveQuestionary = (questionary) => {
 
 export const getResultOfQuestionary = (hash) => {
     console.log(`Get result of questionary ${hash}`)
-    return server.get(`/responses/questionaries/${hash}`)
+    return server.get(`/responses?questionary_hash=${hash}&with_answers=true&process=true`)
 }
 
 export const deleteQuestionaryByHash = (hash) => {
     console.log(`Delete questionary ${hash}`)
     return server.delete(`/questionaries/${hash}`)
+}
+
+export const makeCopyOfQuestionaryWith = (withMe, userEmail, questionaryHash) => {
+    const body = {
+        questionary_hash: questionaryHash,
+        with_me: withMe,
+        user_email: userEmail
+    }
+    return server.post('/copy', body)
+}
+
+export const isAdmin = () => {
+    return server.get("/admin")
 }
 

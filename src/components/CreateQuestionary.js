@@ -27,6 +27,9 @@ import AlertDialog from './common/AlertDialog'
 import EditIcon from '@material-ui/icons/Edit';
 import { deleteQuestion } from '../service/QuestionaryService'
 import { useSnackbar, SnackbarProvider } from 'notistack';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import SaveIcon from '@material-ui/icons/Save';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
 
 const ranges = [
   {
@@ -81,6 +84,8 @@ const useStyles = makeStyles(theme => ({
   },
   leftIcon: {
     marginRight: theme.spacing(1)
+  }, rightIcon: {
+    marginLeft: theme.spacing(1)
   },
   createQuestionButton: {
     marginTop: theme.spacing(5)
@@ -311,7 +316,7 @@ function CreateQuestionary2(props) {
               value={values.module}
             />
           </Grid>
-          <Grid item xs={5} sm={4}>
+          {/* <Grid item xs={5} sm={4}>
             <TextField
               select
               label="Tiempo"
@@ -331,7 +336,7 @@ function CreateQuestionary2(props) {
                 </MenuItem>
               ))}
             </TextField>
-          </Grid>
+          </Grid> */}
           <Table
           >
             <TableHead>
@@ -443,7 +448,8 @@ function CreateQuestionary2(props) {
             className={classes.cancelButton}
             onClick={cancelCreateQuestionary}
           >
-            Cancelar
+            <ArrowBackIcon className={classes.leftIcon} />
+            Atras
         </Button>
           <Button
             variant="contained"
@@ -462,8 +468,10 @@ function CreateQuestionary2(props) {
               console.log('on click en save (2)', alertDialogValues);
             }}
           >
-            Guardar
-        </Button>
+
+            CREAR
+            <NoteAddIcon className={classes.rightIcon} />
+          </Button>
         </Grid>
 
 

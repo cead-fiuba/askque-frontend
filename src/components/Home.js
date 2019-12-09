@@ -107,10 +107,16 @@ function Home(props) {
               <MyButton
                 onClick={() => redirectTo(props.context.state.isLogged ? "/ask-questionary" : "/login")}
                 fullWidth={true}
-                leftIcon={<CommentIcon />}
                 text="Responder cuestionario"
                 className={style.buttons}
                 show={!(props.context.state.isLogged && props.context.state.isTeacher)}
+              />
+              <MyButton
+                onClick={() => redirectTo(props.context.state.isLogged ? "/my-answers" : "/login")}
+                fullWidth={true}
+                text="Mis respuestas"
+                className={style.buttons}
+                show={(props.context.state.isLogged && !props.context.state.isTeacher)}
               />
             </Grid>
 
