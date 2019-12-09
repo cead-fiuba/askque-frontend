@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import AppBar from "./AppBar"
 import { getResponseOfStudent } from '../service/ResponseService'
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -6,6 +6,8 @@ import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import ResponseCard from './ResponseCard'
+import Button from '@material-ui/core/Button';
+import { withRouter } from 'react-router-dom'
 
 
 const useStyles = makeStyles(theme => ({
@@ -17,10 +19,13 @@ const useStyles = makeStyles(theme => ({
     },
     loadingMessage: {
         marginTop: theme.spacing(3)
+    },
+    askQuestionaryButton: {
+        marginTop: theme.spacing(3)
     }
 }));
 
-const MyAnswersView = () => {
+const MyAnswersView = (props) => {
 
 
     const [myAnswers, setMyAnswers] = useState({})
@@ -53,16 +58,32 @@ const MyAnswersView = () => {
                             <CircularProgress thickness={5.0} />
                             <div className={styles.loadingMessage}>
                                 Obteniendo tus respuestas...
-                        </div>
+                            </div>
                         </> :
                         <>
                             {
-                                myAnswers.map((answer, idx) => (
-                                    <ResponseCard
-                                        answer={answer}
-                                        key={idx}
-                                    />
-                                ))
+
+                                myAnswers.length === 0 ?
+                                    <Fragment>
+                                        <div>
+                                            Todavia no respondiste ninguna encuesta
+                                    </div>
+                                        <Button
+                                            color="primary"
+                                            variant="contained"
+                                            onClick={() => props.history.push('/ask-questionary')}
+                                            className={styles.askQuestionaryButton}
+                                        >
+                                            Response encuesta
+                                   </Button>
+                                    </Fragment>
+
+                                    : myAnswers.map((answer, idx) => (
+                                        <ResponseCard
+                                            answer={answer}
+                                            key={idx}
+                                        />
+                                    ))
                             }
                         </>
                 }
@@ -73,7 +94,11 @@ const MyAnswersView = () => {
     </div>
 }
 
-export default MyAnswersView;
+
+export default withRouter((props) => (
+    <MyAnswersView {...props} />
+))
+
 
 function fetchMyAnswers(setMyAnswers, setLoading) {
     getResponseOfStudent().then((response) => {
