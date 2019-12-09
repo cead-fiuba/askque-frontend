@@ -33,6 +33,7 @@ export default function AlertDialog(props) {
                 aria-describedby="alert-dialog-description"
                 fullWidth
                 maxWidth='xs'
+                scroll={props.scroll}
             >
                 {
                     props.loading && <CustomLinearProgress

@@ -11,8 +11,9 @@ import AlertDialog from './common/AlertDialog';
 import Typography from '@material-ui/core/Typography';
 import { useSnackbar, SnackbarProvider } from 'notistack';
 import { deleteQuestionaryResponses } from '../service/ResponseService';
+import { makeCopyOfQuestionaryWith } from '../service/TeacherService'
 import QuestionaryCard from './common/QuestionaryCard';
-
+import MakeCopyAlertDialog from './MakeCopyAlertDialog'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -54,6 +55,9 @@ export function MyAskques2(props) {
     const [showAlertDialog, setShowAlertDialog] = useState(false)
     const [questionaryToDelete, setQuestionaryToDelete] = useState('')
     const [showLoadingAlertDialog, setShowLoadingAlertDialog] = useState(false)
+    const [showMakeCopyAlert, setShowMakeCopyAlert] = useState(false)
+    const [questionaryToDoAction, setQuestionaryToDoAction] = useState()
+    const [loadingAlertMakeCopy, setLoadingAlertMakeCopy] = useState(false)
 
 
     function redirectTo(newPath) {
@@ -61,7 +65,6 @@ export function MyAskques2(props) {
     }
 
     useEffect(() => {
-        console.log('useEffect')
         getAskquesOfTeacher().then((res) => {
             setState({ ...values, questionaries: res.data.questionaries })
             setLoading(false)
@@ -108,9 +111,25 @@ export function MyAskques2(props) {
 
     }
 
+    const handleMakeCopyOfQuestionary = (hash) => {
+        setQuestionaryToDoAction(hash)
+        setShowMakeCopyAlert(true)
+    }
+
     const handleDeleteQuestionary = (hash) => {
         setQuestionaryToDelete(hash)
         setShowAlertDialog(true)
+    }
+
+    const makeCopyOfQuestionary = (withMe, email) => {
+        setLoadingAlertMakeCopy(true)
+        let variant = 'success'
+        makeCopyOfQuestionaryWith(withMe, email, questionaryToDoAction).then((res) => {
+            setShowMakeCopyAlert(false)
+            enqueueSnackbar(`Se creó la copia del questionario ${questionaryToDoAction}`, { variant: 'success' });
+        }).catch((reason) => {
+            enqueueSnackbar(`No se puedo generar la copia, intente mas tarde`, { variant: 'error' });
+        })
     }
 
 
@@ -137,6 +156,7 @@ export function MyAskques2(props) {
                                                 deleteQuestionary={() => { handleDeleteQuestionary(questionary.hash) }}
                                                 editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
                                                 showQuestionaryResults={() => { redirectTo(`ask-results/${questionary.hash}`) }}
+                                                makeCopy={() => { handleMakeCopyOfQuestionary(questionary.hash) }}
                                             />
                                         </Grid>
 
@@ -172,6 +192,12 @@ export function MyAskques2(props) {
                         handleOk={() => { deleteQuestionary(questionaryToDelete) }}
                         loading={showLoadingAlertDialog}
 
+                    />
+                    <MakeCopyAlertDialog
+                        open={showMakeCopyAlert}
+                        handleClose={() => { setShowMakeCopyAlert(false) }}
+                        handleOk={makeCopyOfQuestionary}
+                        loading={loadingAlertMakeCopy}
                     />
                 </>
             }

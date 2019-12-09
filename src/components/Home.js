@@ -116,7 +116,7 @@ function Home(props) {
                 fullWidth={true}
                 text="Mis respuestas"
                 className={style.buttons}
-                show={!(props.context.state.isLogged && props.context.state.isTeacher)}
+                show={(props.context.state.isLogged && !props.context.state.isTeacher)}
               />
             </Grid>
 

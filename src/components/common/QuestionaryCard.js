@@ -65,7 +65,6 @@ export default function QuestionaryCard(props) {
         <AppContextConsumer>
             {
                 ({ state }) => {
-                    console.log('state', state)
                     return <Card className={classes.card}>
                         <CardHeader
                             avatar={
@@ -110,7 +109,6 @@ export default function QuestionaryCard(props) {
                             >
 
                                 Eliminar
-                    <DeleteIcon className={classes.rightIcon} />
                             </Button>
                             <Button
                                 size="small"
@@ -120,8 +118,17 @@ export default function QuestionaryCard(props) {
                             >
 
                                 Editar
-                    <EditIcon className={classes.rightIcon} />
                             </Button>
+                            <Button
+                                size="small"
+                                color="primary"
+                                variant="contained"
+                                onClick={() => { props.makeCopy() }}
+                            >
+
+                                Hacer copia
+                            </Button>
+
                         </CardActions>
                     </Card>
                 }
