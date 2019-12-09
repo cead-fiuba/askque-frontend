@@ -76,10 +76,10 @@ const MakeCopyAlertContent = (props) => {
 
             >
                 <option key={0} value={0}>
-                    Conmigo
+                    Para mi
                 </option>
                 <option key={1} value={2}>
-                    Con otro usuario
+                    Para otro usuario
                 </option>
             </TextField>
 
