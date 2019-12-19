@@ -14,8 +14,10 @@ const useStyles = makeStyles(theme => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        marginTop: '8%'
+        alignItems: 'center'
+    },
+    gridContainer: {
+        marginTop: theme.spacing(10)
     },
     loadingMessage: {
         marginTop: theme.spacing(3)
@@ -50,7 +52,7 @@ const MyAnswersView = (props) => {
                 direction="column"
                 alignItems="center"
                 justify="center"
-                style={{ minHeight: '100vh' }}
+                className={styles.gridContainer}
             >
                 {
                     loading ?
