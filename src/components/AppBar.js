@@ -57,31 +57,31 @@ function AppBarCustom(props) {
           alt="Logo"
           style={{ width: '50px', marginRight: '5px' }}
         />
-        <Hidden only="xs">
-          <Typography
-            variant="h6"
-            color="inherit"
-            className={style.grow}
-            onClick={() => redirectTo("/")}
-            style={{ cursor: 'pointer' }}
-          >
+
+        <Typography
+          variant="h6"
+          color="inherit"
+          className={style.grow}
+          onClick={() => redirectTo("/")}
+          style={{ cursor: 'pointer' }}
+        >
+          <Hidden only="xs">
             QuizFIUBA
+          </Hidden>
+
         </Typography>
-        </Hidden>
 
         {
           props.context.state.isLogged ?
             <>
-              <Hidden only="xs">
-                <Button
-                  variant="text"
-                  color="inherit"
-                  className={style.userEmailButton}
-                >
-                  {props.context.state.email.split('@')[0]}
-                  <PersonIcon className={style.rightButton} />
-                </Button>
-              </Hidden>
+              <Button
+                variant="text"
+                color="inherit"
+                className={style.userEmailButton}
+              >
+                {props.context.state.email.split('@')[0]}
+                <PersonIcon className={style.rightButton} />
+              </Button>
 
               <Button
                 variant="outlined"
