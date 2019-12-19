@@ -2,10 +2,10 @@ import server from '../Server';
 
 export const initSessionStudent = (userData) => {
     return server.post('/login/student', userData).then((res) => {
-        const token = res.data.token
+        const data = res.data;
 
-        console.log('token', token)
-        return Promise.resolve(token)
+        console.log('token', data)
+        return Promise.resolve(data)
     }).catch((e) => {
         return Promise.reject(e)
     })

@@ -29,6 +29,9 @@ const useStyles = makeStyles(theme => ({
     isCorrectOrNotIcon: {
         marginTop: theme.spacing(1),
         marginRight: theme.spacing(1)
+    },
+    notShowResultMessage: {
+        marginBottom: theme.spacing(2)
     }
 }));
 
@@ -53,7 +56,7 @@ const AnswerOfQuestionaryView = (props) => {
         return option.correct === isIncluide;
     }
 
-    const createOptions = (options, optionsSelected) => {
+    const createOptions = (options, optionsSelected, canShowResult) => {
         console.log('questionId', optionsSelected)
         return options.map((option) => {
             console.log('id', option.id)
@@ -61,11 +64,11 @@ const AnswerOfQuestionaryView = (props) => {
                 <ListItemIcon>
                     <>
                         {
-
-                            optionsIsOk(option, optionsSelected) ?
-                                <CheckIcon className={styles.isCorrectOrNotIcon} /> :
-                                <CloseIcon className={styles.isCorrectOrNotIcon} />
-
+                            canShowResult ?
+                                optionsIsOk(option, optionsSelected) ?
+                                    <CheckIcon className={styles.isCorrectOrNotIcon} /> :
+                                    <CloseIcon className={styles.isCorrectOrNotIcon} />
+                                : null
                         }
                         <Checkbox
                             edge="start"
@@ -104,6 +107,12 @@ const AnswerOfQuestionaryView = (props) => {
                         </div>
                 </> : <>
                         {
+                            !answer.questionary.can_show_result &&
+                            <Typography variant="overline" gutterBottom className={styles.notShowResultMessage}>
+                                Todavía no podes ver los resultados del cuestionario, una vez que el docente los habilite, actualice la página
+                            </Typography >
+                        }
+                        {
                             answer.questionary.questions.map(({ id, text, options, has_image, image_url }) => (
                                 <Grid
                                     item
@@ -117,7 +126,7 @@ const AnswerOfQuestionaryView = (props) => {
                                         <b> {text} </b>
                                     </Typography>
                                     <List className={styles.list}>
-                                        {createOptions(options, answer.question_responses.flatMap((q) => (q.optionIds)))}
+                                        {createOptions(options, answer.question_responses.flatMap((q) => (q.optionIds)), answer.questionary.can_show_result)}
                                     </List>
                                 </Grid>
                             ))}

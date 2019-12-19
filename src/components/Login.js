@@ -155,10 +155,13 @@ function SignIn(props) {
   }
 
   const login = () => {
-    initSessionStudent({ email: values.email, password: values.password }).then((token) => {
-      props.context.setToken(token)
+    initSessionStudent({ email: values.email, password: values.password }).then((res) => {
+      console.log('res', res)
+      props.context.setToken(res.token);
+      props.context.setEmail(res.email);
       redirectTo("/ask-questionary")
     }).catch((e) => {
+      console.log(e)
       setValues({ ...values, showErrorLogin: true })
     });
   }
