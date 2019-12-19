@@ -74,7 +74,7 @@ const MyAnswersView = (props) => {
                                             onClick={() => props.history.push('/ask-questionary')}
                                             className={styles.askQuestionaryButton}
                                         >
-                                            Response encuesta
+                                            Responder encuesta
                                    </Button>
                                     </Fragment>
 
