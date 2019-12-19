@@ -11,7 +11,8 @@ import AlertDialog from './common/AlertDialog';
 import Typography from '@material-ui/core/Typography';
 import { useSnackbar, SnackbarProvider } from 'notistack';
 import { deleteQuestionaryResponses } from '../service/ResponseService';
-import { makeCopyOfQuestionaryWith } from '../service/TeacherService'
+import { makeCopyOfQuestionaryWith } from '../service/TeacherService';
+import { showResultsOfQuestionary } from '../service/QuestionaryService'
 import QuestionaryCard from './common/QuestionaryCard';
 import MakeCopyAlertDialog from './MakeCopyAlertDialog'
 
@@ -132,6 +133,14 @@ export function MyAskques2(props) {
         })
     }
 
+    const showResults = (hash) => {
+        showResultsOfQuestionary(hash).then((res) => {
+            enqueueSnackbar(`Se mostrará los resultados del  ${hash}`, { variant: 'success' });
+        }).catch((reason) => {
+            enqueueSnackbar(`No se pudo realizar la acción`, { variant: 'error' });
+        })
+    }
+
 
     return <div>
         <AppBar
@@ -157,6 +166,7 @@ export function MyAskques2(props) {
                                                 editQuestionary={() => redirectTo(`edit-questionary/${questionary.hash}`)}
                                                 showQuestionaryResults={() => { redirectTo(`ask-results/${questionary.hash}`) }}
                                                 makeCopy={() => { handleMakeCopyOfQuestionary(questionary.hash) }}
+                                                showResults={() => showResults(questionary.hash)}
                                             />
                                         </Grid>
 

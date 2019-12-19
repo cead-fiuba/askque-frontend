@@ -177,9 +177,10 @@ function SignIn(props) {
   const handleResponseGoogle = (res) => {
     const email = res.w3.U3
     setLoading(true)
-    initSessionTeacher(email).then((token) => {
-      props.context.setToken(token)
+    initSessionTeacher(email).then((res) => {
+      props.context.setToken(res.token)
       props.context.isTeacher()
+      props.context.setEmail(res.email);
       isAdmin().then((response) => {
         if ("ADMIN" === response.data.permissions) {
           props.context.isAdmin(true)

@@ -13,6 +13,10 @@ export const updateQuantityResponses = (hash) => {
     return server.put(`/questionaries/${hash}/increment`)
 }
 
+export const showResultsOfQuestionary = (hash) => {
+    return server.put(`/questionaries/${hash}/show_results`)
+}
+
 export const deleteQuestion = (questionId) => {
     return server.delete(`/questions/${questionId}`)
 }

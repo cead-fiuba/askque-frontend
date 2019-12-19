@@ -7,11 +7,12 @@ import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from '@material-ui/core/Tooltip';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import { AppContextConsumer } from "../../context/context"
+import Chip from '@material-ui/core/Chip';
+import ShareIcon from '@material-ui/icons/Share';
+
 
 import 'typeface-roboto';
 
@@ -38,6 +39,9 @@ const useStyles = makeStyles(theme => ({
     },
     rightIcon: {
         marginLeft: theme.spacing(1),
+    },
+    chip: {
+        marginTop: theme.spacing(1)
     }
 }));
 
@@ -95,9 +99,26 @@ export default function QuestionaryCard(props) {
                             <Typography variant="body2" color="textSecondary" component="p">
                                 Cantidad de preguntas {props.questionary.questions.length}
                             </Typography>
-                            {state.isAdmin && <Typography variant="overline" display="block">
-                                BY {props.questionary.teacher_name != null ? props.questionary.teacher_name : "undefined"}
-                            </Typography>}
+                            {
+                                props.questionary.can_show_result &&
+                                <>
+                                    <Chip
+                                        color="primary"
+                                        icon={<ShareIcon />}
+                                        variant="outlined"
+                                        label="Resultados compartidos"
+                                        className={classes.chip}
+                                    />
+                                </>
+
+
+                            }
+                            {
+                                state.isAdmin && <Typography variant="overline" display="block">
+                                    BY {props.questionary.teacher_name != null ? props.questionary.teacher_name : "undefined"}
+                                </Typography>
+                            }
+
 
                         </CardContent>
                         <CardActions disableSpacing={false}>
@@ -126,8 +147,19 @@ export default function QuestionaryCard(props) {
                                 onClick={() => { props.makeCopy() }}
                             >
 
-                                Hacer copia
+                                copiar
                             </Button>
+                            {!props.questionary.can_show_result &&
+                                <Button
+                                    size="small"
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={() => { props.showResults() }}
+                                >
+
+                                    resultar
+                            </Button>}
+
 
                         </CardActions>
                     </Card>
