@@ -155,10 +155,13 @@ function SignIn(props) {
   }
 
   const login = () => {
-    initSessionStudent({ email: values.email, password: values.password }).then((token) => {
-      props.context.setToken(token)
+    initSessionStudent({ email: values.email, password: values.password }).then((res) => {
+      console.log('res', res)
+      props.context.setToken(res.token);
+      props.context.setEmail(res.email);
       redirectTo("/ask-questionary")
     }).catch((e) => {
+      console.log(e)
       setValues({ ...values, showErrorLogin: true })
     });
   }
@@ -174,9 +177,10 @@ function SignIn(props) {
   const handleResponseGoogle = (res) => {
     const email = res.w3.U3
     setLoading(true)
-    initSessionTeacher(email).then((token) => {
-      props.context.setToken(token)
+    initSessionTeacher(email).then((res) => {
+      props.context.setToken(res.token)
       props.context.isTeacher()
+      props.context.setEmail(res.email);
       isAdmin().then((response) => {
         if ("ADMIN" === response.data.permissions) {
           props.context.isAdmin(true)

@@ -16,7 +16,8 @@ export class AppContextProvider extends React.Component {
         token: localStorage.getItem('token'),
         isLogged: !tokenIsNull && !tokenIsNullString,
         isTeacher: localStorage.getItem('isTeacher') === "true",
-        isAdmin: localStorage.getItem('isAdmin') === "true"
+        isAdmin: localStorage.getItem('isAdmin') === "true",
+        email: localStorage.getItem('email')
     }
 
     setToken = (token) => {
@@ -35,6 +36,14 @@ export class AppContextProvider extends React.Component {
         this.setState({ token: null, isLogged: false, isTeacher: false }, () => { localStorage.clear() })
     }
 
+    setEmail = (email) => {
+        this.setState({ ... this.state, email: email }, () => { localStorage.setItem('email', email) })
+    }
+
+    getEmail = () => {
+        return this.state.email;
+    }
+
     render() {
         return (
             <AppContext.Provider
@@ -43,7 +52,9 @@ export class AppContextProvider extends React.Component {
                     setToken: this.setToken,
                     isTeacher: this.isTeacher,
                     logout: this.logout,
-                    isAdmin: this.isAdmin
+                    isAdmin: this.isAdmin,
+                    setEmail: this.setEmail,
+                    getEmail: this.getEmail
 
                 }}>
                 {this.props.children}

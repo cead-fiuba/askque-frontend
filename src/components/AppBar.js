@@ -10,7 +10,7 @@ import Hidden from '@material-ui/core/Hidden';
 import { AppContextConsumer } from "../context/context"
 import ExitToApp from '@material-ui/icons/ExitToAppRounded';
 import logo from '../images/logo.png'
-
+import PersonIcon from '@material-ui/icons/Person';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,8 +30,8 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
-  sas: {
-
+  userEmailButton: {
+    marginRight: theme.spacing(2)
   }
 }));
 
@@ -57,6 +57,7 @@ function AppBarCustom(props) {
           alt="Logo"
           style={{ width: '50px', marginRight: '5px' }}
         />
+
         <Typography
           variant="h6"
           color="inherit"
@@ -64,18 +65,33 @@ function AppBarCustom(props) {
           onClick={() => redirectTo("/")}
           style={{ cursor: 'pointer' }}
         >
-          QuizFIUBA
+          <Hidden only="xs">
+            QuizFIUBA
+          </Hidden>
+
         </Typography>
+
         {
           props.context.state.isLogged ?
             <>
+              <Button
+                variant="text"
+                color="inherit"
+                className={style.userEmailButton}
+              >
+                {props.context.state.email.split('@')[0]}
+                <PersonIcon className={style.rightButton} />
+              </Button>
+
               <Button
                 variant="outlined"
                 color="inherit"
                 onClick={exit}
               >
-                Salir
-              <ExitToApp className={style.rightButton} />
+                <Hidden only="xs">
+                  Salir
+                </Hidden>
+                <ExitToApp className={style.rightButton} />
               </Button>
             </>
             :
