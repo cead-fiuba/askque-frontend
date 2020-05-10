@@ -21,6 +21,7 @@ export class AppContextProvider extends React.Component {
     }
 
     setToken = (token) => {
+        console.log('set token',token)
         this.setState({ token, isLogged: token !== null }, () => { localStorage.setItem('token', token) })
     }
 

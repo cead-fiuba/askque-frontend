@@ -44,10 +44,11 @@ function RegisterStudent(props) {
         }
         createStudent(student)
             .then((res) => {
-                goTo('/ask-questionary')
                 props.context.setToken(res.data.token);
+                props.context.setEmail(values.email);
+                goTo('/ask-questionary')
             }).catch((e) => {
-                console.log('algo salio mal al crear la cuenta', e.response.status === 400)
+                console.log('algo salio mal al crear la cuenta', e.response)
                 if (e.response.status === 400) {
                     setValues({ ...values, showSnackbarError: true, snackbarErrorMessage: 'Email ya registrado' })
                 }
