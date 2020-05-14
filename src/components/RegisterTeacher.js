@@ -77,13 +77,14 @@ function RegisterTeacher(props) {
 
     const responseGoogle = (response) => {
         console.log(response);
-        console.log(response.w3.U3);
-        const email = response.w3.U3;
+        console.log(response.profileObj);
+        const personalInformation = response.profileObj;
+        const email = personalInformation.email;
         if (!email.endsWith("fi.uba.ar")) {
-            setValue({ ...values, showInicialMessage: false, name: response.w3.ig, email: response.w3.U3 })
+            setValue({ ...values, showInicialMessage: false, name: personalInformation.name, email: personalInformation.email })
             setErrorConf({ showErrorMessage: true, showSnackbarError: true })
         } else {
-            setValue({ ...values, showGoogleButton: false, showForm: true, showInicialMessage: false, name: response.w3.ig, email: response.w3.U3 })
+            setValue({ ...values, showGoogleButton: false, showForm: true, showInicialMessage: false, name: personalInformation.name, email: personalInformation.email})
 
         }
     }
