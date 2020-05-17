@@ -8,10 +8,15 @@ import { createStudent } from "../service/StudentService"
 import { withRouter } from 'react-router-dom'
 import { AppContextConsumer } from '../context/context'
 import { MySnackbarContentWrapper } from './common/MySnackbarContentWrapper'
+import { MyGoogleButton } from './GoogleButton'
 
 const useStyles = makeStyles(theme => ({
     createAcccountButton: {
         marginTop: theme.spacing(2),
+    },
+    googleButton: {
+        width: '100% !important',
+        marginTop: theme.spacing(7)    
     }
 }));
 
@@ -19,16 +24,15 @@ function RegisterStudent(props) {
 
     const [values, setValues] = React.useState({
         name: '',
-        lastName: '',
         email: '',
-        pass: '',
         emailIsValid: true,
         padron: '',
-        padronIsValid: true,
         padronHelperText: '',
         showSnackbarError: false,
         snackbarErrorMessage: null
     });
+
+    const [showForm,setShowForm] = React.useState(false)
 
 
     const goTo = (value) => {
@@ -56,13 +60,6 @@ function RegisterStudent(props) {
     }
 
 
-    function validateEmail(email) {
-        // eslint-disable-next-line
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email.toLowerCase());
-    }
-
-
     const handleChange = name => event => {
         if (name === 'padron') {
             const isValid = !isNaN(Number(event.target.value))
@@ -73,11 +70,21 @@ function RegisterStudent(props) {
                 [name]: event.target.value,
                 padronHelperText: helperMessage
             })
-        } else if (name === 'email') {
-            const isValid = validateEmail(event.target.value)
-            setValues({ ...values, [name]: event.target.value, emailIsValid: isValid })
         } else {
             setValues({ ...values, [name]: event.target.value })
+        }
+    }
+
+    const responseGoogle = (response) => {
+        console.log(response);
+        console.log(response.profileObj);
+        const personalInformation = response.profileObj;
+        const email = personalInformation.email;
+        if (email.endsWith("fi.uba.ar")) {
+            setValues({...values, name : personalInformation.name, email : email})
+            setShowForm(true)
+        } else {
+            console.log("el email es invalido")
         }
     }
 
@@ -87,7 +94,8 @@ function RegisterStudent(props) {
     return <div>
         <Container component="main" >
             <Typography variant="body2" gutterBottom>
-                Es necesario tener una cuenta para poder response un Askque
+                Es necesario tener una cuenta para poder responder las encuestas. Para crear
+                la es necesario que tengas un email @fi.uba.ar
             </Typography>
 
             {
@@ -100,58 +108,57 @@ function RegisterStudent(props) {
                     />
                 </>
             }
-            <TextField
-                id="padron"
-                label="Padrón"
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                value={values.padron}
-                onChange={handleChange('padron')}
-                error={!values.padronIsValid}
-                helperText={values.padronHelperText}
-            />
-            <TextField
-                id="name"
-                label="Nombre Completo"
-                margin="normal"
-                fullWidth
-                variant="outlined"
-                onChange={handleChange('name')}
-                value={values.name}
-            />
-            <TextField
-                id="email"
-                label="Email"
-                margin="normal"
-                fullWidth
-                variant="outlined"
-                type="email"
-                onChange={handleChange('email')}
-                value={values.email}
-                error={!values.emailIsValid}
-            />
-            <TextField
-                id="password"
-                label="Contraseña"
-                type="password"
-                autoComplete="current-password"
-                margin="normal"
-                fullWidth
-                variant="outlined"
-                onChange={handleChange('pass')}
-                value={values.pass}
-            />
 
-            <Button
-                variant='contained'
-                color="primary"
-                fullWidth
-                className={classes.createAcccountButton}
-                onClick={createStudentAccount}
-            >
-                Crear cuenta AskQue
-            </Button>
+            {
+                showForm ? <>
+                <TextField
+                    id="padron"
+                    label="Padrón"
+                    margin="normal"
+                    variant="outlined"
+                    fullWidth
+                    value={values.padron}
+                    onChange={handleChange('padron')}
+                    error={!values.padronIsValid}
+                    helperText={values.padronHelperText}
+                />
+                <TextField
+                    id="name"
+                    label="Nombre Completo"
+                    margin="normal"
+                    fullWidth
+                    variant="outlined"
+                    onChange={handleChange('name')}
+                    value={values.name}
+                />
+
+                <TextField
+                    id="email"
+                    label="Email"
+                    margin="normal"
+                    fullWidth
+                    variant="outlined"
+                    type="email"
+                    onChange={handleChange('email')}
+                    value={values.email}
+                />
+
+                <Button
+                    variant='contained'
+                    color="primary"
+                    fullWidth
+                    className={classes.createAcccountButton}
+                    onClick={createStudentAccount}
+                >
+                    Crear cuenta
+                </Button>
+
+                </>:
+                <MyGoogleButton
+                    handleResponseGoogle={responseGoogle}
+                    style={classes.googleButton}
+                />
+        }
         </Container>
     </div>
 }
