@@ -1,13 +1,11 @@
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { initSessionStudent, initSessionTeacher } from "../service/LoginService"
+import { initSession } from "../service/LoginService"
 import { isAdmin } from "../service/TeacherService"
 
 import { withRouter } from 'react-router-dom'
@@ -20,7 +18,6 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
 import { MyGoogleButton } from './GoogleButton'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -150,47 +147,21 @@ function SignIn(props) {
     props.history.push(newPath);
   }
 
-  const onChange = field => event => {
-    setValues({ ...values, [field]: event.target.value })
-  }
-
-  const login = () => {
-    initSessionStudent({ email: values.email, password: values.password }).then((res) => {
-      console.log('res', res)
-      props.context.setToken(res.token);
-      props.context.setEmail(res.email);
-      redirectTo("/ask-questionary")
-    }).catch((e) => {
-      console.log(e)
-      setValues({ ...values, showErrorLogin: true })
-    });
-  }
-
-
-  const handleKeyPress = (event) => {
-    var code = event.keyCode || event.which;
-    if (code === 13) {
-      console.log('Enter')
-    }
-  }
-
   const handleResponseGoogle = (res) => {
-    const email = res.w3.U3
+    console.log(res)
+    const email = res.profileObj.email;
     setLoading(true)
-    initSessionTeacher(email).then((res) => {
+    initSession(email).then((res) => {
+      console.log('response',res)
       props.context.setToken(res.token)
-      props.context.isTeacher()
-      props.context.setEmail(res.email);
-      isAdmin().then((response) => {
-        if ("ADMIN" === response.data.permissions) {
-          props.context.isAdmin(true)
-        } else {
-          props.context.isAdmin(false)
-        }
-      }).catch((reason) => {
-        props.context.isAdmin(false)
-      })
-      redirectTo('/my-questionaries')
+      props.context.isTeacher(res.is_teacher)
+      props.context.setEmail(email);
+      if(res.is_teacher){
+        redirectTo('/my-questionaries')
+      }else{
+        redirectTo("/ask-questionary")
+      }
+      
     }).catch((e) => {
       setLoading(false)
       console.log(e.response)
@@ -224,7 +195,7 @@ function SignIn(props) {
             <CircularProgress className={classes.progress} /> :
             <>
               <Typography variant="subtitle1" align='center' className={classes.signAsTeacherText}>
-                Ingrese como alumno
+                Iniciar sesión con gmail
           </Typography>
               <form className={classes.form} noValidate>
                 {
@@ -237,45 +208,6 @@ function SignIn(props) {
                     /> :
                     null
                 }
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  onChange={onChange('email')}
-                />
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Contraseña"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  onChange={onChange('password')}
-                />
-                <Button
-                  fullWidth
-                  color="primary"
-                  className={classes.submit}
-                  onClick={login}
-                  size="large"
-                  variant="contained"
-                  onKeyPress={handleKeyPress}
-                >
-                  Ingresar
-          </Button>
-                <Divider variant="middle" className={classes.divider} />
-                <Typography variant="subtitle1" align='center' className={classes.signAsTeacherText}>
-                  Ingrese como docente
-          </Typography>
                 <MyGoogleButton
                   style={classes.googleButton}
                   handleResponseGoogle={handleResponseGoogle}
