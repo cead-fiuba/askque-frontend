@@ -448,8 +448,7 @@ function CreateQuestionary2(props) {
             className={classes.cancelButton}
             onClick={cancelCreateQuestionary}
           >
-            <ArrowBackIcon className={classes.leftIcon} />
-            Atras
+            Cancelar
         </Button>
           <Button
             variant="contained"
@@ -460,7 +459,7 @@ function CreateQuestionary2(props) {
                 ...alertDialogValues,
                 title: 'Guardar cuestionario',
                 content: '¿Desea guardar el cuestionario?',
-                okButtonText: 'Guardar',
+                okButtonText: 'Sí, crear cuestionario',
                 cancelButtonText: 'Cancelar',
                 open: true,
                 onCancel: () => { setAlertDialogValues({ open: false }) }
@@ -470,7 +469,6 @@ function CreateQuestionary2(props) {
           >
 
             CREAR
-            <NoteAddIcon className={classes.rightIcon} />
           </Button>
         </Grid>
 
