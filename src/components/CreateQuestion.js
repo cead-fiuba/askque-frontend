@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const MAX_RESPONSE = 5
-const NEW_RESPONSE_TEXT = "Nueva respuesta ..."
+const NEW_RESPONSE_TEXT = "Escriba aquí la opción posible"
 
 
 const BorderLinearProgress = withStyles({
@@ -77,7 +77,7 @@ export default function CreateQuestion(props) {
 
     useEffect(() => {
         setValues({
-            progressMessage: 'Escribe la pregunta',
+            progressMessage: 'Escriba la pregunta',
             progress: props.question.text !== "" ? 100 : 0,
             question: props.question.text,
             options: props.asEdit ? props.question.options :
@@ -94,7 +94,7 @@ export default function CreateQuestion(props) {
     }, [props.asEdit, props.question.options, props.question.text, props.question.has_image])
 
     const [values, setValues] = React.useState({
-        progressMessage: 'Escribe la pregunta',
+        progressMessage: 'Escriba la pregunta',
         progress: props.question.text !== "" ? 100 : 0,
         question: props.question.text,
         options: props.asEdit ? props.question.options :
@@ -181,7 +181,7 @@ export default function CreateQuestion(props) {
 
     const cleanForm = () => {
         setValues({
-            progressMessage: 'Escribe la pregunta',
+            progressMessage: 'Escriba la pregunta',
             progress: 0,
             question: '',
             options: [
@@ -226,8 +226,7 @@ export default function CreateQuestion(props) {
                     onClick={save}
                     disabled={!((values.responsesCreated && values.aResponseWasMarkedAsCorrect && values.question !== "") || props.asEdit)}
                 >
-                    guardar
-                    <SaveIcon className={classes.rightIcon} />
+                    Crear
                 </Button>
             </Toolbar>
         </AppBar>
