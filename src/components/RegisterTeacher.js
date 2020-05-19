@@ -99,6 +99,7 @@ function RegisterTeacher(props) {
         createTeacher(teacher).then((response) => {
             console.log('response', response.data.token)
             props.context.setToken(response.data.token)
+            props.context.setEmail(values.email)
             redirectTo("/my-questionaries")
         }).catch((error) => {
             console.log('Algo paso mal', error)
