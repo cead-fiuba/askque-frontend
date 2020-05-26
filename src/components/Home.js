@@ -1,8 +1,6 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { Send, Pencil } from 'mdi-material-ui'
 import { makeStyles } from '@material-ui/core/styles';
 import Image from "../images/2.png"
 import ManitoArriba from '@material-ui/icons/ThumbUpAlt'
@@ -15,13 +13,12 @@ import AppBarCustom from "./AppBar"
 import CreateIcon from '@material-ui/icons/Create';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import MyButton from './common/MyButton'
-import CommentIcon from '@material-ui/icons/Comment';
+
 const styles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
   body: {
-    // marginTop: theme.spacing(4),
     backgroundImage: ` url(${Image})`,
     backgroundColor: '#7fc7d9',
     backgroundPosition: 'center',

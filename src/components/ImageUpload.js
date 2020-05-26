@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ImageIcon from '@material-ui/icons/Image';
 import Tooltip from '@material-ui/core/Tooltip';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -27,8 +26,6 @@ export default function ImageUpload(props) {
         imagePreviewUrl: ''
     })
 
-    const [imageWasSelected, setImageWasSelect] = useState(false)
-
     const handleSubmit = (e) => {
         e.preventDefault();
         // TODO: do something with -> this.state.file
@@ -46,7 +43,6 @@ export default function ImageUpload(props) {
                 file: file,
                 imagePreviewUrl: reader.result
             });
-            setImageWasSelect(true)
             props.saveImage(file)
         }
 

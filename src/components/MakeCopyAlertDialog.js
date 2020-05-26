@@ -20,7 +20,6 @@ const MakeCopyAlertContent = (props) => {
 
     const classes = useStyles();
     const [makeCopyForMe, setMakeCopyForMe] = useState(true)
-    const [otherUserEmail, setOtherUserEmail] = useState()
     const [otherUserEmailForError, setOtherUserEmailForError] = useState(false)
     const [formEmailHelperText, setFormEmailHelperText] = useState()
 

@@ -124,7 +124,6 @@ export function MyAskques2(props) {
 
     const makeCopyOfQuestionary = (withMe, email) => {
         setLoadingAlertMakeCopy(true)
-        let variant = 'success'
         makeCopyOfQuestionaryWith(withMe, email, questionaryToDoAction).then((res) => {
             setShowMakeCopyAlert(false)
             enqueueSnackbar(`Se creó la copia del questionario ${questionaryToDoAction}`, { variant: 'success' });

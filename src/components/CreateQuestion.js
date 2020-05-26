@@ -13,7 +13,6 @@ import ChecbokList from "./ChecbokList"
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import SaveIcon from '@material-ui/icons/Save'
 import ImageUpload from '../components/ImageUpload'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
