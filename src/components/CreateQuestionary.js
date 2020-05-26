@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import AppBar from "./AppBar"
 import { makeStyles } from '@material-ui/core/styles';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -27,28 +25,6 @@ import AlertDialog from './common/AlertDialog'
 import EditIcon from '@material-ui/icons/Edit';
 import { deleteQuestion } from '../service/QuestionaryService'
 import { useSnackbar, SnackbarProvider } from 'notistack';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import SaveIcon from '@material-ui/icons/Save';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
-
-const ranges = [
-  {
-    value: 3,
-    label: '3',
-  },
-  {
-    value: 5,
-    label: '5',
-  },
-  {
-    value: 7,
-    label: '7',
-  },
-  {
-    value: 10,
-    label: '10',
-  }
-];
 
 const NEW_RESPONSE_TEXT = "Nueva respuesta ..."
 
