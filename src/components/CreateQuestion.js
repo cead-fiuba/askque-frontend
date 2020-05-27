@@ -229,7 +229,7 @@ export default function CreateQuestion(props) {
         ...values,
         [prop]: event.target.value,
         progress: 25,
-        progressMessage: "Escriba todas las respuestas posibles",
+        progressMessage: "Escriba las opciones",
       });
     } else {
       setValues({ ...values, [prop]: event.target.value });

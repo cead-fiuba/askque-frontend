@@ -86,7 +86,7 @@ function CreateQuestionary2(props) {
     showCreateResponses: false,
     minutes: "3",
     open: false,
-    module: props.asEdit ? props.questionary.module : "",
+    tema: props.asEdit ? props.questionary.tema : "",
     questions: props.asEdit ? props.questionary.questions : [],
   });
 
@@ -269,14 +269,14 @@ function CreateQuestionary2(props) {
       <CssBaseline />
       <AppBar position="static" />
       <Typography component="div" variant="h4" style={{ margin: "5%" }}>
-        <Box textAlign="center">NUEVA ENCUESTA</Box>
+        <Box textAlign="center">NUEVO CUESTIONARIO</Box>
       </Typography>
       <Container maxWidth="md">
         <Grid container spacing={1} className={classes.rowResponse}>
           <Grid item xs={12} sm={6}>
             <TextField
               id="outlined-full-width"
-              label="Nombre de la Encuesta"
+              label="Nombre del cuestionario"
               style={{ width: "95%" }}
               margin="dense"
               variant="outlined"
@@ -289,12 +289,12 @@ function CreateQuestionary2(props) {
           <Grid item xs={7} sm={6}>
             <TextField
               id="outlined-name"
-              label="Modulo"
+              label="Tema"
               className={classes.textField}
               margin="dense"
               variant="outlined"
               style={{ width: "95%" }}
-              onChange={handleChange("module")}
+              onChange={handleChange("tema")}
               value={values.module}
             />
           </Grid>
