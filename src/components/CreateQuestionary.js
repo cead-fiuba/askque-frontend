@@ -298,122 +298,124 @@ function CreateQuestionary2(props) {
               value={values.module}
             />
           </Grid>
-
-          {values.questions.length === 0 ? (
-            <>
-              <Typography component="div" variant="h5" style={{ margin: "5%" }}>
-                <Box textAlign="center">
-                  Para crear la encuesta, agregue las preguntas
-                </Box>
-              </Typography>
-            </>
-          ) : (
-            <>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Texto</TableCell>
-                    <Hidden only="xs">
-                      <TableCell align="center">Nro de opciones</TableCell>
-                    </Hidden>
-                    <TableCell align="center">Acciones</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {values.questions.map((question, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell component="th" scope="row">
-                        <Typography variant="body1" noWrap={true}>
-                          {question.text.substring(0, 23) + "..."}
-                        </Typography>
-                      </TableCell>
-                      <Hidden only="xs">
-                        <TableCell align="center">
-                          {question.options.length}
-                        </TableCell>
-                      </Hidden>
-                      <TableCell align="center">
-                        <CssBaseline />
-                        <ButtonGroup
-                          size="small"
-                          aria-label="small outlined button group"
-                          color="primary"
-                          variant="contained"
-                        >
-                          <Button
-                            onClick={() =>
-                              setAlertDialogValuesDelete({
-                                ...alertDialogValuesDelete,
-                                open: true,
-                                questionIdxToDelete: idx,
-                              })
-                            }
-                          >
-                            <DeleteIcon className={classes.leftIcon} />
-                            <Hidden only="xs">Eliminar</Hidden>
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              setQuestionViewConfig({
-                                question: question,
-                                showCreateQuestionForm: true,
-                                asEdit: true,
-                              });
-                            }}
-                          >
-                            <EditIcon className={classes.leftIcon} />
-                            <Hidden only="xs">Editar</Hidden>
-                          </Button>
-                        </ButtonGroup>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </>
-          )}
-
-          <Grid
-            container
-            spacing={1}
-            className={classes.createQuestionButton}
-            justify="flex-end"
-            alignItems="center"
-            direction="row"
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                setQuestionViewConfig({
-                  question: {
-                    text: "",
-                    options: [
-                      {
-                        text: NEW_RESPONSE_TEXT,
-                        correct: false,
-                        isNew: true,
-                      },
-                    ],
-                  },
-                  showCreateQuestionForm: true,
-                  asEdit: false,
-                });
-              }}
-            >
-              Agregar pregunta
-            </Button>
-
-            <CreateQuestion
-              saveQuestion={saveQuestion}
-              open={questionViewConfig.showCreateQuestionForm}
-              handleClose={() => showCreateQuestionView(false)}
-              question={questionViewConfig.question}
-              asEdit={questionViewConfig.asEdit}
-            />
-          </Grid>
         </Grid>
+      </Container>
+      <Container maxWidth="md">
+        {values.questions.length === 0 ? (
+          <div>
+            <Typography
+              component="div"
+              variant="h6"
+              style={{ alignItems: "center", marginTop: "5%" }}
+            >
+              <Box textAlign="center">No hay ninguna pregunta</Box>
+            </Typography>
+          </div>
+        ) : (
+          <>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Texto</TableCell>
+                  <Hidden only="xs">
+                    <TableCell align="center">Nro de opciones</TableCell>
+                  </Hidden>
+                  <TableCell align="center">Acciones</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {values.questions.map((question, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell component="th" scope="row">
+                      <Typography variant="body1" noWrap={true}>
+                        {question.text.substring(0, 30) + "..."}
+                      </Typography>
+                    </TableCell>
+                    <Hidden only="xs">
+                      <TableCell align="center">
+                        {question.options.length}
+                      </TableCell>
+                    </Hidden>
+                    <TableCell align="center">
+                      <CssBaseline />
+                      <ButtonGroup
+                        size="small"
+                        aria-label="small outlined button group"
+                        color="primary"
+                        variant="contained"
+                      >
+                        <Button
+                          onClick={() =>
+                            setAlertDialogValuesDelete({
+                              ...alertDialogValuesDelete,
+                              open: true,
+                              questionIdxToDelete: idx,
+                            })
+                          }
+                        >
+                          <DeleteIcon className={classes.leftIcon} />
+                          <Hidden only="xs">Eliminar</Hidden>
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setQuestionViewConfig({
+                              question: question,
+                              showCreateQuestionForm: true,
+                              asEdit: true,
+                            });
+                          }}
+                        >
+                          <EditIcon className={classes.leftIcon} />
+                          <Hidden only="xs">Editar</Hidden>
+                        </Button>
+                      </ButtonGroup>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </>
+        )}
 
+        <Grid
+          container
+          spacing={1}
+          className={classes.createQuestionButton}
+          justify="flex-end"
+          alignItems="center"
+          direction="row"
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setQuestionViewConfig({
+                question: {
+                  text: "",
+                  options: [
+                    {
+                      text: NEW_RESPONSE_TEXT,
+                      correct: false,
+                      isNew: true,
+                    },
+                  ],
+                },
+                showCreateQuestionForm: true,
+                asEdit: false,
+              });
+            }}
+          >
+            Agregar pregunta
+          </Button>
+
+          <CreateQuestion
+            saveQuestion={saveQuestion}
+            open={questionViewConfig.showCreateQuestionForm}
+            handleClose={() => showCreateQuestionView(false)}
+            question={questionViewConfig.question}
+            asEdit={questionViewConfig.asEdit}
+          />
+        </Grid>
         <Grid
           container
           justify="flex-end"
@@ -433,8 +435,8 @@ function CreateQuestionary2(props) {
             onClick={() => {
               setAlertDialogValues({
                 ...alertDialogValues,
-                title: "Guardar cuestionario",
-                content: "¿Desea guardar el cuestionario?",
+                title: "Crear cuestionario",
+                content: "¿Desea crear el cuestionario?",
                 okButtonText: "Sí, crear cuestionario",
                 cancelButtonText: "Cancelar",
                 open: true,
@@ -448,34 +450,34 @@ function CreateQuestionary2(props) {
             CREAR CUESTIONARIO
           </Button>
         </Grid>
-
-        <AlertDialog
-          open={alertDialogValues.open}
-          title={alertDialogValues.title}
-          content={alertDialogValues.content}
-          handleOk={save}
-          handleClose={alertDialogValues.onCancel}
-          buttonTextOk={alertDialogValues.okButtonText}
-          buttonTextCancel={alertDialogValues.cancelButtonText}
-          loading={loadingAlertSave}
-        />
-
-        <AlertDialog
-          open={alertDialogValuesDelete.open}
-          title={alertDialogValuesDelete.title}
-          content={alertDialogValuesDelete.content}
-          handleOk={handleDeleteQuestion}
-          handleClose={() =>
-            setAlertDialogValuesDelete({
-              ...alertDialogValuesDelete,
-              open: false,
-            })
-          }
-          buttonTextOk={alertDialogValuesDelete.okButtonText}
-          buttonTextCancel={alertDialogValuesDelete.cancelButtonText}
-          loading={alertDialogValuesDelete.loading}
-        />
       </Container>
+
+      <AlertDialog
+        open={alertDialogValues.open}
+        title={alertDialogValues.title}
+        content={alertDialogValues.content}
+        handleOk={save}
+        handleClose={alertDialogValues.onCancel}
+        buttonTextOk={alertDialogValues.okButtonText}
+        buttonTextCancel={alertDialogValues.cancelButtonText}
+        loading={loadingAlertSave}
+      />
+
+      <AlertDialog
+        open={alertDialogValuesDelete.open}
+        title={alertDialogValuesDelete.title}
+        content={alertDialogValuesDelete.content}
+        handleOk={handleDeleteQuestion}
+        handleClose={() =>
+          setAlertDialogValuesDelete({
+            ...alertDialogValuesDelete,
+            open: false,
+          })
+        }
+        buttonTextOk={alertDialogValuesDelete.okButtonText}
+        buttonTextCancel={alertDialogValuesDelete.cancelButtonText}
+        loading={alertDialogValuesDelete.loading}
+      />
     </div>
   );
 }
