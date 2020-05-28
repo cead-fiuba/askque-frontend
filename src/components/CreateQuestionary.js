@@ -205,7 +205,7 @@ function CreateQuestionary2(props) {
       hash: props.asEdit ? props.questionary.hash : null,
       name: values.name,
       time: values.minutes,
-      module: values.module,
+      module: values.tema,
       is_new: props.asEdit ? false : true,
     };
     const questions = values.questions.map(async (question) => {
