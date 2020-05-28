@@ -13,7 +13,7 @@ export function MyGoogleButton(props) {
       render={(renderProps) => (
         <GoogleButton
           className={props.style}
-          label="Continuar con Google"
+          label="Validar correo"
           onClick={renderProps.onClick}
         ></GoogleButton>
       )}
