@@ -87,10 +87,10 @@ export default function Register() {
   return (
     <div>
       <Container component="main" maxWidth="md" style={{ marginTop: "3%" }}>
+        <Box fontSize="h5.fontSize" fontWeight="fontWeightBold" m={1}>
+          Crear cuenta
+        </Box>
         <Paper square style={{ padding: "5%" }}>
-          <Typography component="h1" variant="h5">
-            Crear cuenta
-          </Typography>
           <Grid container>
             <Grid item xs={5} style={{ marginTop: "2%" }}>
               <TextField
