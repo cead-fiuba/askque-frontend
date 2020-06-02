@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
@@ -12,7 +12,9 @@ import Select from "@material-ui/core/Select";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import { MyGoogleButton } from "./GoogleButton";
-
+import Button from "@material-ui/core/Button";
+import InfoIcon from "@material-ui/icons/InfoOutlined";
+import DoneAllIcon from "@material-ui/icons/DoneAllRounded";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -58,30 +60,83 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const emails = { 1: "@fi.uba.ar", 0: "@gmail.com" };
 export default function Register() {
-  //const classes = useStyles();
-  const [rol, setRol] = React.useState("");
-
   const [userData, setUserData] = React.useState({
     name: null,
     lastname: null,
     rol: "",
     asignature: "",
+    emailDomine: 1,
+    emailUserName: null,
   });
 
+  const [isComplete, setIsComplete] = React.useState();
+  const [emailWasValidated, setEmailWasValidated] = React.useState(false);
+
   const handleChange = (name) => (event) => {
-    console.log("name" + name + "event" + event.target.value);
+    console.log("name:" + name + " event:" + event.target.value);
     setUserData({ ...userData, [name]: event.target.value });
+  };
+
+  useEffect(() => {
+    checkIsComplete();
+  }, [userData, emailWasValidated]);
+
+  const checkIsComplete = () => {
+    const nameIsOk = userData.name !== "" && userData.name !== null;
+    const lastNameIsOk = userData.lastname !== "" && userData.lastname !== null;
+    const rolIsOk = userData.rol !== "";
+    const emailUserNameIsOk =
+      userData.emailUserName !== null && userData.emailUserName !== "";
+    const emailDomineIsOk =
+      userData.emailDomine !== null && userData.emailDomine !== "";
+
+    const basicValidationIsOk =
+      nameIsOk &&
+      lastNameIsOk &&
+      rolIsOk &&
+      emailUserNameIsOk &&
+      emailDomineIsOk &&
+      emailWasValidated;
+    console.log("nameIsOK", nameIsOk);
+    console.log("lastNameIsOk", lastNameIsOk);
+    console.log("rolIsOk", rolIsOk);
+    console.log("emailUserNameIsOk", emailUserNameIsOk);
+    console.log("emailDomineIsOk", emailDomineIsOk);
+    console.log("emailWasValidated", emailWasValidated);
+
+    if (basicValidationIsOk) {
+      if (userData.rol === 0) {
+        console.log("estudiante");
+        const padronIsOk =
+          userData.padron !== "" &&
+          userData.padron !== null &&
+          userData.padron !== undefined;
+        console.log("padron", userData.padron);
+        setIsComplete(padronIsOk);
+      } else if (userData.rol === 1) {
+        const legajoIsOk =
+          userData.legajo !== "" &&
+          userData.legajo !== undefined &&
+          userData.legajo !== null;
+        const asignatureIsOk =
+          userData.asignature !== null &&
+          userData.asignature !== "" &&
+          userData.asignature !== undefined;
+        setIsComplete(legajoIsOk && asignatureIsOk);
+      }
+    }
   };
 
   const classes = useStyles();
 
-  const responseGoogle = (response) => {
-    console.log(response);
-    console.log(response.profileObj);
-    const personalInformation = response.profileObj;
-    const email = personalInformation.email;
-    console.log("email", email);
+  const loginCallback = (email) => {
+    const currentEmail = userData.emailUserName + emails[userData.emailDomine];
+    if (email === currentEmail) {
+      console.log("email is ok");
+      setEmailWasValidated(true);
+    }
   };
 
   return (
@@ -99,6 +154,7 @@ export default function Register() {
                 variant="outlined"
                 onChange={handleChange("name")}
                 fullWidth
+                required
               />
             </Grid>
             <Grid item xs={1}></Grid>
@@ -109,6 +165,7 @@ export default function Register() {
                 variant="outlined"
                 onChange={handleChange("lastname")}
                 fullWidth
+                required
               />
             </Grid>
             <Grid item xs={1}></Grid>
@@ -122,6 +179,7 @@ export default function Register() {
                   value={userData.rol}
                   onChange={handleChange("rol")}
                   label="Ingresar"
+                  required
                 >
                   <MenuItem value={0}>Alumno</MenuItem>
                   <MenuItem value={1}>Docente</MenuItem>
@@ -139,8 +197,9 @@ export default function Register() {
                     id="outlined-basic"
                     label="Legajo"
                     variant="outlined"
-                    onChange={handleChange("lastname")}
+                    onChange={handleChange("legajo")}
                     fullWidth
+                    required
                   />
                 </Grid>
                 <Grid item xs={1}></Grid>
@@ -160,8 +219,10 @@ export default function Register() {
                       onChange={handleChange("asignature")}
                       label="Ingresar"
                     >
-                      <MenuItem value={0}>FISICA I</MenuItem>
-                      <MenuItem value={1}>FISICA II</MenuItem>
+                      <MenuItem value={0}>Fisica I</MenuItem>
+                      <MenuItem value={1}>Fisica II</MenuItem>
+                      <MenuItem value={2}>Analisis Matematico II</MenuItem>
+                      <MenuItem value={3}>Analisis Matematico III</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -171,8 +232,10 @@ export default function Register() {
                     id="outlined-basic"
                     label="Email"
                     variant="outlined"
-                    onChange={handleChange("email")}
+                    onChange={handleChange("emailUserName")}
                     fullWidth
+                    required
+                    disabled={emailWasValidated}
                   />
                 </Grid>
                 <Grid item xs={2} style={{ marginTop: "2%" }}>
@@ -180,8 +243,90 @@ export default function Register() {
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={userData.asignature}
-                      onChange={handleChange("asignature")}
+                      value={userData.emailDomine}
+                      onChange={handleChange("emailDomine")}
+                    >
+                      <MenuItem value={1}>@fi.uba.ar</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={1}></Grid>
+                {userData.emailDomine !== "" &&
+                  userData.emailUserName !== null && (
+                    <>
+                      {emailWasValidated ? (
+                        <>
+                          <Grid
+                            item
+                            xs={5}
+                            style={{ marginTop: "3%", color: "green" }}
+                          >
+                            <DoneAllIcon fontSize="large"></DoneAllIcon> Email
+                            validado!{" "}
+                          </Grid>
+                        </>
+                      ) : (
+                        <>
+                          <Grid item xs={5} style={{ marginTop: "2%" }}>
+                            <MyGoogleButton callback={loginCallback} />
+                          </Grid>
+                          <Grid item xs={6}></Grid>
+                          <Grid item xs={6}>
+                            <InfoIcon></InfoIcon>
+                            <Typography
+                              variant="caption"
+                              display="initial"
+                              gutterBottom
+                            >
+                              IMPORTANTE: Al hacer click en el "Validar correo"
+                              aparecera una ventana emergente con tus cuentas de
+                              google disponibles, asegurate de elegir{" "}
+                              <b>
+                                {userData.emailUserName +
+                                  emails[userData.emailDomine]}
+                              </b>
+                            </Typography>
+                          </Grid>
+                        </>
+                      )}
+                    </>
+                  )}
+              </Grid>
+            </>
+          )}
+          {userData.rol === 0 && (
+            <>
+              <Grid container>
+                <Grid item xs={5} style={{ marginTop: "2%" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Padron"
+                    variant="outlined"
+                    onChange={handleChange("padron")}
+                    fullWidth
+                    required
+                  />
+                </Grid>
+                <Grid item xs={7} />
+                <Grid item xs={3} style={{ marginTop: "2%" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Email"
+                    variant="outlined"
+                    onChange={handleChange("emailUserName")}
+                    fullWidth
+                    required
+                    disabled={emailWasValidated}
+                  />
+                </Grid>
+                <Grid item xs={2} style={{ marginTop: "2%" }}>
+                  <FormControl variant="outlined" style={{ width: "100%" }}>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={userData.emailDomine}
+                      onChange={handleChange("emailDomine")}
+                      disabled={emailWasValidated}
                     >
                       <MenuItem value={0}>@gmail.com</MenuItem>
                       <MenuItem value={1}>@fi.uba.ar</MenuItem>
@@ -189,14 +334,70 @@ export default function Register() {
                   </FormControl>
                 </Grid>
                 <Grid item xs={1}></Grid>
-                <Grid item xs={5} style={{ marginTop: "2%" }}>
-                  <MyGoogleButton
-                    handleResponseGoogle={responseGoogle}
-                    style={classes.googleButton}
-                  />
-                </Grid>
+                {userData.emailDomine !== "" &&
+                  userData.emailUserName !== null &&
+                  userData.emailUserName !== "" && (
+                    <>
+                      {emailWasValidated ? (
+                        <>
+                          <Grid
+                            item
+                            xs={5}
+                            style={{ marginTop: "3%", color: "green" }}
+                          >
+                            <DoneAllIcon fontSize="large"></DoneAllIcon> Email
+                            validado!{" "}
+                          </Grid>
+                        </>
+                      ) : (
+                        <>
+                          <Grid item xs={5} style={{ marginTop: "2%" }}>
+                            <MyGoogleButton callback={loginCallback} />
+                          </Grid>
+                          <Grid item xs={6}></Grid>
+                          <Grid item xs={6}>
+                            <InfoIcon></InfoIcon>
+                            <Typography
+                              variant="caption"
+                              display="initial"
+                              gutterBottom
+                            >
+                              IMPORTANTE: Al hacer click en el "Validar correo"
+                              aparecera una venta emergente con tus cuentas de
+                              google disponibles, asegurate de elegir{" "}
+                              <b>
+                                {userData.emailUserName +
+                                  emails[userData.emailDomine]}
+                              </b>
+                            </Typography>
+                          </Grid>
+                        </>
+                      )}
+                    </>
+                  )}
               </Grid>
             </>
+          )}
+
+          {isComplete && (
+            <Grid
+              container
+              alignItems="center"
+              direction="row"
+              justify="center"
+              style={{ marginTop: "3%" }}
+            >
+              <Button
+                variant="contained"
+                className={classes.cancelButton}
+                onClick={() => {
+                  console.log("cancel");
+                }}
+                color="primary"
+              >
+                Crear cuenta
+              </Button>
+            </Grid>
           )}
         </Paper>
       </Container>
