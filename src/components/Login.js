@@ -19,6 +19,10 @@ import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import { MyGoogleButton } from "./GoogleButton";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const variantIcon = {
   error: ErrorIcon,
@@ -141,6 +145,8 @@ function SignIn(props) {
     errorLoginMessage: "Email o contraseña incorrecto",
   });
 
+  const [rol,setAge] = React.useState()
+
   const [loading, setLoading] = React.useState(false);
 
   const redirectTo = (newPath) => {
@@ -207,8 +213,21 @@ function SignIn(props) {
               align="center"
               className={classes.signAsTeacherText}
             >
-              Iniciar sesión con gmail
+              Iniciar sesión con tu correo de google
             </Typography>
+            <FormControl variant="outlined" className={classes.formControl} style= {{width:"100%",marginTop:"2%"}}>
+        <InputLabel id="demo-simple-select-outlined-label">Rol</InputLabel>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          id="demo-simple-select-outlined"
+          value={rol}
+          onChange={(event)=>{setAge(event.target.value)}}
+          label="Rol"
+        >
+          <MenuItem value={1}>Alumno</MenuItem>
+          <MenuItem value={2}>Docente</MenuItem>
+        </Select>
+      </FormControl>
             <form className={classes.form} noValidate>
               {values.showErrorLogin ? (
                 <MySnackbarContentWrapper
@@ -222,6 +241,10 @@ function SignIn(props) {
                 style={classes.googleButton}
                 handleResponseGoogle={handleResponseGoogle}
               />
+            <Typography variant="caption" display="block" gutterBottom style ={{marginTop:"2%"}}>
+            {rol === 1 && <>Podes ingresar con tu cuenta <b>@gmail.com o @fi.uba.ar</b> </>}
+            {rol === 2 && <>Solo poder ingresar con tu cuenta <b>@fi.uba.ar</b> </>}
+      </Typography>
             </form>
           </>
         )}
@@ -229,7 +252,7 @@ function SignIn(props) {
       {!loading && (
         <Paper className={classes.noAccountPaper}>
           <Typography variant="subtitle1">
-            Todavia no tenes cuenta?
+           ¿Todavia no tenes cuenta?
             <Link
               color="textSecondary"
               className={classes.linkToCreateAccount}
