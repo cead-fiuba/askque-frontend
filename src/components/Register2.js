@@ -63,12 +63,17 @@ function Register(props) {
     asignature: "",
     emailDomine: 1,
     emailUserName: null,
+    ocupation: "",
   });
 
   const [isComplete, setIsComplete] = React.useState();
   const [emailWasValidated, setEmailWasValidated] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [showDialog, setShowDialog] = React.useState(false);
+  const [emailFieldInfo, setEmailFieldInfo] = React.useState({
+    isValid: true,
+    helperText: null,
+  });
 
   const handleChange = (name) => (event) => {
     setUserData({ ...userData, [name]: event.target.value });
@@ -120,6 +125,7 @@ function Register(props) {
   const save = () => {
     setLoading(true);
     const email = userData.emailUserName + emails[userData.emailDomine];
+    var promise;
     if (userData.rol === 0) {
       const request = {
         name: userData.name,
@@ -127,14 +133,7 @@ function Register(props) {
         padron: userData.padron,
         email: email,
       };
-      createStudent(request).then((res) => {
-        props.context.setToken(res.data.token);
-        props.context.setEmail(email);
-        setTimeout(() => {
-          setLoading(false);
-          setShowDialog(true);
-        }, 2000);
-      });
+      promise = createStudent(request);
     } else {
       const request = {
         legajo: userData.legajo,
@@ -144,15 +143,26 @@ function Register(props) {
         email: email,
         ocupation: userData.ocupation,
       };
-      createTeacher(request).then((res) => {
+      promise = createTeacher(request);
+    }
+    promise
+      .then((res) => {
         props.context.setToken(res.data.token);
         props.context.setEmail(email);
         setTimeout(() => {
           setLoading(false);
           setShowDialog(true);
         }, 2000);
+      })
+      .catch((reason) => {
+        console.log("reason", reason.message);
+        setLoading(false);
+        setEmailFieldInfo({
+          isValid: false,
+          helperText: "Ya existe usuario con este email",
+        });
+        setEmailWasValidated(false);
       });
-    }
   };
 
   const classes = useStyles();
@@ -276,6 +286,8 @@ function Register(props) {
                 </Grid>
                 <Grid item xs={3} style={{ marginTop: "2%" }}>
                   <TextField
+                    error={!emailFieldInfo.isValid}
+                    helperText={emailFieldInfo.helperText}
                     id="outlined-basic"
                     label="Email"
                     variant="outlined"
@@ -364,6 +376,8 @@ function Register(props) {
                     fullWidth
                     required
                     disabled={emailWasValidated}
+                    error={!emailFieldInfo.isValid}
+                    helperText={emailFieldInfo.helperText}
                   />
                 </Grid>
                 <Grid item xs={2} style={{ marginTop: "2%" }}>
