@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
 import Register from "./Register";
-import Register2 from "./Register2";
 import CreateQuestionary from "./CreateQuestionary";
 import AskQuestionaryView from "./AskQuestionaryView";
 import MyAskques from "./MyAskques";
@@ -18,7 +17,6 @@ export default class Root extends Component {
       <Router>
         <Switch>
           <Route path="/login" component={Login} />
-          <Route path="/register2" component={Register2} />
           <Route path="/register" component={Register} />
           <Route path="/create-questionary" component={CreateQuestionary} />
           <Route path="/ask-questionary" component={AskQuestionaryView} />
