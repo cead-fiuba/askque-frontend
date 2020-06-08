@@ -15,31 +15,6 @@ import { MyGoogleButton } from "./GoogleButton";
 import Button from "@material-ui/core/Button";
 import InfoIcon from "@material-ui/icons/InfoOutlined";
 import DoneAllIcon from "@material-ui/icons/DoneAllRounded";
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Box boxShadow={3}>
-      <Typography
-        component="div"
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-        style={{ width: "100%" }}
-      >
-        <Box p={3}>{children}</Box>
-      </Typography>
-    </Box>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const emails = { 1: "@fi.uba.ar", 0: "@gmail.com" };
+const asignatures = ["Fisica I", "Fisica II"];
+const ocupations = ["Profesor", "Ayudante", "JTP"];
+
 export default function Register() {
   const [userData, setUserData] = React.useState({
     name: null,
@@ -75,7 +53,6 @@ export default function Register() {
   const [emailWasValidated, setEmailWasValidated] = React.useState(false);
 
   const handleChange = (name) => (event) => {
-    console.log("name:" + name + " event:" + event.target.value);
     setUserData({ ...userData, [name]: event.target.value });
   };
 
@@ -192,7 +169,7 @@ export default function Register() {
           {userData.rol === 1 && (
             <>
               <Grid container>
-                <Grid item xs={5} style={{ marginTop: "2%" }}>
+                <Grid item xs={2} style={{ marginTop: "2%" }}>
                   <TextField
                     id="outlined-basic"
                     label="Legajo"
@@ -203,7 +180,32 @@ export default function Register() {
                   />
                 </Grid>
                 <Grid item xs={1}></Grid>
-                <Grid item xs={5} style={{ marginTop: "2%" }}>
+                <Grid item xs={4} style={{ marginTop: "2%" }}>
+                  <FormControl
+                    className={classes.formControl}
+                    variant="outlined"
+                  >
+                    <InputLabel id="demo-simple-select-label">Cargo</InputLabel>
+
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={userData.ocupation}
+                      onChange={handleChange("ocupation")}
+                      label="Ingresar"
+                    >
+                      {ocupations.map((asignature, idx) => {
+                        return (
+                          <MenuItem value={idx} key={idx}>
+                            {asignature}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={1}></Grid>
+                <Grid item xs={4} style={{ marginTop: "2%" }}>
                   <FormControl
                     className={classes.formControl}
                     variant="outlined"
@@ -219,14 +221,16 @@ export default function Register() {
                       onChange={handleChange("asignature")}
                       label="Ingresar"
                     >
-                      <MenuItem value={0}>Fisica I</MenuItem>
-                      <MenuItem value={1}>Fisica II</MenuItem>
-                      <MenuItem value={2}>Analisis Matematico II</MenuItem>
-                      <MenuItem value={3}>Analisis Matematico III</MenuItem>
+                      {asignatures.map((asignature, idx) => {
+                        return (
+                          <MenuItem value={idx} key={idx}>
+                            {asignature}
+                          </MenuItem>
+                        );
+                      })}
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={1}></Grid>
                 <Grid item xs={3} style={{ marginTop: "2%" }}>
                   <TextField
                     id="outlined-basic"
