@@ -147,9 +147,7 @@ function SignIn(props) {
     props.history.push(newPath);
   };
 
-  const handleResponseGoogle = (res) => {
-    console.log(res);
-    const email = res.profileObj.email;
+  const onCallback = (email) => {
     setLoading(true);
     initSession(email)
       .then((res) => {
@@ -220,7 +218,7 @@ function SignIn(props) {
               ) : null}
               <MyGoogleButton
                 style={classes.googleButton}
-                handleResponseGoogle={handleResponseGoogle}
+                callback={onCallback}
               />
             </form>
           </>
