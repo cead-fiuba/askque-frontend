@@ -153,9 +153,7 @@ function SignIn(props) {
     props.history.push(newPath);
   };
 
-  const handleResponseGoogle = (res) => {
-    console.log(res);
-    const email = res.profileObj.email;
+  const onCallback = (email) => {
     setLoading(true);
     initSession(email)
       .then((res) => {
@@ -239,7 +237,7 @@ function SignIn(props) {
               ) : null}
               <MyGoogleButton
                 style={classes.googleButton}
-                handleResponseGoogle={handleResponseGoogle}
+                callback={onCallback}
               />
             <Typography variant="caption" display="block" gutterBottom style ={{marginTop:"2%"}}>
             {rol === 1 && <>Podes ingresar con tu cuenta <b>@gmail.com o @fi.uba.ar</b> </>}
