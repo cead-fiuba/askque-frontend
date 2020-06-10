@@ -23,6 +23,15 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import {userExistsByEmail} from '../service/EmailService'
+
 
 const variantIcon = {
   error: ErrorIcon,
@@ -149,50 +158,35 @@ function SignIn(props) {
 
   const [loading, setLoading] = React.useState(false);
 
+  const [open, setOpen] = React.useState(false);
+  const [userExists, setUserExists] = React.useState();
+  const [email, setEmail] = React.useState(); 
+
   const redirectTo = (newPath) => {
     props.history.push(newPath);
   };
 
   const onCallback = (email) => {
-    setLoading(true);
-    initSession(email)
-      .then((res) => {
-        console.log("response", res);
-        props.context.setToken(res.token);
-        props.context.isTeacher(res.is_teacher);
-        props.context.setEmail(email);
-        if (res.is_teacher) {
-          redirectTo("/my-questionaries");
-        } else {
-          redirectTo("/ask-questionary");
-        }
-      })
-      .catch((e) => {
-        setLoading(false);
-        console.log(e.response);
-        if (e.response !== undefined && e.response.status === 404) {
-          setValues({
-            ...values,
-            showErrorLogin: true,
-            errorLoginMessage: "Gmail no válido",
-          });
-        }
-        if (e.response === undefined) {
-          setValues({
-            ...values,
-            showErrorLogin: true,
-            errorLoginMessage:
-              "Estamos teniendo problemas, por favor intente mas tarde",
-          });
-        }
-      });
+    setEmail(email)
+    
+    userExistsByEmail(email).then((value)=>{
+      console.log("todo ok")
+      setOpen(true)
+      setUserExists(true)
+    }).catch((reason)=>{
+      console.log("todo mal :(")
+      setOpen(true)
+    })
   };
 
   const handleOnClose = () => {
     setValues({ ...values, showErrorLogin: false });
   };
 
+
+
   return (
+    <>
     <Container component="main" maxWidth="xs">
       <Paper className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -235,10 +229,15 @@ function SignIn(props) {
                   onClose={handleOnClose}
                 />
               ) : null}
-              <MyGoogleButton
-                style={classes.googleButton}
+              <Grid container justify="center" alignItems="center">
+              
+              <Grid item>
+                <MyGoogleButton
                 callback={onCallback}
-              />
+                a={1}
+              /> </Grid>
+              </Grid>
+              
             <Typography variant="caption" display="block" gutterBottom style ={{marginTop:"2%"}}>
             {rol === 1 && <>Podes ingresar con tu cuenta <b>@gmail.com o @fi.uba.ar</b> </>}
             {rol === 2 && <>Solo poder ingresar con tu cuenta <b>@fi.uba.ar</b> </>}
@@ -262,6 +261,33 @@ function SignIn(props) {
         </Paper>
       )}
     </Container>
+
+    <Dialog
+    open={open}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle id="alert-dialog-title">
+          {userExists? "Inicio de sesión" :"Cuenta invalida" }
+      </DialogTitle>
+    <DialogContent>
+      <DialogContentText id="alert-dialog-description">
+        {userExists? <>
+          Vas a iniciar sesión con esta cuenta: <b> {email} </b> ¿Desea continuar?
+        </> : 
+        <>
+        El email ingresado no es válido, debido a que no encontramos ninguna cuenta asociada a <b> {email} </b>
+        </>
+        }
+      </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button color="primary" autoFocus >
+        {userExists? "SI, iniciar sesion" : "volver a intentar" }
+      </Button>
+    </DialogActions>
+  </Dialog>
+  </>
   );
 }
 
