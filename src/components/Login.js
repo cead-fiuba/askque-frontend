@@ -19,10 +19,18 @@ import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import { MyGoogleButton } from "./GoogleButton";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { userExistsByEmail } from "../service/EmailService";
 
 const variantIcon = {
   error: ErrorIcon,
@@ -145,46 +153,41 @@ function SignIn(props) {
     errorLoginMessage: "Email o contraseña incorrecto",
   });
 
-  const [rol,setAge] = React.useState()
+  const [rol, setAge] = React.useState();
 
   const [loading, setLoading] = React.useState(false);
+
+  const [open, setOpen] = React.useState(false);
+  const [userExists, setUserExists] = React.useState();
+  const [email, setEmail] = React.useState();
+  const [isTeacher, setIsTeacher] = React.useState();
 
   const redirectTo = (newPath) => {
     props.history.push(newPath);
   };
 
   const onCallback = (email) => {
-    setLoading(true);
+    setEmail(email);
+
     initSession(email)
       .then((res) => {
-        console.log("response", res);
-        props.context.setToken(res.token);
-        props.context.isTeacher(res.is_teacher);
-        props.context.setEmail(email);
+        console.log("todo ok");
+        setOpen(true);
+        setUserExists(true);
+        console.log("todo ok", res);
+
+        const token = res.token;
+        console.log("token", token);
+        props.context.setToken(token);
+        setIsTeacher(res.is_teacher);
         if (res.is_teacher) {
-          redirectTo("/my-questionaries");
-        } else {
-          redirectTo("/ask-questionary");
+          props.context.isTeacher();
         }
+        props.context.setEmail(email);
       })
-      .catch((e) => {
-        setLoading(false);
-        console.log(e.response);
-        if (e.response !== undefined && e.response.status === 404) {
-          setValues({
-            ...values,
-            showErrorLogin: true,
-            errorLoginMessage: "Gmail no válido",
-          });
-        }
-        if (e.response === undefined) {
-          setValues({
-            ...values,
-            showErrorLogin: true,
-            errorLoginMessage:
-              "Estamos teniendo problemas, por favor intente mas tarde",
-          });
-        }
+      .catch((reason) => {
+        console.log("todo mal :(");
+        setOpen(true);
       });
   };
 
@@ -193,75 +196,145 @@ function SignIn(props) {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Paper className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          {loading ? "Iniciando sesión" : "Ingresar"}
-        </Typography>
-
-        {loading ? (
-          <CircularProgress className={classes.progress} />
-        ) : (
-          <>
-            <Typography
-              variant="subtitle1"
-              align="center"
-              className={classes.signAsTeacherText}
-            >
-              Iniciar sesión con tu correo de google
-            </Typography>
-            <FormControl variant="outlined" className={classes.formControl} style= {{width:"100%",marginTop:"2%"}}>
-        <InputLabel id="demo-simple-select-outlined-label">Rol</InputLabel>
-        <Select
-          labelId="demo-simple-select-outlined-label"
-          id="demo-simple-select-outlined"
-          value={rol}
-          onChange={(event)=>{setAge(event.target.value)}}
-          label="Rol"
-        >
-          <MenuItem value={1}>Alumno</MenuItem>
-          <MenuItem value={2}>Docente</MenuItem>
-        </Select>
-      </FormControl>
-            <form className={classes.form} noValidate>
-              {values.showErrorLogin ? (
-                <MySnackbarContentWrapper
-                  variant="error"
-                  className={classes.margin}
-                  message={values.errorLoginMessage}
-                  onClose={handleOnClose}
-                />
-              ) : null}
-              <MyGoogleButton
-                style={classes.googleButton}
-                callback={onCallback}
-              />
-            <Typography variant="caption" display="block" gutterBottom style ={{marginTop:"2%"}}>
-            {rol === 1 && <>Podes ingresar con tu cuenta <b>@gmail.com o @fi.uba.ar</b> </>}
-            {rol === 2 && <>Solo poder ingresar con tu cuenta <b>@fi.uba.ar</b> </>}
-      </Typography>
-            </form>
-          </>
-        )}
-      </Paper>
-      {!loading && (
-        <Paper className={classes.noAccountPaper}>
-          <Typography variant="subtitle1">
-           ¿Todavia no tenes cuenta?
-            <Link
-              color="textSecondary"
-              className={classes.linkToCreateAccount}
-              href="/register"
-            >
-              Crear cuenta
-            </Link>
+    <>
+      <Container component="main" maxWidth="xs">
+        <Paper className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            {loading ? "Iniciando sesión" : "Ingresar"}
           </Typography>
+
+          {loading ? (
+            <CircularProgress className={classes.progress} />
+          ) : (
+            <>
+              <Typography
+                variant="subtitle1"
+                align="center"
+                className={classes.signAsTeacherText}
+              >
+                Iniciar sesión con tu correo de google
+              </Typography>
+              <FormControl
+                variant="outlined"
+                className={classes.formControl}
+                style={{ width: "100%", marginTop: "2%" }}
+              >
+                <InputLabel id="demo-simple-select-outlined-label">
+                  Rol
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  value={rol}
+                  onChange={(event) => {
+                    setAge(event.target.value);
+                  }}
+                  label="Rol"
+                >
+                  <MenuItem value={1}>Alumno</MenuItem>
+                  <MenuItem value={2}>Docente</MenuItem>
+                </Select>
+              </FormControl>
+              <form className={classes.form} noValidate>
+                {values.showErrorLogin ? (
+                  <MySnackbarContentWrapper
+                    variant="error"
+                    className={classes.margin}
+                    message={values.errorLoginMessage}
+                    onClose={handleOnClose}
+                  />
+                ) : null}
+                <Grid container justify="center" alignItems="center">
+                  <Grid item>
+                    <MyGoogleButton callback={onCallback} a={1} />{" "}
+                  </Grid>
+                </Grid>
+
+                <Typography
+                  variant="caption"
+                  display="block"
+                  gutterBottom
+                  style={{ marginTop: "2%" }}
+                >
+                  {rol === 1 && (
+                    <>
+                      Podes ingresar con tu cuenta{" "}
+                      <b>@gmail.com o @fi.uba.ar</b>{" "}
+                    </>
+                  )}
+                  {rol === 2 && (
+                    <>
+                      Solo poder ingresar con tu cuenta <b>@fi.uba.ar</b>{" "}
+                    </>
+                  )}
+                </Typography>
+              </form>
+            </>
+          )}
         </Paper>
-      )}
-    </Container>
+        {!loading && (
+          <Paper className={classes.noAccountPaper}>
+            <Typography variant="subtitle1">
+              ¿Todavia no tenes cuenta?
+              <Link
+                color="textSecondary"
+                className={classes.linkToCreateAccount}
+                href="/register"
+              >
+                Crear cuenta
+              </Link>
+            </Typography>
+          </Paper>
+        )}
+      </Container>
+
+      <Dialog
+        open={open}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {userExists ? "Inicio de sesión" : "Cuenta invalida"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {userExists ? (
+              <>
+                Vas a iniciar sesión con esta cuenta: <b> {email} </b> ¿Desea
+                continuar?
+              </>
+            ) : (
+              <>
+                El email ingresado no es válido, debido a que no encontramos
+                ninguna cuenta asociada a <b> {email} </b>
+              </>
+            )}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            color="primary"
+            autoFocus
+            onClick={() => {
+              if (userExists) {
+                if (isTeacher) {
+                  redirectTo("/my-questionaries");
+                } else {
+                  redirectTo("/ask-questionary");
+                }
+              } else {
+                setOpen(false);
+              }
+            }}
+          >
+            {userExists ? "SI, iniciar sesion" : "volver a intentar"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 

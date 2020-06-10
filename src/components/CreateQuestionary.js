@@ -436,7 +436,8 @@ function CreateQuestionary2(props) {
               setAlertDialogValues({
                 ...alertDialogValues,
                 title: "Crear cuestionario",
-                content: "¿Desea crear el cuestionario?",
+                content:
+                  "Usted está por crear una cuestionario ¿Desea continuar?",
                 okButtonText: "Sí, crear cuestionario",
                 cancelButtonText: "Cancelar",
                 open: true,
