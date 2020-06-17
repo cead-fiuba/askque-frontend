@@ -18,10 +18,12 @@ import {
   CartesianGrid,
 } from "recharts";
 import Grid from "@material-ui/core/Grid";
-import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { withRouter } from "react-router-dom";
+import { showResultsOfQuestionary } from "../service/QuestionaryService";
+import { useSnackbar, SnackbarProvider } from "notistack";
+import { MySnackbarContentWrapper } from "./common/MySnackbarContentWrapper";
 
 const abecedario = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 const correctOptionsByQuestionId = {};
@@ -54,6 +56,7 @@ function QuestionnaireStatistics(props) {
   const [questionary, setQuestionary] = useState();
   const [qtyByOptionId, setQtyByOptionId] = useState();
   const [responses, setResponses] = useState();
+  const { enqueueSnackbar } = useSnackbar();
 
   const createCorrectOptionsByQuestionId = (questionaryData) => {
     questionaryData.questions.forEach((question) => {
@@ -123,6 +126,18 @@ function QuestionnaireStatistics(props) {
     return counter;
   };
 
+  const showResults = () => {
+    showResultsOfQuestionary(questionary.hash)
+      .then((res) => {
+        enqueueSnackbar(`Se mostrará los resultados del  ${questionary.hash}`, {
+          variant: "success",
+        });
+      })
+      .catch((reason) => {
+        enqueueSnackbar(`No se pudo realizar la acción`, { variant: "error" });
+      });
+  };
+
   useEffect(() => {
     const hash = props.match.params.hash;
     const informationPromise = getInformationOfQuestionary(hash);
@@ -176,15 +191,16 @@ function QuestionnaireStatistics(props) {
         </Grid>
         <Grid item xs={8} />
         <Grid item xs={2}>
-          <Button
-            className={classes.navigationButtons}
-            color="primary"
-            variant="contained"
-            onClick={() => props.history.push("/create-questionary")}
-          >
-            Crear encuesta
-            <AddIcon className={classes.rightIcon} />
-          </Button>
+          {questionary && !questionary.can_show_result && (
+            <Button
+              className={classes.navigationButtons}
+              color="primary"
+              variant="contained"
+              onClick={() => showResults()}
+            >
+              Mostrar respuestas
+            </Button>
+          )}
         </Grid>
       </Grid>
       <Container component="main" className={classes.container}>
@@ -272,4 +288,8 @@ function QuestionnaireStatistics(props) {
   );
 }
 
-export default withRouter((props) => <QuestionnaireStatistics {...props} />);
+export default withRouter((props) => (
+  <SnackbarProvider maxSnack={3}>
+    <QuestionnaireStatistics {...props} />
+  </SnackbarProvider>
+));
