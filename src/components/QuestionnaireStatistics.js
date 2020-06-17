@@ -16,6 +16,7 @@ import {
   Tooltip,
   Legend,
   CartesianGrid,
+  Cell,
 } from "recharts";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -23,7 +24,6 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { withRouter } from "react-router-dom";
 import { showResultsOfQuestionary } from "../service/QuestionaryService";
 import { useSnackbar, SnackbarProvider } from "notistack";
-import { MySnackbarContentWrapper } from "./common/MySnackbarContentWrapper";
 
 const abecedario = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 const correctOptionsByQuestionId = {};
@@ -65,8 +65,6 @@ function QuestionnaireStatistics(props) {
         .map((option) => option.id);
       correctOptionsByQuestionId[question.id] = correctOptions;
     });
-
-    console.log("correctOptionsById", correctOptionsByQuestionId);
   };
 
   const buildQtyByOptionId = (answers) => {
@@ -103,19 +101,11 @@ function QuestionnaireStatistics(props) {
   const calculateHowManyCorrectAnswersHasQuestionary = () => {
     var counter = 0;
     responses.forEach((response) => {
-      console.log("response", response);
       var responseIsCorrect = true;
       response.question_responses.forEach((questionResponse) => {
         const actual = questionResponse.optionIds.map((id) => parseInt(id));
-        console.log("current", actual);
-        console.log(
-          "should",
-          correctOptionsByQuestionId[questionResponse.questionId]
-        );
-
-        if (
-          correctOptionsByQuestionId[questionResponse.questionId] !== actual
-        ) {
+        const should = correctOptionsByQuestionId[questionResponse.questionId];
+        if (should !== actual) {
           responseIsCorrect = false;
         }
       });
@@ -205,7 +195,7 @@ function QuestionnaireStatistics(props) {
       </Grid>
       <Container component="main" className={classes.container}>
         {loading ? (
-          <>Obteniendo información</>
+          <>Obteniendo información ...</>
         ) : (
           <>
             <Grid item xs={12}>
@@ -232,9 +222,11 @@ function QuestionnaireStatistics(props) {
             >
               {questionary.questions.map((question, questionId) => {
                 const data = question.options.map((option, idx) => {
+                  console.log("option", option);
                   return {
                     name: abecedario[idx],
                     cantidad: qtyByOptionId[option.id],
+                    isCorrect: option.correct,
                   };
                 });
 
@@ -256,7 +248,16 @@ function QuestionnaireStatistics(props) {
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <Bar dataKey="cantidad" fill="#8884d8" />
+                      <Bar dataKey="cantidad" fill="#8884d8">
+                        {data.map((entry, index) => {
+                          return (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={entry.isCorrect ? "#808000" : "#FF0000"}
+                            />
+                          );
+                        })}
+                      </Bar>
                     </BarChart>
                     <List>
                       {question.options.map((option, idx) => {
