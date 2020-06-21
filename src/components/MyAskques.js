@@ -145,18 +145,6 @@ export function MyAskques2(props) {
       });
   };
 
-  const showResults = (hash) => {
-    showResultsOfQuestionary(hash)
-      .then((res) => {
-        enqueueSnackbar(`Se mostrará los resultados del  ${hash}`, {
-          variant: "success",
-        });
-      })
-      .catch((reason) => {
-        enqueueSnackbar(`No se pudo realizar la acción`, { variant: "error" });
-      });
-  };
-
   return (
     <div>
       <AppBar position="static" />
@@ -187,7 +175,6 @@ export function MyAskques2(props) {
                       makeCopy={() => {
                         handleMakeCopyOfQuestionary(questionary.hash);
                       }}
-                      showResults={() => showResults(questionary.hash)}
                     />
                   </Grid>
                 ))}

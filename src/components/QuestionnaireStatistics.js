@@ -16,14 +16,17 @@ import {
   Tooltip,
   Legend,
   CartesianGrid,
+  Cell,
 } from "recharts";
 import Grid from "@material-ui/core/Grid";
-import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { withRouter } from "react-router-dom";
+import { showResultsOfQuestionary } from "../service/QuestionaryService";
+import { useSnackbar, SnackbarProvider } from "notistack";
 
 const abecedario = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+const correctOptionsByQuestionId = {};
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -51,20 +54,94 @@ function QuestionnaireStatistics(props) {
 
   const [loading, setLoading] = useState(true);
   const [questionary, setQuestionary] = useState();
-  const [results, setResults] = useState();
+  const [qtyByOptionId, setQtyByOptionId] = useState();
+  const [responses, setResponses] = useState();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const createCorrectOptionsByQuestionId = (questionaryData) => {
+    questionaryData.questions.forEach((question) => {
+      const correctOptions = question.options
+        .filter((option) => option.correct)
+        .map((option) => option.id);
+      correctOptionsByQuestionId[question.id] = correctOptions;
+    });
+  };
+
+  const buildQtyByOptionId = (answers) => {
+    const someMap = {};
+    answers.forEach((answer) => {
+      answer.question_responses.forEach((questionResponse) => {
+        questionResponse.optionIds.forEach((optionId) => {
+          if (someMap.hasOwnProperty(optionId)) {
+            someMap[optionId] = someMap[optionId] + 1;
+          } else {
+            someMap[optionId] = 1;
+          }
+        });
+      });
+    });
+    setQtyByOptionId(someMap);
+  };
+
+  const calculateHowManyCorrectResponseHasQuestion = (questionId) => {
+    const counter = 0;
+    responses.forEach((response) => {
+      response.question_responses.forEach((questionResponse) => {
+        if (
+          questionResponse.questionId === questionId &&
+          questionResponse.optionIds === correctOptionsByQuestionId[questionId]
+        ) {
+          counter = counter + 1;
+        }
+      });
+    });
+    return counter;
+  };
+
+  const calculateHowManyCorrectAnswersHasQuestionary = () => {
+    var counter = 0;
+    responses.forEach((response) => {
+      var responseIsCorrect = true;
+      response.question_responses.forEach((questionResponse) => {
+        const actual = questionResponse.optionIds.map((id) => parseInt(id));
+        const should = correctOptionsByQuestionId[questionResponse.questionId];
+        if (should !== actual) {
+          responseIsCorrect = false;
+        }
+      });
+      if (responseIsCorrect) {
+        counter = counter + 1;
+      }
+    });
+    return counter;
+  };
+
+  const showResults = () => {
+    showResultsOfQuestionary(questionary.hash)
+      .then((res) => {
+        enqueueSnackbar(`Se mostrará los resultados del  ${questionary.hash}`, {
+          variant: "success",
+        });
+      })
+      .catch((reason) => {
+        enqueueSnackbar(`No se pudo realizar la acción`, { variant: "error" });
+      });
+  };
 
   useEffect(() => {
-    const informationPromise = getInformationOfQuestionary(
-      props.match.params.hash
-    );
+    const hash = props.match.params.hash;
+    const informationPromise = getInformationOfQuestionary(hash);
     const resultPromise = getResultOfQuestionary(props.match.params.hash);
 
     Promise.all([informationPromise, resultPromise]).then(
       ([informationResponse, resultResponse]) => {
-        const information = informationResponse.data;
-        const results = resultResponse.data.answers;
-        setQuestionary(information);
-        setResults(results);
+        const questionaryData = informationResponse.data;
+        console.log("questionaryData", questionaryData);
+        createCorrectOptionsByQuestionId(questionaryData);
+        const answers = resultResponse.data.answers;
+        setQuestionary(questionaryData);
+        buildQtyByOptionId(answers);
+        setResponses(answers);
         setLoading(false);
       }
     );
@@ -72,8 +149,9 @@ function QuestionnaireStatistics(props) {
     const interval = setInterval(() => {
       const resultPromise = getResultOfQuestionary(props.match.params.hash);
       resultPromise.then((resultResponse) => {
-        const result = resultResponse.data.answers;
-        setResults(result);
+        const answers = resultResponse.data.answers;
+        buildQtyByOptionId(answers);
+        setResponses(answers);
         setLoading(false);
       });
     }, 10000);
@@ -103,41 +181,62 @@ function QuestionnaireStatistics(props) {
         </Grid>
         <Grid item xs={8} />
         <Grid item xs={2}>
-          <Button
-            className={classes.navigationButtons}
-            color="primary"
-            variant="contained"
-            onClick={() => props.history.push("/create-questionary")}
-          >
-            Crear encuesta
-            <AddIcon className={classes.rightIcon} />
-          </Button>
+          {questionary && !questionary.can_show_result && (
+            <Button
+              className={classes.navigationButtons}
+              color="primary"
+              variant="contained"
+              onClick={() => showResults()}
+            >
+              Mostrar respuestas
+            </Button>
+          )}
         </Grid>
       </Grid>
-      <Container maxWidth="md" component="main" className={classes.container}>
+      <Container component="main" className={classes.container}>
         {loading ? (
-          <>Obteniendo información</>
+          <>Obteniendo información ...</>
         ) : (
           <>
-            <Typography variant="h3" style={{ marginBottom: "5%" }}>
-              {questionary.name}
-            </Typography>
-            <Typography variant="h5" style={{ marginBottom: "5%" }}>
-              Cantidad de respuestas {questionary.quantity_respones}
-            </Typography>
-
-            <>
+            <Grid item xs={12}>
+              <Typography variant="h3" style={{ marginBottom: "5%" }}>
+                {questionary.name}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="h5">
+                Cantidad de respuestas {questionary.quantity_respones}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="h5" style={{ marginBottom: "5%" }}>
+                Cantidad de respuestas correctas{" "}
+                {calculateHowManyCorrectAnswersHasQuestionary()}
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              alignContent="center"
+              alignItems="stretch"
+              spacing={10}
+            >
               {questionary.questions.map((question, questionId) => {
                 const data = question.options.map((option, idx) => {
+                  console.log("option", option);
                   return {
                     name: abecedario[idx],
-                    cantidad: results[option.id],
+                    cantidad: qtyByOptionId[option.id],
+                    isCorrect: option.correct,
                   };
                 });
 
                 return (
-                  <div key={questionId}>
-                    <b style={{ margin: "5%" }}>{question.text}</b>
+                  <Grid item xs={6} key={questionId}>
+                    <b>{question.text}</b>
+                    <Typography variant="h6" align="center">
+                      Cantidad de respuestas correctas{" "}
+                      {calculateHowManyCorrectResponseHasQuestion(questionId)}
+                    </Typography>
                     <BarChart
                       width={600}
                       height={300}
@@ -149,7 +248,16 @@ function QuestionnaireStatistics(props) {
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <Bar dataKey="cantidad" fill="#8884d8" />
+                      <Bar dataKey="cantidad" fill="#8884d8">
+                        {data.map((entry, index) => {
+                          return (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={entry.isCorrect ? "#808000" : "#FF0000"}
+                            />
+                          );
+                        })}
+                      </Bar>
                     </BarChart>
                     <List>
                       {question.options.map((option, idx) => {
@@ -170,10 +278,10 @@ function QuestionnaireStatistics(props) {
                         );
                       })}
                     </List>
-                  </div>
+                  </Grid>
                 );
               })}
-            </>
+            </Grid>
           </>
         )}
       </Container>
@@ -181,4 +289,8 @@ function QuestionnaireStatistics(props) {
   );
 }
 
-export default withRouter((props) => <QuestionnaireStatistics {...props} />);
+export default withRouter((props) => (
+  <SnackbarProvider maxSnack={3}>
+    <QuestionnaireStatistics {...props} />
+  </SnackbarProvider>
+));

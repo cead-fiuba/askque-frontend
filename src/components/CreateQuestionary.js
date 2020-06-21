@@ -18,8 +18,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Hidden from "@material-ui/core/Hidden";
 import { saveQuestionary } from "../service/TeacherService";
-import Fab from "@material-ui/core/Fab";
-import CreateIcon from "@material-ui/icons/Add";
 import { uploadImage } from "../service/ImageUploaderService";
 import AlertDialog from "./common/AlertDialog";
 import EditIcon from "@material-ui/icons/Edit";
@@ -251,7 +249,6 @@ function CreateQuestionary2(props) {
             Se creo el questionario <b>{response.data.hash}</b>
           </>
         );
-        console.log("dasdasdas", alertDialogValues);
         setAlertDialogValues({ ...alertDialogValues, content: newContent });
         setTimeout(() => {
           redirectTo("/my-questionaries");
