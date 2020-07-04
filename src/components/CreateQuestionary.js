@@ -289,6 +289,7 @@ function CreateQuestionary2(props) {
               className={classes.textField}
               onChange={handleChange("name")}
               value={values.name}
+              helperText="Requerido"
               fullWidth
             />
           </Grid>
@@ -298,9 +299,10 @@ function CreateQuestionary2(props) {
               label="Tema"
               className={classes.textField}
               variant="outlined"
-              style={{ width: "95%" }}
               onChange={handleChange("tema")}
               value={values.module}
+              helperText="Requerido"
+              fullWidth
             />
           </Grid>
           <Grid item sm={6}>
@@ -318,7 +320,7 @@ function CreateQuestionary2(props) {
                 <MenuItem value={1}>primero</MenuItem>
                 <MenuItem value={2}>segundo</MenuItem>
               </Select>
-              <FormHelperText>Required</FormHelperText>
+              <FormHelperText>Requerido</FormHelperText>
             </FormControl>
           </Grid>
         </Grid>
