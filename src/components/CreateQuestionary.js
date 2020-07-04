@@ -24,6 +24,15 @@ import EditIcon from "@material-ui/icons/Edit";
 import { deleteQuestion } from "../service/QuestionaryService";
 import { useSnackbar, SnackbarProvider } from "notistack";
 
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import MenuItem from '@material-ui/core/MenuItem';
+
+
+
 const NEW_RESPONSE_TEXT = "Nueva respuesta ...";
 
 const useStyles = makeStyles((theme) => ({
@@ -72,6 +81,13 @@ const useStyles = makeStyles((theme) => ({
   cancelButton: {
     marginRight: theme.spacing(2),
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 200,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
 function CreateQuestionary2(props) {
@@ -84,6 +100,7 @@ function CreateQuestionary2(props) {
     showCreateResponses: false,
     minutes: "3",
     open: false,
+    cuatrimestre:null,
     tema: props.asEdit ? props.questionary.tema : "",
     questions: props.asEdit ? props.questionary.questions : [],
   });
@@ -120,6 +137,7 @@ function CreateQuestionary2(props) {
     questionIdxToDelete: null,
   });
 
+
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -155,6 +173,7 @@ function CreateQuestionary2(props) {
       setValues({ ...values, questions: questions });
     }
   };
+
 
   /***
    *
@@ -204,6 +223,7 @@ function CreateQuestionary2(props) {
       name: values.name,
       time: values.minutes,
       module: values.tema,
+      semester: values.cuatrimestre,
       is_new: props.asEdit ? false : true,
     };
     const questions = values.questions.map(async (question) => {
@@ -279,9 +299,7 @@ function CreateQuestionary2(props) {
               variant="outlined"
               className={classes.textField}
               onChange={handleChange("name")}
-              value={values.name}
-              //fullWidth
-            />
+              value={values.name}/>
           </Grid>
           <Grid item xs={7} sm={6}>
             <TextField
@@ -295,7 +313,27 @@ function CreateQuestionary2(props) {
               value={values.module}
             />
           </Grid>
+          <Grid item sm={6}>
+           <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel id="demo-simple-select-outlined-label">Cuatrimestre</InputLabel>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          id="demo-simple-select-outlined"
+          value={values.cuatrimestre}
+          onChange={handleChange("cuatrimestre")}
+          label="Cuatrimestre"
+          margin="dense"
+          fullWidth
+        >
+        
+          <MenuItem value={1}>Primero</MenuItem>
+          <MenuItem value={2}>Segundo</MenuItem>
+        </Select>
+      </FormControl>
+          </Grid>
+
         </Grid>
+         
       </Container>
       <Container maxWidth="md">
         {values.questions.length === 0 ? (
