@@ -23,7 +23,7 @@ import AlertDialog from "./common/AlertDialog";
 import EditIcon from "@material-ui/icons/Edit";
 import { deleteQuestion } from "../service/QuestionaryService";
 import { useSnackbar, SnackbarProvider } from "notistack";
-
+import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -81,9 +81,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 200,
   },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
 }));
 
 function CreateQuestionary2(props) {
@@ -96,7 +93,7 @@ function CreateQuestionary2(props) {
     showCreateResponses: false,
     minutes: "3",
     open: false,
-    cuatrimestre: null,
+    cuatrimestre: "",
     tema: props.asEdit ? props.questionary.tema : "",
     questions: props.asEdit ? props.questionary.questions : [],
   });
@@ -288,12 +285,11 @@ function CreateQuestionary2(props) {
             <TextField
               id="outlined-full-width"
               label="Nombre del cuestionario"
-              style={{ width: "95%" }}
-              margin="dense"
               variant="outlined"
               className={classes.textField}
               onChange={handleChange("name")}
               value={values.name}
+              fullWidth
             />
           </Grid>
           <Grid item xs={7} sm={6}>
@@ -301,7 +297,6 @@ function CreateQuestionary2(props) {
               id="outlined-name"
               label="Tema"
               className={classes.textField}
-              margin="dense"
               variant="outlined"
               style={{ width: "95%" }}
               onChange={handleChange("tema")}
@@ -319,12 +314,11 @@ function CreateQuestionary2(props) {
                 value={values.cuatrimestre}
                 onChange={handleChange("cuatrimestre")}
                 label="Cuatrimestre"
-                margin="dense"
-                fullWidth
               >
-                <MenuItem value={1}>Primero</MenuItem>
-                <MenuItem value={2}>Segundo</MenuItem>
+                <MenuItem value={1}>primero</MenuItem>
+                <MenuItem value={2}>segundo</MenuItem>
               </Select>
+              <FormHelperText>Required</FormHelperText>
             </FormControl>
           </Grid>
         </Grid>
