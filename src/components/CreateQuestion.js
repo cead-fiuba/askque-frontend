@@ -7,15 +7,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import Slide from "@material-ui/core/Slide";
 import TextField from "@material-ui/core/TextField";
-import ChecbokList from "./ChecbokList";
-import Paper from "@material-ui/core/Paper";
+import OptionList from "./OptionList";
 import Container from "@material-ui/core/Container";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import ImageUpload from "../components/ImageUpload";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import AddOptionDialog from "./AddOptionDialog";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -38,21 +36,6 @@ const useStyles = makeStyles((theme) => ({
 const MAX_RESPONSE = 5;
 const NEW_RESPONSE_TEXT = "Escriba aquí la opción posible";
 
-const BorderLinearProgress = withStyles({
-  root: {
-    height: 10,
-    backgroundColor: lighten("#2196f3", 0.5),
-  },
-  bar: {
-    borderRadius: 20,
-    backgroundColor: "#2196f3",
-  },
-})(LinearProgress);
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 /***
  *
  * props = {
@@ -68,23 +51,13 @@ export default function CreateQuestion(props) {
 
   const [withImage, setWithImage] = useState(false);
   const [fileImage, setFileImage] = useState(null);
+  const [openAddOptionDialog, setOpenAddOptionDialog] = React.useState(false);
 
   useEffect(() => {
     setValues({
-      progressMessage: "Escriba la pregunta",
-      progress: props.question.text !== "" ? 100 : 0,
       question: props.question.text,
-      options: props.asEdit
-        ? props.question.options
-        : [
-            {
-              text: NEW_RESPONSE_TEXT,
-              correct: false,
-              isNew: true,
-            },
-          ],
+      options: props.asEdit ? props.question.options : [],
       responsesCreated: props.question.text !== "",
-      aResponseWasMarkedAsCorrect: false,
     });
     setWithImage(props.question.has_image === true);
   }, [
@@ -95,21 +68,25 @@ export default function CreateQuestion(props) {
   ]);
 
   const [values, setValues] = React.useState({
-    progressMessage: "Escriba la pregunta",
-    progress: props.question.text !== "" ? 100 : 0,
     question: props.question.text,
-    options: props.asEdit
-      ? props.question.options
-      : [
-          {
-            text: NEW_RESPONSE_TEXT,
-            correct: false,
-            isNew: true,
-          },
-        ],
-    responsesCreated: props.question.text !== "",
-    aResponseWasMarkedAsCorrect: false,
+    options: props.asEdit ? props.question.options : [],
   });
+
+  const handleDialogClose = () => {
+    setOpenAddOptionDialog(false);
+  };
+
+  const addOption = (option) => {
+    const currentOptions = [...values.options];
+    currentOptions.push(option);
+    setValues({ ...values, options: currentOptions });
+  };
+
+  const deleteOption = (idx) => {
+    const currentOptions = [...values.options];
+    currentOptions.splice(idx);
+    setValues({ ...values, options: currentOptions });
+  };
 
   const saveImage = (formDataOfImage) => {
     console.log("Saving image...", formDataOfImage);
@@ -152,24 +129,6 @@ export default function CreateQuestion(props) {
       lastElement.text !== NEW_RESPONSE_TEXT &&
       lastElement.text !== ""
     );
-  };
-
-  const markResponse = (idx, value) => {
-    const oldResponses = values.options.filter(
-      (option) => option.text !== NEW_RESPONSE_TEXT && option.text !== ""
-    );
-    oldResponses[idx].correct = value;
-    if (!values.aResponseWasMarkedAsCorrect) {
-      setValues({
-        ...values,
-        options: oldResponses,
-        aResponseWasMarkedAsCorrect: true,
-        progress: 100,
-        progressMessage: "Listo",
-      });
-    } else {
-      setValues({ ...values, options: oldResponses });
-    }
   };
 
   const exitTwoCompleteOptions = () => {
@@ -237,12 +196,7 @@ export default function CreateQuestion(props) {
   };
 
   return (
-    <Dialog
-      fullScreen
-      open={props.open}
-      onClose={props.handleClose}
-      TransitionComponent={Transition}
-    >
+    <Dialog fullScreen open={props.open} onClose={props.handleClose}>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton
@@ -276,19 +230,7 @@ export default function CreateQuestion(props) {
           </Button>
         </Toolbar>
       </AppBar>
-      <Container>
-        <Paper className={classes.progressPaper}>
-          <Typography variant="h6" component="h2">
-            Progreso : <b>{values.progressMessage}</b>
-          </Typography>
-          <BorderLinearProgress
-            className={classes.margin}
-            variant="determinate"
-            color="secondary"
-            value={values.progress}
-          />
-        </Paper>
-
+      <Container className={classes.margin}>
         <FormControlLabel
           control={
             <Switch
@@ -324,16 +266,26 @@ export default function CreateQuestion(props) {
           onChange={handleChange("question")}
           value={values.question}
         />
-        <ChecbokList
+        <Button
+          onClick={() => {
+            setOpenAddOptionDialog(true);
+          }}
+          color="primary"
+          variant="contained"
+        >
+          Agregar opción
+        </Button>
+        <OptionList
           handleChange={handleChange}
           responses={values.options}
           handleResponse={handleResponse}
-          markResponse={markResponse}
-          deleteResponse={deleteResponse}
-          aResponseWasMarkedAsCorrect={
-            values.aResponseWasMarkedAsCorrect || props.asEdit
-          }
-          existTwoCompleteOptions={() => exitTwoCompleteOptions()}
+          deleteOption={deleteOption}
+        />
+
+        <AddOptionDialog
+          open={openAddOptionDialog}
+          handleClose={handleDialogClose}
+          addOption={addOption}
         />
       </Container>
     </Dialog>
