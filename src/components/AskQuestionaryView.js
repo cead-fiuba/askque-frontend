@@ -7,9 +7,24 @@ import AskqueResumen from "./AskqueResume";
 import { getInformationOfQuestionaryWithCache } from "../service/QuestionaryService";
 import Button from "@material-ui/core/Button";
 import CompleteQuestionary from "./CompleteQuestionary";
+import Container from '@material-ui/core/Container';
+import ReactCodeInput from 'react-code-input';
+import { makeStyles } from "@material-ui/core/styles";
 
-export default class AskQuestionaryView extends Component {
-  state = {
+
+const useStyles = makeStyles((theme) => ({
+  codeInput:{
+    fontSize: '15px !important' 
+  }
+}));
+
+
+
+const AskQuestionaryView = () => {
+  const classes = useStyles();
+
+
+  const [state,setState] = React.useState({
     questionaryHash: "",
     showLoading: false,
     showInformation: true,
@@ -18,16 +33,17 @@ export default class AskQuestionaryView extends Component {
     questionaryModulo: null,
     startCompleteQuestionary: false,
     questionary: null,
-  };
+  })
 
-  handleChange = (e) => {
-    console.log(e.target.value);
-    const hash = e.target.value.toUpperCase();
+  const handleChange = (code) => {
+    const hash = code.toUpperCase();
+    console.log('hash',hash)
     const isComplete = hash.length === 3;
-    this.setState({ questionaryHash: hash });
+    setState({ ...state,questionaryHash: hash });
     if (isComplete) {
       getInformationOfQuestionaryWithCache(hash).then((response) => {
-        this.setState({
+        setState({
+          ...state,
           showResume: true,
           questionaryName: response.data.name,
           questionaryModulo: response.data.module,
@@ -39,84 +55,102 @@ export default class AskQuestionaryView extends Component {
     }
   };
 
-  startCompleteQuestionary = () => {
-    this.setState({
+  const startCompleteQuestionary = () => {
+    setState({
+      ...state,
       showInformation: false,
       showResume: false,
       startCompleteQuestionary: true,
     });
   };
 
-  render() {
+
     return (
       <>
         <AppBar position="static" />
-        <Grid
-          container
-          alignItems="center"
-          justify="center"
-          style={{ marginTop: "10%" }}
-        >
-          {this.state.showInformation ? (
-            <Typography
+         <Container maxWidth="md">
+         <Grid container
+         justify="center"
+         alignItems="center"
+         >
+            <Grid item xs={12}>
+             <Typography
               variant="h4"
               align="center"
               color="textPrimary"
               gutterBottom
-              style={{ marginTop: "1em" }}
-            >
-              Ingrese la clave del cuestionario
-            </Typography>
-          ) : null}
-
-          <Grid item xs={12}>
-            {this.state.showInformation ? (
-              <input
-                id="input-askque-code"
-                type="text"
-                maxLength="3"
-                value={this.state.questionaryHash}
-                onChange={this.handleChange}
-              />
-            ) : null}
-          </Grid>
-          <Grid container alignItems="center" justify="center">
-            {this.state.showResume ? (
-              <>
-                <AskqueResumen
-                  name={this.state.questionaryName}
-                  module={this.state.questionaryModulo}
-                  code={this.state.questionaryHash}
-                  time={this.state.questionaryTime}
-                  date={this.state.questionary.date}
-                  quantityQuestions={this.state.quantityQuestions}
+              style={{ marginTop: "3em" }}
+              >
+              Ingrese la clave 
+              </Typography>
+            </Grid>
+            <Grid item>
+            <ReactCodeInput 
+            type='text' 
+            fields={3}
+            onChange={handleChange}
+            style={{marginBottom:"30%"}}
+            inputStyle={{
+  MozAppearance: "textfield",
+  borderRadius: "6px",
+  border: "1px solid",
+  boxShadow:"0px 0px 10px 0px rgba(0,0,0,.10)",
+  margin: "4px",
+  paddingLeft: "8px",
+  width: "52px",
+  height: "64px",
+  fontSize: "46px",
+  boxSizing: "border-box",
+  color: "black",
+  backgroundColor: "white",
+  borderColor: "lightgrey",
+  textTransform:"uppercase"
+            }}
+            />
+            </Grid>
+               {state.showResume &&
+               <>
+               <Grid item xs={10}>
+               <AskqueResumen
+                  name={state.questionaryName}
+                  module={state.questionaryModulo}
+                  code={state.questionaryHash}
+                  time={state.questionaryTime}
+                  date={state.questionary.date}
+                  quantityQuestions={state.quantityQuestions}
                 />
-
-                <Typography variant="subtitle1" color="textSecondary">
-                  Tenes {this.state.questionaryTime} minutos para responder{" "}
-                  {this.state.quantityQuestions} preguntas!
-                </Typography>
-                <Button
+               </Grid>
+                
+              <Grid item xs={8}>
+              <Button
                   variant="contained"
                   color="primary"
                   fullWidth
-                  style={{ margin: "5%" }}
-                  onClick={this.startCompleteQuestionary}
-                >
+                  onClick={startCompleteQuestionary}
+                   >
                   Estoy listo
-                </Button>
+                  </Button>
+              </Grid>
+                
               </>
-            ) : null}
-
-            {this.state.startCompleteQuestionary ? (
-              <CompleteQuestionary
-                hash={this.state.questionaryHash}
-                questionary={this.state.questionary}
+                  }
+              {state.startCompleteQuestionary && <CompleteQuestionary
+                hash={state.questionaryHash}
+                questionary={state.questionary}
               />
-            ) : null}
+              }
           </Grid>
-        </Grid>
+
+
+
+
+
+
+
+      </Container>
       </>
     );
-  }
 }
+
+
+export default AskQuestionaryView;
