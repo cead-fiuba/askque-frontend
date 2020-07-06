@@ -1,15 +1,15 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-
+import ThumbUpAltRoundedIcon from "@material-ui/icons/ThumbUpAltRounded";
 import Grid from "@material-ui/core/Grid";
+import ThumbDownRoundedIcon from "@material-ui/icons/ThumbDownRounded";
+import DoneOutlineRoundedIcon from "@material-ui/icons/DoneOutlineRounded";
+import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,32 +17,65 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     marginTop: "2%",
   },
+  helpIconOk: {
+    color: "green",
+  },
+  helpIconNotOk: {
+    color: "red",
+  },
+  buttonGroup: {
+    marginTop: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+  },
 }));
 
 export default function OptionList(props) {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState([0]);
 
   return (
     <>
       <Grid container className={classes.root}>
         {props.responses.map((response, idx) => {
           return (
-            <Grid container justify="flex-end">
-              <Grid item key={idx} sm={12}>
+            <Grid container justify="flex-end" key={idx}>
+              <Grid item sm={11}>
                 <TextField
                   fullWidth
-                  onChange={props.handleResponse(idx)}
-                  onClick={props.handleResponse(idx)}
                   value={response.text}
                   variant="outlined"
                   margin="dense"
-                  error={!response.correct}
+                  className={
+                    response.correct
+                      ? classes.correctOption
+                      : classes.incorrectOption
+                  }
+                  InputProps={{
+                    endAdornment: (
+                      <>
+                        {response.correct ? (
+                          <DoneOutlineRoundedIcon
+                            fontSize="large"
+                            className={classes.helpIconOk}
+                          />
+                        ) : (
+                          <CloseRoundedIcon
+                            fontSize="large"
+                            className={classes.helpIconNotOk}
+                          />
+                        )}
+                      </>
+                    ),
+                  }}
                 />
               </Grid>
-              <Grid sm={1}>
-                <ButtonGroup variant="text">
-                  <Button size="small">
+              <Grid item sm={1}>
+                <ButtonGroup variant="text" className={classes.buttonGroup}>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      props.editOption(idx);
+                    }}
+                  >
                     <EditIcon />
                   </Button>
                   <Button

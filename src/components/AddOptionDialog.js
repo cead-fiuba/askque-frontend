@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -15,19 +15,17 @@ const AddOptionDialog = (props) => {
   const [isCorrect, setIsCorrect] = useState(false);
   const [isNotCorrect, setIsNotCorrect] = useState(false);
 
-  const clean = () => {
-    setText("");
-    setIsCorrect(false);
-    setIsNotCorrect(false);
-  };
+  useEffect(() => {
+    setText(props.defaultValues.text);
+    setIsCorrect(props.defaultValues.isCorrect);
+    setIsNotCorrect(props.defaultValues.isNotCorrect);
+  }, [props]);
 
   const save = () => {
-    clean();
-    props.addOption({ text: text, correct: isCorrect });
     props.handleClose();
+    props.addOption({ text: text, correct: isCorrect }, props.defaultValues.id);
   };
   const cancel = () => {
-    clean();
     props.handleClose();
   };
 
@@ -70,8 +68,8 @@ const AddOptionDialog = (props) => {
                 inputProps={{ "aria-label": "secondary checkbox" }}
                 onChange={() => {
                   setIsCorrect(true);
+                  setIsNotCorrect(false);
                 }}
-                disabled={isNotCorrect}
               />
             }
             label="Sí"
@@ -79,12 +77,13 @@ const AddOptionDialog = (props) => {
           <FormControlLabel
             control={
               <Checkbox
+                color="primary"
                 checked={isNotCorrect}
                 onChange={() => {
                   setIsNotCorrect(true);
+                  setIsCorrect(false);
                 }}
                 inputProps={{ "aria-label": "primary checkbox" }}
-                disabled={isCorrect}
               />
             }
             label="No"
@@ -95,8 +94,8 @@ const AddOptionDialog = (props) => {
         <Button onClick={cancel} color="primary">
           Cancelar
         </Button>
-        <Button onClick={save} color="primary" autoFocus>
-          Agregar
+        <Button onClick={save} color="primary" autoFocus variant="contained">
+          {props.defaultValues.id !== null ? "Sí,guardar" : "Sí,agregar"}
         </Button>
       </DialogActions>
     </Dialog>

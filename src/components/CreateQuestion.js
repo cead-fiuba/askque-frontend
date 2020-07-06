@@ -53,6 +53,13 @@ export default function CreateQuestion(props) {
   const [fileImage, setFileImage] = useState(null);
   const [openAddOptionDialog, setOpenAddOptionDialog] = React.useState(false);
 
+  const [currentOption, setCurrentOption] = useState({
+    text: "",
+    isCorrect: false,
+    isNotCorrect: false,
+    id: null,
+  });
+
   useEffect(() => {
     setValues({
       question: props.question.text,
@@ -76,76 +83,45 @@ export default function CreateQuestion(props) {
     setOpenAddOptionDialog(false);
   };
 
-  const addOption = (option) => {
+  const addOption = (option, idx) => {
+    console.log("add option idx", idx);
     const currentOptions = [...values.options];
-    currentOptions.push(option);
+    if (idx !== null && idx !== undefined) {
+      currentOptions[idx] = option;
+    } else {
+      currentOptions.push(option);
+    }
+    setCurrentOption({
+      text: "",
+      isCorrect: false,
+      isNotCorrect: false,
+      id: null,
+    });
     setValues({ ...values, options: currentOptions });
   };
 
   const deleteOption = (idx) => {
+    console.log("delete idx", idx);
     const currentOptions = [...values.options];
-    currentOptions.splice(idx);
+    currentOptions.splice(idx, 1);
+    console.log("currentOptions", currentOptions);
     setValues({ ...values, options: currentOptions });
+  };
+
+  const editOption = (idx) => {
+    const optionToEdit = values.options[idx];
+    setCurrentOption({
+      text: optionToEdit.text,
+      isCorrect: optionToEdit.correct,
+      isNotCorrect: !optionToEdit.correct,
+      id: idx,
+    });
+    setOpenAddOptionDialog(true);
   };
 
   const saveImage = (formDataOfImage) => {
     console.log("Saving image...", formDataOfImage);
     setFileImage(formDataOfImage);
-  };
-
-  const handleResponse = (idx) => (event) => {
-    const oldResponses = values.options;
-    oldResponses[idx].text =
-      event.target.value === NEW_RESPONSE_TEXT ? "" : event.target.value;
-    oldResponses[idx].isNew = false;
-    if (theLastIsNotEmpty(oldResponses) && oldResponses.length < MAX_RESPONSE) {
-      oldResponses.push({
-        text: NEW_RESPONSE_TEXT,
-        correct: false,
-        isNew: true,
-      });
-    }
-    setValues({ ...values, options: oldResponses });
-    if (
-      !values.responsesCreated &&
-      !values.aResponseWasMarkedAsCorrect &&
-      exitTwoCompleteOptions()
-    ) {
-      setValues({
-        ...values,
-        options: oldResponses,
-        responsesCreated: true,
-        progress: 75,
-        progressMessage: "Indique todas las respuestas correctas",
-      });
-    }
-  };
-
-  const theLastIsNotEmpty = (responses) => {
-    const size = responses.length;
-    const lastElement = responses[size - 1];
-    return (
-      lastElement.text !== null &&
-      lastElement.text !== NEW_RESPONSE_TEXT &&
-      lastElement.text !== ""
-    );
-  };
-
-  const exitTwoCompleteOptions = () => {
-    return (
-      values.options.filter(
-        (response) =>
-          response.text !== NEW_RESPONSE_TEXT && response.text !== ""
-      ).length >= 2
-    );
-  };
-
-  const deleteResponse = (idx) => {
-    if (values.options.length > 1) {
-      const oldResponses = values.options;
-      oldResponses.splice(idx, 1);
-      setValues({ ...values, options: oldResponses });
-    }
   };
 
   function save() {
@@ -158,41 +134,11 @@ export default function CreateQuestion(props) {
       toSave.id = props.question.id;
     }
     props.saveQuestion(toSave, props.asEdit);
-    cleanForm();
     props.handleClose();
   }
 
-  const cleanForm = () => {
-    setValues({
-      progressMessage: "Escriba la pregunta",
-      progress: 0,
-      question: "",
-      options: [
-        {
-          text: NEW_RESPONSE_TEXT,
-          correct: false,
-          isNew: true,
-        },
-      ],
-      responsesCreated: false,
-      aResponseWasMarkedAsCorrect: false,
-    });
-  };
   const handleChange = (prop) => (event) => {
-    if (
-      prop === "question" &&
-      !values.responsesCreated &&
-      !values.aResponseWasMarkedAsCorrect
-    ) {
-      setValues({
-        ...values,
-        [prop]: event.target.value,
-        progress: 25,
-        progressMessage: "Escriba las opciones",
-      });
-    } else {
-      setValues({ ...values, [prop]: event.target.value });
-    }
+    setValues({ ...values, [prop]: event.target.value });
   };
 
   return (
@@ -203,7 +149,6 @@ export default function CreateQuestion(props) {
             edge="start"
             color="inherit"
             onClick={() => {
-              cleanForm();
               props.handleClose();
             }}
             aria-label="Close"
@@ -217,16 +162,9 @@ export default function CreateQuestion(props) {
             variant="contained"
             color="primary"
             onClick={save}
-            disabled={
-              !(
-                (values.responsesCreated &&
-                  values.aResponseWasMarkedAsCorrect &&
-                  values.question !== "") ||
-                props.asEdit
-              )
-            }
+            disabled={values.question === "" && values.options.length === 0}
           >
-            Crear
+            Guardar
           </Button>
         </Toolbar>
       </AppBar>
@@ -276,16 +214,16 @@ export default function CreateQuestion(props) {
           Agregar opción
         </Button>
         <OptionList
-          handleChange={handleChange}
           responses={values.options}
-          handleResponse={handleResponse}
           deleteOption={deleteOption}
+          editOption={editOption}
         />
 
         <AddOptionDialog
           open={openAddOptionDialog}
           handleClose={handleDialogClose}
           addOption={addOption}
+          defaultValues={currentOption}
         />
       </Container>
     </Dialog>
