@@ -7,15 +7,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import Slide from "@material-ui/core/Slide";
 import TextField from "@material-ui/core/TextField";
-import ChecbokList from "./ChecbokList";
-import Paper from "@material-ui/core/Paper";
+import OptionList from "./OptionList";
 import Container from "@material-ui/core/Container";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import ImageUpload from "../components/ImageUpload";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import AddOptionDialog from "./AddOptionDialog";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -38,21 +36,6 @@ const useStyles = makeStyles((theme) => ({
 const MAX_RESPONSE = 5;
 const NEW_RESPONSE_TEXT = "Escriba aquí la opción posible";
 
-const BorderLinearProgress = withStyles({
-  root: {
-    height: 10,
-    backgroundColor: lighten("#2196f3", 0.5),
-  },
-  bar: {
-    borderRadius: 20,
-    backgroundColor: "#2196f3",
-  },
-})(LinearProgress);
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 /***
  *
  * props = {
@@ -68,23 +51,20 @@ export default function CreateQuestion(props) {
 
   const [withImage, setWithImage] = useState(false);
   const [fileImage, setFileImage] = useState(null);
+  const [openAddOptionDialog, setOpenAddOptionDialog] = React.useState(false);
+
+  const [currentOption, setCurrentOption] = useState({
+    text: "",
+    isCorrect: false,
+    isNotCorrect: false,
+    id: null,
+  });
 
   useEffect(() => {
     setValues({
-      progressMessage: "Escriba la pregunta",
-      progress: props.question.text !== "" ? 100 : 0,
       question: props.question.text,
-      options: props.asEdit
-        ? props.question.options
-        : [
-            {
-              text: NEW_RESPONSE_TEXT,
-              correct: false,
-              isNew: true,
-            },
-          ],
+      options: props.asEdit ? props.question.options : [],
       responsesCreated: props.question.text !== "",
-      aResponseWasMarkedAsCorrect: false,
     });
     setWithImage(props.question.has_image === true);
   }, [
@@ -95,98 +75,53 @@ export default function CreateQuestion(props) {
   ]);
 
   const [values, setValues] = React.useState({
-    progressMessage: "Escriba la pregunta",
-    progress: props.question.text !== "" ? 100 : 0,
     question: props.question.text,
-    options: props.asEdit
-      ? props.question.options
-      : [
-          {
-            text: NEW_RESPONSE_TEXT,
-            correct: false,
-            isNew: true,
-          },
-        ],
-    responsesCreated: props.question.text !== "",
-    aResponseWasMarkedAsCorrect: false,
+    options: props.asEdit ? props.question.options : [],
   });
+
+  const handleDialogClose = () => {
+    setOpenAddOptionDialog(false);
+  };
+
+  const addOption = (option, idx) => {
+    console.log("add option idx", idx);
+    const currentOptions = [...values.options];
+    if (idx !== null && idx !== undefined) {
+      currentOptions[idx] = option;
+    } else {
+      currentOptions.push(option);
+    }
+    setCurrentOption({
+      text: "",
+      isCorrect: false,
+      isNotCorrect: false,
+      id: null,
+    });
+    setValues({ ...values, options: currentOptions });
+  };
+
+  const deleteOption = (idx) => {
+    console.log("delete idx", idx);
+    const currentOptions = [...values.options];
+    currentOptions.splice(idx, 1);
+    console.log("currentOptions", currentOptions);
+    setValues({ ...values, options: currentOptions });
+  };
+
+  const editOption = (idx) => {
+    const optionToEdit = values.options[idx];
+    setCurrentOption({
+      text: optionToEdit.text,
+      isCorrect: optionToEdit.correct,
+      isNotCorrect: !optionToEdit.correct,
+      id: idx,
+    });
+    setOpenAddOptionDialog(true);
+  };
 
   const saveImage = (formDataOfImage) => {
     console.log("Saving image...", formDataOfImage);
     setFileImage(formDataOfImage);
-  };
-
-  const handleResponse = (idx) => (event) => {
-    const oldResponses = values.options;
-    oldResponses[idx].text =
-      event.target.value === NEW_RESPONSE_TEXT ? "" : event.target.value;
-    oldResponses[idx].isNew = false;
-    if (theLastIsNotEmpty(oldResponses) && oldResponses.length < MAX_RESPONSE) {
-      oldResponses.push({
-        text: NEW_RESPONSE_TEXT,
-        correct: false,
-        isNew: true,
-      });
-    }
-    setValues({ ...values, options: oldResponses });
-    if (
-      !values.responsesCreated &&
-      !values.aResponseWasMarkedAsCorrect &&
-      exitTwoCompleteOptions()
-    ) {
-      setValues({
-        ...values,
-        options: oldResponses,
-        responsesCreated: true,
-        progress: 75,
-        progressMessage: "Indique todas las respuestas correctas",
-      });
-    }
-  };
-
-  const theLastIsNotEmpty = (responses) => {
-    const size = responses.length;
-    const lastElement = responses[size - 1];
-    return (
-      lastElement.text !== null &&
-      lastElement.text !== NEW_RESPONSE_TEXT &&
-      lastElement.text !== ""
-    );
-  };
-
-  const markResponse = (idx, value) => {
-    const oldResponses = values.options.filter(
-      (option) => option.text !== NEW_RESPONSE_TEXT && option.text !== ""
-    );
-    oldResponses[idx].correct = value;
-    if (!values.aResponseWasMarkedAsCorrect) {
-      setValues({
-        ...values,
-        options: oldResponses,
-        aResponseWasMarkedAsCorrect: true,
-        progress: 100,
-        progressMessage: "Listo",
-      });
-    } else {
-      setValues({ ...values, options: oldResponses });
-    }
-  };
-
-  const exitTwoCompleteOptions = () => {
-    return (
-      values.options.filter(
-        (response) =>
-          response.text !== NEW_RESPONSE_TEXT && response.text !== ""
-      ).length >= 2
-    );
-  };
-
-  const deleteResponse = (idx) => {
-    if (values.options.length > 1) {
-      const oldResponses = values.options;
-      oldResponses.splice(idx, 1);
-      setValues({ ...values, options: oldResponses });
-    }
   };
 
   function save() {
@@ -199,57 +134,21 @@ export default function CreateQuestion(props) {
       toSave.id = props.question.id;
     }
     props.saveQuestion(toSave, props.asEdit);
-    cleanForm();
     props.handleClose();
   }
 
-  const cleanForm = () => {
-    setValues({
-      progressMessage: "Escriba la pregunta",
-      progress: 0,
-      question: "",
-      options: [
-        {
-          text: NEW_RESPONSE_TEXT,
-          correct: false,
-          isNew: true,
-        },
-      ],
-      responsesCreated: false,
-      aResponseWasMarkedAsCorrect: false,
-    });
-  };
   const handleChange = (prop) => (event) => {
-    if (
-      prop === "question" &&
-      !values.responsesCreated &&
-      !values.aResponseWasMarkedAsCorrect
-    ) {
-      setValues({
-        ...values,
-        [prop]: event.target.value,
-        progress: 25,
-        progressMessage: "Escriba las opciones",
-      });
-    } else {
-      setValues({ ...values, [prop]: event.target.value });
-    }
+    setValues({ ...values, [prop]: event.target.value });
   };
 
   return (
-    <Dialog
-      fullScreen
-      open={props.open}
-      onClose={props.handleClose}
-      TransitionComponent={Transition}
-    >
+    <Dialog fullScreen open={props.open} onClose={props.handleClose}>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton
             edge="start"
             color="inherit"
             onClick={() => {
-              cleanForm();
               props.handleClose();
             }}
             aria-label="Close"
@@ -263,32 +162,13 @@ export default function CreateQuestion(props) {
             variant="contained"
             color="primary"
             onClick={save}
-            disabled={
-              !(
-                (values.responsesCreated &&
-                  values.aResponseWasMarkedAsCorrect &&
-                  values.question !== "") ||
-                props.asEdit
-              )
-            }
+            disabled={values.question === "" && values.options.length === 0}
           >
-            Crear
+            Guardar
           </Button>
         </Toolbar>
       </AppBar>
-      <Container>
-        <Paper className={classes.progressPaper}>
-          <Typography variant="h6" component="h2">
-            Progreso : <b>{values.progressMessage}</b>
-          </Typography>
-          <BorderLinearProgress
-            className={classes.margin}
-            variant="determinate"
-            color="secondary"
-            value={values.progress}
-          />
-        </Paper>
-
+      <Container className={classes.margin}>
         <FormControlLabel
           control={
             <Switch
@@ -324,16 +204,26 @@ export default function CreateQuestion(props) {
           onChange={handleChange("question")}
           value={values.question}
         />
-        <ChecbokList
-          handleChange={handleChange}
+        <Button
+          onClick={() => {
+            setOpenAddOptionDialog(true);
+          }}
+          color="primary"
+          variant="contained"
+        >
+          Agregar opción
+        </Button>
+        <OptionList
           responses={values.options}
-          handleResponse={handleResponse}
-          markResponse={markResponse}
-          deleteResponse={deleteResponse}
-          aResponseWasMarkedAsCorrect={
-            values.aResponseWasMarkedAsCorrect || props.asEdit
-          }
-          existTwoCompleteOptions={() => exitTwoCompleteOptions()}
+          deleteOption={deleteOption}
+          editOption={editOption}
+        />
+
+        <AddOptionDialog
+          open={openAddOptionDialog}
+          handleClose={handleDialogClose}
+          addOption={addOption}
+          defaultValues={currentOption}
         />
       </Container>
     </Dialog>

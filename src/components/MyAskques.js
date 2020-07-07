@@ -207,14 +207,12 @@ export function MyAskques2(props) {
               }}
               title={"Eliminar cuestionario"}
               content={
-                <>
-                  <Typography variant="body1" gutterBottom component={"span"}>
-                    {"¿Está seguro que desea eliminar el cuestionario?\n"}
-                  </Typography>
-                </>
+                <Typography variant="body1">
+                  {"¿Está seguro que desea eliminar el cuestionario?"}
+                </Typography>
               }
-              buttonTextOk={<b>Eliminar</b>}
-              buttonTextCancel={<b>Cancelar</b>}
+              buttonTextOk={"Sí, Eliminar"}
+              buttonTextCancel={"Cancelar"}
               handleOk={() => {
                 deleteQuestionary(questionaryToDelete);
               }}
