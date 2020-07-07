@@ -14,7 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   codeInput:{
-    fontSize: '15px !important' 
+    fontSize: '15px' 
   }
 }));
 
