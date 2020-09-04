@@ -15,7 +15,6 @@ import Typography from "@material-ui/core/Typography";
 import { useSnackbar, SnackbarProvider } from "notistack";
 import { deleteQuestionaryResponses } from "../service/ResponseService";
 import { makeCopyOfQuestionaryWith } from "../service/TeacherService";
-import { showResultsOfQuestionary } from "../service/QuestionaryService";
 import QuestionaryCard from "./common/QuestionaryCard";
 import MakeCopyAlertDialog from "./MakeCopyAlertDialog";
 
@@ -145,6 +144,14 @@ export function MyAskques2(props) {
       });
   };
 
+  const getLinkOfQuestionary = (hash) => {
+    console.log(window.location.host + "/ask-questionary/");
+    const text = window.location.host + "/ask-questionary/" + hash;
+    navigator.clipboard.writeText(text);
+    let variant = "success";
+    enqueueSnackbar(`El link fue copiado`, { variant });
+  };
+
   return (
     <div>
       <AppBar position="static" />
@@ -174,6 +181,9 @@ export function MyAskques2(props) {
                       }}
                       makeCopy={() => {
                         handleMakeCopyOfQuestionary(questionary.hash);
+                      }}
+                      getLinkOfQuestionary={() => {
+                        getLinkOfQuestionary(questionary.hash);
                       }}
                     />
                   </Grid>
