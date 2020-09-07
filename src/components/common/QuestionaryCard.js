@@ -151,7 +151,7 @@ export default function QuestionaryCard(props) {
                   props.getLinkOfQuestionary();
                 }}
               >
-                Link
+                Linkear
               </Button>
             </CardActions>
           </Card>
