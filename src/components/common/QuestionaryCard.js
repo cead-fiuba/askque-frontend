@@ -10,8 +10,6 @@ import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import { AppContextConsumer } from "../../context/context";
-import Chip from "@material-ui/core/Chip";
-import ShareIcon from "@material-ui/icons/Share";
 
 import "typeface-roboto";
 
@@ -144,6 +142,16 @@ export default function QuestionaryCard(props) {
                 }}
               >
                 copiar
+              </Button>
+              <Button
+                size="small"
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  props.getLinkOfQuestionary();
+                }}
+              >
+                Linkear
               </Button>
             </CardActions>
           </Card>
