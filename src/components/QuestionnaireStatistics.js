@@ -83,9 +83,17 @@ function QuestionnaireStatistics(props) {
     setQtyByOptionId(someMap);
   };
 
+
+  const eqSet = (as, bs) => {
+    if (as.size !== bs.size) return false;
+    for (var a of as) if (!bs.has(a)) return false;
+    return true;
+}
+
   const calculateHowManyCorrectResponseHasQuestion = (questionId) => {
     const counter = 0;
     console.log("responses",responses)
+    console.log("question id",questionId)
     responses.forEach((response) => {
       response.question_responses.forEach((questionResponse) => {
         console.log("questionResponse.optionIds",questionResponse.optionIds)
@@ -93,7 +101,7 @@ function QuestionnaireStatistics(props) {
         console.log("correctOptionsByQuestionId[questionId]",correctOptionsByQuestionId[questionId])
         if (
           questionResponse.questionId === questionId &&
-          questionResponse.optionIds === correctOptionsByQuestionId[questionId]
+          eqSet(new Set(questionResponse.optionIds.map((e) => parseInt(e))),new Set(correctOptionsByQuestionId[parseInt(questionId)]))
         ) {
           counter = counter + 1;
         }
