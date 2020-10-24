@@ -247,7 +247,7 @@ function QuestionnaireStatistics(props) {
                     <b>{question.text}</b>
                     <Typography variant="h6" align="center">
                       Cantidad de respuestas correctas{" "}
-                      {calculateHowManyCorrectResponseHasQuestion(questionId)}
+                      {calculateHowManyCorrectResponseHasQuestion(question.id)}
                     </Typography>
                     <BarChart
                       width={600}
