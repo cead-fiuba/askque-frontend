@@ -26,6 +26,10 @@ export default class Root extends Component {
             path="/ask-results/:hash"
             component={QuestionnaireStatistics}
           />
+          <Route
+            path="/ask-results"
+            component={QuestionnaireStatistics}
+          />
           <Route path="/edit-questionary/:hash" component={EditQuestionary} />
           <Route
             path="/answers-questionary/:hash"
