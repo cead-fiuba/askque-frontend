@@ -85,9 +85,11 @@ function QuestionnaireStatistics(props) {
 
   const calculateHowManyCorrectResponseHasQuestion = (questionId) => {
     const counter = 0;
+    console.log("responses",responses)
     responses.forEach((response) => {
       response.question_responses.forEach((questionResponse) => {
         console.log("questionResponse.optionIds",questionResponse.optionIds)
+        console.log("correctOptionsByQuestionId",correctOptionsByQuestionId)
         console.log("correctOptionsByQuestionId[questionId]",correctOptionsByQuestionId[questionId])
         if (
           questionResponse.questionId === questionId &&
