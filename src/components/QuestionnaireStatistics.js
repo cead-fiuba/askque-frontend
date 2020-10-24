@@ -87,6 +87,8 @@ function QuestionnaireStatistics(props) {
     const counter = 0;
     responses.forEach((response) => {
       response.question_responses.forEach((questionResponse) => {
+        console.log("questionResponse.optionIds",questionResponse.optionIds)
+        console.log("correctOptionsByQuestionId[questionId]",correctOptionsByQuestionId[questionId])
         if (
           questionResponse.questionId === questionId &&
           questionResponse.optionIds === correctOptionsByQuestionId[questionId]
