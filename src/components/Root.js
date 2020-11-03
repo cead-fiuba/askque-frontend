@@ -19,7 +19,7 @@ export default class Root extends Component {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/create-questionary" component={CreateQuestionary} />
-          <Route path="/ask-questionary" component={AskQuestionaryView} />
+          <Route exact path="/ask-questionary" component={AskQuestionaryView} />
           <Route path="/ask-questionary/:hash" component={AskQuestionaryView} />
           <Route path="/my-questionaries" component={MyAskques} />
           <Route path="/my-answers" component={MyAnswersView} />

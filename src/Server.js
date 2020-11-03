@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 
-const SERVER_PATH = process.env.NODE_ENV === "production" ? "https://askque-back.herokuapp.com/" : "http://localhost:3000/";
+//const SERVER_PATH = process.env.NODE_ENV === "production" ? "https://askque-back.herokuapp.com/" : "http://localhost:3000/";
+const SERVER_PATH = "https://askque-back.herokuapp.com/"
 
 console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 const server = axios.create({
