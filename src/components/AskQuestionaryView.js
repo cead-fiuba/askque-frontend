@@ -6,9 +6,12 @@ import Grid from "@material-ui/core/Grid";
 import AskqueResumen from "./AskqueResume";
 import { getInformationOfQuestionaryWithCache } from "../service/QuestionaryService";
 import Button from "@material-ui/core/Button";
+import TextField from '@material-ui/core/TextField';
 import CompleteQuestionary from "./CompleteQuestionary";
+import { useParams } from 'react-router-dom';
 
 export default function AskQuestionaryView(props) {
+  const { hash } = useParams();
   const [state, setState] = useState({
     questionaryHash: "",
     showLoading: false,
@@ -21,23 +24,25 @@ export default function AskQuestionaryView(props) {
   });
 
   useEffect(() => {
-    const hash = props.match.params.hash;
     const isComplete = hash !== undefined && hash !== null && hash.length === 3;
     if (isComplete) {
+      setState({ ...state, questionaryHash: hash });
       getInformationOfQuestionaryWithCache(hash).then((response) => {
         setState({
           ...state,
           questionaryHash: hash,
           showResume: true,
+          showInformation: false,
           questionaryName: response.data.name,
           questionaryModulo: response.data.module,
           questionaryTime: response.data.time,
           quantityQuestions: response.data.questions.length,
           questionary: response.data,
         });
+        console.log(state.showInformation); 
       });
-    }
-  }, [props.match.params.hash]);
+    } 
+  }, [hash]);
 
   const handleChange = (e) => {
     console.log(e.target.value);
@@ -56,8 +61,13 @@ export default function AskQuestionaryView(props) {
           questionary: response.data,
         });
       });
+      console.log(state.showResume)
     } else {
-      setState({ ...state, questionaryHash: hash });
+      setState({ 
+        ...state, 
+        questionaryHash: hash,
+        showResume: false
+      });
     }
   };
 
@@ -71,32 +81,35 @@ export default function AskQuestionaryView(props) {
   };
 
   return (
-    <>
+    <div>
       <AppBar position="static" />
-      <Grid
-        container
-        alignItems="center"
-        justify="center"
+      <Grid 
+        container 
+        alignItems="center" 
+        justify="center" 
+        spacing={3} 
         style={{ marginTop: "10%" }}
       >
-        {state.showInformation ? (
-          <Typography
-            variant="h4"
-            align="center"
-            color="textPrimary"
-            gutterBottom
-            style={{ marginTop: "1em" }}
-          >
-            Ingrese la clave del cuestionario
-          </Typography>
-        ) : null}
-
-        <Grid item xs={12}>
+        <Grid item xs={10}>
           {state.showInformation ? (
-            <input
-              id="input-askque-code"
-              type="text"
+            <Typography
+              variant="h4"
+              align="center"
+              color="textPrimary"
+              gutterBottom
+              style={{ marginTop: "1em" }}
+            >
+              Ingrese el codigo del cuestionario:
+            </Typography>
+          ) : null}
+        </Grid>
+        <Grid item xs={6}>
+          {state.showInformation ? (
+            <TextField
+              fullWidth={true}
               maxLength="3"
+              variant="outlined"
+              InputProps={{style: {fontSize: 40}}}
               value={state.questionaryHash}
               onChange={handleChange}
             />
@@ -104,7 +117,7 @@ export default function AskQuestionaryView(props) {
         </Grid>
         <Grid container alignItems="center" justify="center">
           {state.showResume ? (
-            <>
+            <div>
               <AskqueResumen
                 name={state.questionaryName}
                 module={state.questionaryModulo}
@@ -113,7 +126,6 @@ export default function AskQuestionaryView(props) {
                 date={state.questionary.date}
                 quantityQuestions={state.quantityQuestions}
               />
-
               <Typography variant="subtitle1" color="textSecondary">
                 Tenes {state.questionaryTime} minutos para responder{" "}
                 {state.quantityQuestions} preguntas!
@@ -125,9 +137,9 @@ export default function AskQuestionaryView(props) {
                 style={{ margin: "5%" }}
                 onClick={startComplete}
               >
-                Estoy listo
+                Comenzar
               </Button>
-            </>
+            </div>
           ) : null}
 
           {state.startCompleteQuestionary ? (
@@ -138,6 +150,18 @@ export default function AskQuestionaryView(props) {
           ) : null}
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 }
+
+
+/*        setState({
+          ...state,
+          questionaryHash: hash,
+          showResume: true,
+          questionaryName: response.data.name,
+          questionaryModulo: response.data.module,
+          questionaryTime: response.data.time,
+          quantityQuestions: response.data.questions.length,
+          questionary: response.data,
+        });*/
