@@ -23,8 +23,8 @@ const styles = makeStyles((theme) => ({
     backgroundColor: "#7fc7d9",
     backgroundPosition: "center",
     backgroundSize: "conver",
-    paddingTop: "10%",
-    paddingBottom: "10%",
+    padding: "10%",
+    marginTop: theme.spacing(6)
   },
   buttons: {
     marginTop: theme.spacing(4),
@@ -77,7 +77,7 @@ function Home(props) {
               variant="h6"
               align="center"
               paragraph
-              style={{ color: "white" }}
+              style={{ color: "white", padding: "2%" }}
             >
               Aplicación para crear preguntas educativas de manera sencilla y
               rápida. Esta aplicación se utilizará en la Facultad de Ingenieria
@@ -184,6 +184,7 @@ function Home(props) {
                     variant="h6"
                     align="center"
                     color="textSecondary"
+                    style={{ padding: "10%" }}
                     paragraph
                   >
                     Muy facil de usar que obtener el código del askque y listo!
@@ -215,6 +216,7 @@ function Home(props) {
                     variant="h6"
                     align="center"
                     color="textSecondary"
+                    style={{ padding: "10%" }}
                     paragraph
                   >
                     No es necesario obtener ningún link, solo con el código ya
@@ -247,6 +249,7 @@ function Home(props) {
                     variant="h6"
                     align="center"
                     color="textSecondary"
+                    style={{ padding: "10%" }}
                     paragraph
                   >
                     Muy facil de usar que obtener el código del askque y listo!
@@ -261,7 +264,7 @@ function Home(props) {
               align="center"
               color="textSecondary"
             >
-              Builded by CETEC
+              Built by CETEC.
             </Typography>
           </footer>
         </React.Fragment>

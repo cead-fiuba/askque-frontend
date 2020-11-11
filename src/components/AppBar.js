@@ -53,8 +53,9 @@ function AppBarCustom(props) {
         <Toolbar>
           <img
             src={logo}
+            onClick={() => redirectTo("/")}
             alt="Logo"
-            style={{ width: "50px", marginRight: "5px" }}
+            style={{ width: "35px", margin: "5px" }}
           />
 
           <Typography
@@ -78,7 +79,7 @@ function AppBarCustom(props) {
                 <PersonIcon className={style.rightButton} />
               </Button>
 
-              <Button variant="outlined" color="inherit" onClick={exit}>
+              <Button color="inherit" onClick={exit}>
                 <Hidden only="xs">Salir</Hidden>
                 <ExitToApp className={style.rightButton} />
               </Button>
@@ -87,7 +88,6 @@ function AppBarCustom(props) {
             <>
               <Button
                 onClick={() => redirectTo("/register")}
-                variant="outlined"
                 color="inherit"
                 style={{ marginRight: "1%" }}
               >
@@ -98,7 +98,6 @@ function AppBarCustom(props) {
                 onClick={() => {
                   redirectTo("/login");
                 }}
-                variant="outlined"
                 color="inherit"
               >
                 <Hidden only="xs">Ingresar</Hidden>
