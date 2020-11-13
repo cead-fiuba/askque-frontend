@@ -259,30 +259,15 @@ function Register(props) {
                 </Grid>
                 <Grid item xs={1}></Grid>
                 <Grid item xs={4} style={{ marginTop: "2%" }}>
-                  <FormControl
-                    className={classes.formControl}
+                  <TextField
+                    id="outlined-basic"
+                    label="Codigo Materia (XX.XX)"
                     variant="outlined"
-                  >
-                    <InputLabel id="demo-simple-select-label">
-                      Materia
-                    </InputLabel>
-
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={userData.asignature}
-                      onChange={handleChange("asignature")}
-                      label="Ingresar"
-                    >
-                      {asignatures.map((asignature, idx) => {
-                        return (
-                          <MenuItem value={idx} key={idx}>
-                            {asignature}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
+                    onChange={handleChange("asignature")}
+                    fullWidth
+                    inputProps={{ maxLength: 5 }}
+                    required
+                  />
                 </Grid>
                 <Grid item xs={3} style={{ marginTop: "2%" }}>
                   <TextField
