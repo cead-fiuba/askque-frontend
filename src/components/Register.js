@@ -51,8 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const emails = { 1: "@fi.uba.ar", 0: "@gmail.com" };
-const asignatures = ["Fisica I", "Fisica II"];
+const emailDomains = { 1: "@fi.uba.ar", 0: "@gmail.com" };
 const ocupations = ["Profesor", "Ayudante", "JTP"];
 
 function Register(props) {
@@ -61,7 +60,7 @@ function Register(props) {
     lastname: null,
     rol: "",
     asignature: "",
-    emailDomine: "",
+    emailDomain: "",
     emailUserName: null,
     ocupation: "",
   });
@@ -88,14 +87,14 @@ function Register(props) {
     const lastNameIsOk = !isEmpty(userData.lastname);
     const rolIsOk = userData.rol !== "";
     const emailUserNameIsOk = !isEmpty(userData.emailUserName);
-    const emailDomineIsOk = !isEmpty(userData.emailDomine);
+    const emailDomainIsOk = !isEmpty(userData.emailDomain);
 
     const basicValidationIsOk =
       nameIsOk &&
       lastNameIsOk &&
       rolIsOk &&
       emailUserNameIsOk &&
-      emailDomineIsOk &&
+      emailDomainIsOk &&
       emailWasValidated;
 
     if (basicValidationIsOk) {
@@ -115,7 +114,7 @@ function Register(props) {
   };
 
   const loginCallback = (email) => {
-    const currentEmail = userData.emailUserName + emails[userData.emailDomine];
+    const currentEmail = userData.emailUserName + emailDomains[userData.emailDomain];
     if (email === currentEmail) {
       console.log("email is ok");
       setEmailWasValidated(true);
@@ -124,7 +123,7 @@ function Register(props) {
 
   const save = () => {
     setLoading(true);
-    const email = userData.emailUserName + emails[userData.emailDomine];
+    const email = userData.emailUserName + emailDomains[userData.emailDomain];
     var promise;
     if (userData.rol === 0) {
       const request = {
@@ -139,7 +138,6 @@ function Register(props) {
         legajo: userData.legajo,
         name: userData.name,
         lastname: userData.lastname,
-        asignature: asignatures[userData.asignature],
         email: email,
         ocupation: userData.ocupation,
       };
@@ -247,10 +245,10 @@ function Register(props) {
                       onChange={handleChange("ocupation")}
                       label="Ingresar"
                     >
-                      {ocupations.map((asignature, idx) => {
+                      {ocupations.map((ocupation, idx) => {
                         return (
                           <MenuItem value={idx} key={idx}>
-                            {asignature}
+                            {ocupation}
                           </MenuItem>
                         );
                       })}
@@ -287,15 +285,15 @@ function Register(props) {
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={userData.emailDomine}
-                      onChange={handleChange("emailDomine")}
+                      value={userData.emailDomain}
+                      onChange={handleChange("emailDomain")}
                     >
                       <MenuItem value={1}>@fi.uba.ar</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
                 <Grid item xs={1}></Grid>
-                {userData.emailDomine !== "" &&
+                {userData.emailDomain !== "" &&
                   userData.emailUserName !== null && (
                     <>
                       {emailWasValidated ? (
@@ -327,7 +325,7 @@ function Register(props) {
                               google disponibles, asegurate de elegir{" "}
                               <b>
                                 {userData.emailUserName +
-                                  emails[userData.emailDomine]}
+                                  emailDomains[userData.emailDomain]}
                               </b>
                             </Typography>
                           </Grid>
@@ -370,8 +368,8 @@ function Register(props) {
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={userData.emailDomine}
-                      onChange={handleChange("emailDomine")}
+                      value={userData.emailDomain}
+                      onChange={handleChange("emailDomain")}
                       disabled={emailWasValidated}
                     >
                       <MenuItem value={0}>@gmail.com</MenuItem>
@@ -380,7 +378,7 @@ function Register(props) {
                   </FormControl>
                 </Grid>
                 <Grid item xs={1}></Grid>
-                {userData.emailDomine !== "" &&
+                {userData.emailDomain !== "" &&
                   userData.emailUserName !== null &&
                   userData.emailUserName !== "" && (
                     <>
@@ -413,7 +411,7 @@ function Register(props) {
                               google disponibles, asegurate de elegir{" "}
                               <b>
                                 {userData.emailUserName +
-                                  emails[userData.emailDomine]}
+                                  emailDomains[userData.emailDomain]}
                               </b>
                             </Typography>
                           </Grid>
