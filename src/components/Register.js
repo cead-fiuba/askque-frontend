@@ -59,7 +59,6 @@ function Register(props) {
     name: null,
     lastname: null,
     rol: "",
-    asignature: "",
     emailDomain: "",
     emailUserName: null,
     ocupation: "",
@@ -99,12 +98,9 @@ function Register(props) {
 
     if (basicValidationIsOk) {
       if (userData.rol === 0) {
-        const padronIsOk = !isEmpty(userData.padron);
-        setIsComplete(padronIsOk);
+        setIsComplete(!isEmpty(userData.padron));
       } else if (userData.rol === 1) {
-        const legajoIsOk = !isEmpty(userData.legajo);
-        const asignatureIsOk = !isEmpty(userData.asignature);
-        setIsComplete(legajoIsOk && asignatureIsOk);
+        setIsComplete(!isEmpty(userData.legajo));
       }
     }
   };
@@ -220,7 +216,7 @@ function Register(props) {
           {userData.rol === 1 && (
             <>
               <Grid container>
-                <Grid item xs={2} style={{ marginTop: "2%" }}>
+                <Grid item xs={4} style={{ marginTop: "2%" }}>
                   <TextField
                     id="outlined-basic"
                     label="Legajo"
@@ -231,7 +227,7 @@ function Register(props) {
                   />
                 </Grid>
                 <Grid item xs={1}></Grid>
-                <Grid item xs={4} style={{ marginTop: "2%" }}>
+                <Grid item xs={7} style={{ marginTop: "2%" }}>
                   <FormControl
                     className={classes.formControl}
                     variant="outlined"
@@ -255,19 +251,7 @@ function Register(props) {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={1}></Grid>
-                <Grid item xs={4} style={{ marginTop: "2%" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Codigo Materia (XX.XX)"
-                    variant="outlined"
-                    onChange={handleChange("asignature")}
-                    fullWidth
-                    inputProps={{ maxLength: 5 }}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={3} style={{ marginTop: "2%" }}>
+                <Grid item xs={6} style={{ marginTop: "2%" }}>
                   <TextField
                     error={!emailFieldInfo.isValid}
                     helperText={emailFieldInfo.helperText}
@@ -280,7 +264,7 @@ function Register(props) {
                     disabled={emailWasValidated}
                   />
                 </Grid>
-                <Grid item xs={2} style={{ marginTop: "2%" }}>
+                <Grid item xs={6} style={{ marginTop: "2%" }}>
                   <FormControl variant="outlined" style={{ width: "100%" }}>
                     <Select
                       labelId="demo-simple-select-label"
@@ -292,7 +276,6 @@ function Register(props) {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={1}></Grid>
                 {userData.emailDomain !== "" &&
                   userData.emailUserName !== null && (
                     <>
@@ -300,8 +283,8 @@ function Register(props) {
                         <>
                           <Grid
                             item
-                            xs={5}
-                            style={{ marginTop: "3%", color: "green" }}
+                            xs={12}
+                            style={{ marginTop: "5%", color: "green" }}
                           >
                             <DoneAllIcon fontSize="large"></DoneAllIcon> Email
                             validado!{" "}
@@ -309,11 +292,10 @@ function Register(props) {
                         </>
                       ) : (
                         <>
-                          <Grid item xs={5} style={{ marginTop: "2%" }}>
+                          <Grid item xs={12} style={{ marginTop: "5%" }}>
                             <MyGoogleButton callback={loginCallback} />
                           </Grid>
-                          <Grid item xs={6}></Grid>
-                          <Grid item xs={6}>
+                          <Grid item xs={12}>
                             <InfoIcon></InfoIcon>
                             <Typography
                               variant="caption"
@@ -350,7 +332,7 @@ function Register(props) {
                   />
                 </Grid>
                 <Grid item xs={7} />
-                <Grid item xs={3} style={{ marginTop: "2%" }}>
+                <Grid item xs={6} style={{ marginTop: "2%" }}>
                   <TextField
                     id="outlined-basic"
                     label="Email"
@@ -363,7 +345,7 @@ function Register(props) {
                     helperText={emailFieldInfo.helperText}
                   />
                 </Grid>
-                <Grid item xs={2} style={{ marginTop: "2%" }}>
+                <Grid item xs={6} style={{ marginTop: "2%" }}>
                   <FormControl variant="outlined" style={{ width: "100%" }}>
                     <Select
                       labelId="demo-simple-select-label"
@@ -377,7 +359,6 @@ function Register(props) {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={1}></Grid>
                 {userData.emailDomain !== "" &&
                   userData.emailUserName !== null &&
                   userData.emailUserName !== "" && (
@@ -386,7 +367,7 @@ function Register(props) {
                         <>
                           <Grid
                             item
-                            xs={5}
+                            xs={12}
                             style={{ marginTop: "3%", color: "green" }}
                           >
                             <DoneAllIcon fontSize="large"></DoneAllIcon> Email
@@ -395,11 +376,10 @@ function Register(props) {
                         </>
                       ) : (
                         <>
-                          <Grid item xs={5} style={{ marginTop: "2%" }}>
+                          <Grid item xs={12} style={{ marginTop: "2%" }}>
                             <MyGoogleButton callback={loginCallback} />
                           </Grid>
-                          <Grid item xs={6}></Grid>
-                          <Grid item xs={6}>
+                          <Grid item xs={12}>
                             <InfoIcon></InfoIcon>
                             <Typography
                               variant="caption"
