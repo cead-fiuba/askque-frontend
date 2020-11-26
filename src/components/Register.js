@@ -51,8 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const emails = { 1: "@fi.uba.ar", 0: "@gmail.com" };
-const asignatures = ["Fisica I", "Fisica II"];
+const emailDomains = { 1: "@fi.uba.ar", 0: "@gmail.com" };
 const ocupations = ["Profesor", "Ayudante", "JTP"];
 
 function Register(props) {
@@ -60,8 +59,7 @@ function Register(props) {
     name: null,
     lastname: null,
     rol: "",
-    asignature: "",
-    emailDomine: "",
+    emailDomain: "",
     emailUserName: null,
     ocupation: "",
   });
@@ -88,24 +86,21 @@ function Register(props) {
     const lastNameIsOk = !isEmpty(userData.lastname);
     const rolIsOk = userData.rol !== "";
     const emailUserNameIsOk = !isEmpty(userData.emailUserName);
-    const emailDomineIsOk = !isEmpty(userData.emailDomine);
+    const emailDomainIsOk = !isEmpty(userData.emailDomain);
 
     const basicValidationIsOk =
       nameIsOk &&
       lastNameIsOk &&
       rolIsOk &&
       emailUserNameIsOk &&
-      emailDomineIsOk &&
+      emailDomainIsOk &&
       emailWasValidated;
 
     if (basicValidationIsOk) {
       if (userData.rol === 0) {
-        const padronIsOk = !isEmpty(userData.padron);
-        setIsComplete(padronIsOk);
+        setIsComplete(!isEmpty(userData.padron));
       } else if (userData.rol === 1) {
-        const legajoIsOk = !isEmpty(userData.legajo);
-        const asignatureIsOk = !isEmpty(userData.asignature);
-        setIsComplete(legajoIsOk && asignatureIsOk);
+        setIsComplete(!isEmpty(userData.legajo));
       }
     }
   };
@@ -115,7 +110,7 @@ function Register(props) {
   };
 
   const loginCallback = (email) => {
-    const currentEmail = userData.emailUserName + emails[userData.emailDomine];
+    const currentEmail = userData.emailUserName + emailDomains[userData.emailDomain];
     if (email === currentEmail) {
       console.log("email is ok");
       setEmailWasValidated(true);
@@ -124,7 +119,7 @@ function Register(props) {
 
   const save = () => {
     setLoading(true);
-    const email = userData.emailUserName + emails[userData.emailDomine];
+    const email = userData.emailUserName + emailDomains[userData.emailDomain];
     var promise;
     if (userData.rol === 0) {
       const request = {
@@ -139,7 +134,6 @@ function Register(props) {
         legajo: userData.legajo,
         name: userData.name,
         lastname: userData.lastname,
-        asignature: asignatures[userData.asignature],
         email: email,
         ocupation: userData.ocupation,
       };
@@ -222,7 +216,7 @@ function Register(props) {
           {userData.rol === 1 && (
             <>
               <Grid container>
-                <Grid item xs={2} style={{ marginTop: "2%" }}>
+                <Grid item xs={4} style={{ marginTop: "2%" }}>
                   <TextField
                     id="outlined-basic"
                     label="Legajo"
@@ -233,7 +227,7 @@ function Register(props) {
                   />
                 </Grid>
                 <Grid item xs={1}></Grid>
-                <Grid item xs={4} style={{ marginTop: "2%" }}>
+                <Grid item xs={7} style={{ marginTop: "2%" }}>
                   <FormControl
                     className={classes.formControl}
                     variant="outlined"
@@ -247,29 +241,17 @@ function Register(props) {
                       onChange={handleChange("ocupation")}
                       label="Ingresar"
                     >
-                      {ocupations.map((asignature, idx) => {
+                      {ocupations.map((ocupation, idx) => {
                         return (
                           <MenuItem value={idx} key={idx}>
-                            {asignature}
+                            {ocupation}
                           </MenuItem>
                         );
                       })}
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={1}></Grid>
-                <Grid item xs={4} style={{ marginTop: "2%" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Codigo Materia (XX.XX)"
-                    variant="outlined"
-                    onChange={handleChange("asignature")}
-                    fullWidth
-                    inputProps={{ maxLength: 5 }}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={3} style={{ marginTop: "2%" }}>
+                <Grid item xs={6} style={{ marginTop: "2%" }}>
                   <TextField
                     error={!emailFieldInfo.isValid}
                     helperText={emailFieldInfo.helperText}
@@ -282,28 +264,27 @@ function Register(props) {
                     disabled={emailWasValidated}
                   />
                 </Grid>
-                <Grid item xs={2} style={{ marginTop: "2%" }}>
+                <Grid item xs={6} style={{ marginTop: "2%" }}>
                   <FormControl variant="outlined" style={{ width: "100%" }}>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={userData.emailDomine}
-                      onChange={handleChange("emailDomine")}
+                      value={userData.emailDomain}
+                      onChange={handleChange("emailDomain")}
                     >
                       <MenuItem value={1}>@fi.uba.ar</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={1}></Grid>
-                {userData.emailDomine !== "" &&
+                {userData.emailDomain !== "" &&
                   userData.emailUserName !== null && (
                     <>
                       {emailWasValidated ? (
                         <>
                           <Grid
                             item
-                            xs={5}
-                            style={{ marginTop: "3%", color: "green" }}
+                            xs={12}
+                            style={{ marginTop: "5%", color: "green" }}
                           >
                             <DoneAllIcon fontSize="large"></DoneAllIcon> Email
                             validado!{" "}
@@ -311,11 +292,10 @@ function Register(props) {
                         </>
                       ) : (
                         <>
-                          <Grid item xs={5} style={{ marginTop: "2%" }}>
+                          <Grid item xs={12} style={{ marginTop: "5%" }}>
                             <MyGoogleButton callback={loginCallback} />
                           </Grid>
-                          <Grid item xs={6}></Grid>
-                          <Grid item xs={6}>
+                          <Grid item xs={12}>
                             <InfoIcon></InfoIcon>
                             <Typography
                               variant="caption"
@@ -327,7 +307,7 @@ function Register(props) {
                               google disponibles, asegurate de elegir{" "}
                               <b>
                                 {userData.emailUserName +
-                                  emails[userData.emailDomine]}
+                                  emailDomains[userData.emailDomain]}
                               </b>
                             </Typography>
                           </Grid>
@@ -352,7 +332,7 @@ function Register(props) {
                   />
                 </Grid>
                 <Grid item xs={7} />
-                <Grid item xs={3} style={{ marginTop: "2%" }}>
+                <Grid item xs={6} style={{ marginTop: "2%" }}>
                   <TextField
                     id="outlined-basic"
                     label="Email"
@@ -365,13 +345,13 @@ function Register(props) {
                     helperText={emailFieldInfo.helperText}
                   />
                 </Grid>
-                <Grid item xs={2} style={{ marginTop: "2%" }}>
+                <Grid item xs={6} style={{ marginTop: "2%" }}>
                   <FormControl variant="outlined" style={{ width: "100%" }}>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={userData.emailDomine}
-                      onChange={handleChange("emailDomine")}
+                      value={userData.emailDomain}
+                      onChange={handleChange("emailDomain")}
                       disabled={emailWasValidated}
                     >
                       <MenuItem value={0}>@gmail.com</MenuItem>
@@ -379,8 +359,7 @@ function Register(props) {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={1}></Grid>
-                {userData.emailDomine !== "" &&
+                {userData.emailDomain !== "" &&
                   userData.emailUserName !== null &&
                   userData.emailUserName !== "" && (
                     <>
@@ -388,7 +367,7 @@ function Register(props) {
                         <>
                           <Grid
                             item
-                            xs={5}
+                            xs={12}
                             style={{ marginTop: "3%", color: "green" }}
                           >
                             <DoneAllIcon fontSize="large"></DoneAllIcon> Email
@@ -397,11 +376,10 @@ function Register(props) {
                         </>
                       ) : (
                         <>
-                          <Grid item xs={5} style={{ marginTop: "2%" }}>
+                          <Grid item xs={12} style={{ marginTop: "2%" }}>
                             <MyGoogleButton callback={loginCallback} />
                           </Grid>
-                          <Grid item xs={6}></Grid>
-                          <Grid item xs={6}>
+                          <Grid item xs={12}>
                             <InfoIcon></InfoIcon>
                             <Typography
                               variant="caption"
@@ -413,7 +391,7 @@ function Register(props) {
                               google disponibles, asegurate de elegir{" "}
                               <b>
                                 {userData.emailUserName +
-                                  emails[userData.emailDomine]}
+                                  emailDomains[userData.emailDomain]}
                               </b>
                             </Typography>
                           </Grid>

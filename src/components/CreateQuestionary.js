@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
+    minWidth: 200,
   },
   dense: {
     marginTop: 16,
@@ -94,6 +95,7 @@ function CreateQuestionary2(props) {
     minutes: "3",
     open: false,
     cuatrimestre: "",
+    asignature: "",
     tema: props.asEdit ? props.questionary.tema : "",
     questions: props.asEdit ? props.questionary.questions : [],
   });
@@ -215,6 +217,7 @@ function CreateQuestionary2(props) {
       time: values.minutes,
       module: values.tema,
       semester: values.cuatrimestre,
+      asignature: values.asignature,
       is_new: props.asEdit ? false : true,
     };
     const questions = values.questions.map(async (question) => {
@@ -281,32 +284,41 @@ function CreateQuestionary2(props) {
       </Typography>
       <Container maxWidth="md">
         <Grid container spacing={1} className={classes.rowResponse}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <TextField
               id="outlined-full-width"
               label="Nombre del cuestionario"
               variant="outlined"
-              className={classes.textField}
               onChange={handleChange("name")}
               value={values.name}
-              helperText="Requerido"
+              required
               fullWidth
             />
           </Grid>
-          <Grid item xs={7} sm={6}>
+          <Grid item xs={12}>
             <TextField
               id="outlined-name"
               label="Tema"
-              className={classes.textField}
               variant="outlined"
               onChange={handleChange("tema")}
               value={values.module}
-              helperText="Requerido"
               fullWidth
+              required
             />
           </Grid>
-          <Grid item sm={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
+          <Grid item xs={12}>
+            <TextField
+              id="outlined-basic"
+              label="Codigo Materia (XX.XX)"
+              variant="outlined"
+              onChange={handleChange("asignature")}
+              fullWidth
+              inputProps={{ maxLength: 5 }}
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl variant="outlined" style={{ width: "100%" }}>
               <InputLabel id="demo-simple-select-outlined-label">
                 Cuatrimestre
               </InputLabel>
@@ -316,11 +328,12 @@ function CreateQuestionary2(props) {
                 value={values.cuatrimestre}
                 onChange={handleChange("cuatrimestre")}
                 label="Cuatrimestre"
+                fullWidth
+                required
               >
-                <MenuItem value={1}>primero</MenuItem>
-                <MenuItem value={2}>segundo</MenuItem>
+                <MenuItem value={1}>Primero</MenuItem>
+                <MenuItem value={2}>Segundo</MenuItem>
               </Select>
-              <FormHelperText>Requerido</FormHelperText>
             </FormControl>
           </Grid>
         </Grid>
