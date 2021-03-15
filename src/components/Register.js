@@ -79,6 +79,7 @@ function Register(props) {
 
   useEffect(() => {
     checkIsComplete();
+  // eslint-disable-next-line
   }, [userData, emailWasValidated]);
 
   const checkIsComplete = () => {

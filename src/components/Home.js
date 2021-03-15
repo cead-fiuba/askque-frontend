@@ -80,8 +80,7 @@ function Home(props) {
               style={{ color: "white", padding: "2%" }}
             >
               Aplicación para crear preguntas educativas de manera sencilla y
-              rápida. Esta aplicación se utilizará en la Facultad de Ingenieria
-              de la UBA
+              rápida.
             </Typography>
             <Grid
               container

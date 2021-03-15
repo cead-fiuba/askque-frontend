@@ -5,9 +5,7 @@ import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import ThumbUpAltRoundedIcon from "@material-ui/icons/ThumbUpAltRounded";
 import Grid from "@material-ui/core/Grid";
-import ThumbDownRoundedIcon from "@material-ui/icons/ThumbDownRounded";
 import DoneOutlineRoundedIcon from "@material-ui/icons/DoneOutlineRounded";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 

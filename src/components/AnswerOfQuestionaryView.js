@@ -125,6 +125,7 @@ const AnswerOfQuestionaryView = (props) => {
                     <div>
                       {has_image && (
                         <img
+			  alt=""
                           src={image_url}
                           style={{
                             objectFit: "contain",

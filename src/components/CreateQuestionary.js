@@ -23,7 +23,6 @@ import AlertDialog from "./common/AlertDialog";
 import EditIcon from "@material-ui/icons/Edit";
 import { deleteQuestion } from "../service/QuestionaryService";
 import { useSnackbar, SnackbarProvider } from "notistack";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";

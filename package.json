@@ -12,7 +12,9 @@
     "chart.js": "^2.8.0",
     "clsx": "^1.0.4",
     "form-data": "^2.5.1",
+    "ignore-warnings": "^0.2.1",
     "mdi-material-ui": "^6.0.0",
+    "next": "^10.0.8-canary.6",
     "node-sass": "^4.14.1",
     "notistack": "^0.9.5",
     "react": "^16.9.0",
@@ -27,18 +29,31 @@
     "typeface-roboto": "0.0.75"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=80 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not ie <= 11",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint-plugin-disable": "^2.0.1"
+  }
 }

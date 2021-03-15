@@ -22,7 +22,7 @@ const theme = createMuiTheme({
 class App extends Component {
   render() {
     return (
-      <HttpsRedirect>
+      <HttpsRedirect disabled={process.env.REACT_APP_DISABLED_HTTPS_REDIRECT === 'true'}>
         <MuiThemeProvider theme={theme}>
           <AppContextProvider>
             <CssBaseline />

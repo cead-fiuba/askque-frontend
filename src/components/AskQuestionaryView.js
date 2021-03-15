@@ -22,13 +22,13 @@ export default function AskQuestionaryView(props) {
     startCompleteQuestionary: false,
     questionary: null,
   });
-
+  
   useEffect(() => {
     const isComplete = hash !== undefined && hash !== null && hash.length === 3;
     if (isComplete) {
-      setState({ ...state, questionaryHash: hash });
+      setState(state => ({ ...state, questionaryHash: hash }));
       getInformationOfQuestionaryWithCache(hash).then((response) => {
-        setState({
+        setState(state => ({
           ...state,
           questionaryHash: hash,
           showResume: true,
@@ -38,10 +38,11 @@ export default function AskQuestionaryView(props) {
           questionaryTime: response.data.time,
           quantityQuestions: response.data.questions.length,
           questionary: response.data,
-        });
+        }));
         console.log(state.showInformation); 
       });
-    } 
+    }
+  // eslint-disable-next-line
   }, [hash]);
 
   const handleChange = (e) => {

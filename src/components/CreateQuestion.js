@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, withStyles, lighten } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
@@ -32,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
   },
 }));
-
-const MAX_RESPONSE = 5;
-const NEW_RESPONSE_TEXT = "Escriba aquí la opción posible";
 
 /***
  *
