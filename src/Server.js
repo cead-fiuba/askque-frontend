@@ -2,9 +2,8 @@ import axios from 'axios';
 
 
 //const SERVER_PATH = process.env.NODE_ENV === "production" ? "https://askque-back.herokuapp.com/" : "http://localhost:3000/";
-const SERVER_PATH = "http://askque.fi.uba.ar:3000/";
+const SERVER_PATH = "https://askque.fi.uba.ar:3000/";
 
-console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 const server = axios.create({
     baseURL: SERVER_PATH,
     headers: {
@@ -14,7 +13,6 @@ const server = axios.create({
 
 server.interceptors.request.use(
     config => {
-        console.log('config.headers.Authorization', config.headers.Authorization)
         if (!config.headers.Authorization) {
             const token = localStorage.getItem('token')
             if (token !== "null") {

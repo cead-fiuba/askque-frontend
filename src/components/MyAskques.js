@@ -146,7 +146,7 @@ export function MyAskques2(props) {
 
   const getLinkOfQuestionary = (hash) => {
     console.log(window.location.host + "/ask-questionary/");
-    const text = window.location.host + "/ask-questionary/" + hash;
+    const text = window.location.protocol + "//" + window.location.host + "/ask-questionary/" + hash;
     navigator.clipboard.writeText(text);
     let variant = "success";
     enqueueSnackbar(`El link fue copiado`, { variant });

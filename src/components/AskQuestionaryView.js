@@ -127,10 +127,12 @@ export default function AskQuestionaryView(props) {
                 date={state.questionary.date}
                 quantityQuestions={state.quantityQuestions}
               />
-              <Typography variant="subtitle1" color="textSecondary">
-                Tenes {state.questionaryTime} minutos para responder{" "}
-                {state.quantityQuestions} preguntas!
-              </Typography>
+	      { state.questionaryTime && (
+	        <Typography variant="subtitle1" color="textSecondary">
+		  Tenes {state.questionaryTime} minutos para responder{" "}
+		  {state.quantityQuestions} preguntas!
+	        </Typography>
+	      )}
               <Button
                 variant="contained"
                 color="primary"
