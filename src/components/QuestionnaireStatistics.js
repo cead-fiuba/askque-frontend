@@ -24,6 +24,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { withRouter } from "react-router-dom";
 import { showResultsOfQuestionary } from "../service/QuestionaryService";
 import { useSnackbar, SnackbarProvider } from "notistack";
+import { useHistory, useParams } from "react-router-dom";
 
 const abecedario = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 const correctOptionsByQuestionId = {};
@@ -51,7 +52,8 @@ const useStyles = makeStyles((theme) => ({
 
 function QuestionnaireStatistics(props) {
   const classes = useStyles();
-
+  const history = useHistory();
+  const { hash } = useParams(); 
   const [loading, setLoading] = useState(true);
   const [questionary, setQuestionary] = useState();
   const [qtyByOptionId, setQtyByOptionId] = useState();
@@ -141,9 +143,8 @@ function QuestionnaireStatistics(props) {
   };
 
   useEffect(() => {
-    const hash = props.match.params.hash;
     const informationPromise = getInformationOfQuestionary(hash);
-    const resultPromise = getResultOfQuestionary(props.match.params.hash);
+    const resultPromise = getResultOfQuestionary(hash);
 
     Promise.all([informationPromise, resultPromise]).then(
       ([informationResponse, resultResponse]) => {
@@ -159,7 +160,7 @@ function QuestionnaireStatistics(props) {
     );
 
     const interval = setInterval(() => {
-      const resultPromise = getResultOfQuestionary(props.match.params.hash);
+      const resultPromise = getResultOfQuestionary(hash);
       resultPromise.then((resultResponse) => {
         const answers = resultResponse.data.answers;
         buildQtyByOptionId(answers);
@@ -168,7 +169,7 @@ function QuestionnaireStatistics(props) {
       });
     }, 10000);
     return () => clearInterval(interval);
-  }, [props.match.params.hash]);
+  }, [hash]);
 
   return (
     <div>
@@ -185,7 +186,7 @@ function QuestionnaireStatistics(props) {
             className={classes.navigationButtons}
             color="primary"
             variant="contained"
-            onClick={() => props.history.push("/my-questionaries")}
+            onClick={() => history.push("/my-questionaries")}
           >
             <ArrowBackIcon className={classes.leftIcon} />
             Regresar

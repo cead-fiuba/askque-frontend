@@ -7,7 +7,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import prettyFormatDate from "../util/PrettyFormatDate";
-import { withRouter } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -35,9 +35,10 @@ const useStyles = makeStyles((theme) => ({
 
 const ResponseCard = (props) => {
   const classes = useStyles();
+  const history = useHistory();
 
   function redirectTo(newPath) {
-    props.history.push(newPath);
+    history.push(newPath);
   }
 
   return (

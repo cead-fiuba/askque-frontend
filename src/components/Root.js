@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
 import Register from "./Register";
@@ -18,20 +18,20 @@ export default class Root extends Component {
         <Switch>
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <Route path="/create-questionary" component={CreateQuestionary} />
-          <Route exact path="/ask-questionary" component={AskQuestionaryView} />
-          <Route path="/ask-questionary/:hash" component={AskQuestionaryView} />
-          <Route path="/my-questionaries" component={MyAskques} />
-          <Route path="/my-answers" component={MyAnswersView} />
-          <Route
+          <PrivateRoute path="/create-questionary" component={props => <CreateQuestionary/>} />
+          <PrivateRoute exact path="/ask-questionary" component={props => <AskQuestionaryView/>} />
+          <PrivateRoute path="/ask-questionary/:hash" component={props => <AskQuestionaryView/>} />
+          <PrivateRoute path="/my-questionaries" component={props => <MyAskques/>} />
+          <PrivateRoute path="/my-answers" component={props => <MyAnswersView/>} />
+          <PrivateRoute
             path="/ask-results/:hash"
             component={QuestionnaireStatistics}
           />
           
-          <Route path="/edit-questionary/:hash" component={EditQuestionary} />
-          <Route
+          <PrivateRoute path="/edit-questionary/:hash" component={props => <EditQuestionary/>} />
+          <PrivateRoute
             path="/answers-questionary/:hash"
-            component={AnswerOfQuestionaryView}
+            component={props => <AnswerOfQuestionaryView/>}
           />
           <Route path="/" component={Home} />
         </Switch>
@@ -39,3 +39,16 @@ export default class Root extends Component {
     );
   }
 }
+
+const PrivateRoute = ({ component: Component, ...rest}) => (
+  <Route
+    {...rest}
+    render={props =>
+      localStorage.getItem("token") ? (
+        <Component {...props} />
+      ) : (
+        <Redirect to={{pathname: "/login", state: { from: props.location }}} />
+      )
+    }
+  />
+)

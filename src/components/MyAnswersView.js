@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import ResponseCard from "./ResponseCard";
 import Button from "@material-ui/core/Button";
-import { withRouter } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 const MyAnswersView = (props) => {
   const [myAnswers, setMyAnswers] = useState({});
   const [loading, setLoading] = useState(true);
+  const history = useHistory();
 
   useEffect(() => {
     fetchMyAnswers(setMyAnswers, setLoading);
@@ -63,7 +64,7 @@ const MyAnswersView = (props) => {
                   <Button
                     color="primary"
                     variant="contained"
-                    onClick={() => props.history.push("/ask-questionary")}
+                    onClick={() => history.push("/ask-questionary")}
                     className={styles.askQuestionaryButton}
                   >
                     Responder encuesta

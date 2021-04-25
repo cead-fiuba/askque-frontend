@@ -27,6 +27,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import { useHistory } from "react-router-dom";
 
 const NEW_RESPONSE_TEXT = "Nueva respuesta ...";
 
@@ -85,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CreateQuestionary2(props) {
   const classes = useStyles();
-
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const [values, setValues] = React.useState({
@@ -136,7 +137,7 @@ function CreateQuestionary2(props) {
   };
 
   function redirectTo(newPath) {
-    props.history.push(newPath);
+    history.push(newPath);
   }
 
   const saveQuestion = (question) => {

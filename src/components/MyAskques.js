@@ -17,6 +17,7 @@ import { deleteQuestionaryResponses } from "../service/ResponseService";
 import { makeCopyOfQuestionaryWith } from "../service/TeacherService";
 import QuestionaryCard from "./common/QuestionaryCard";
 import MakeCopyAlertDialog from "./MakeCopyAlertDialog";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function MyAskques2(props) {
   const classes = useStyles();
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const [values, setState] = useState({
@@ -61,7 +63,7 @@ export function MyAskques2(props) {
   const [loadingAlertMakeCopy, setLoadingAlertMakeCopy] = useState(false);
 
   function redirectTo(newPath) {
-    props.history.push(newPath);
+    history.push(newPath);
   }
 
   useEffect(() => {
