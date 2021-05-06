@@ -217,14 +217,8 @@ function QuestionnaireStatistics(props) {
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="h5">
+              <Typography variant="h5" style={{ marginBottom: "10%" }}>
                 Cantidad de respuestas {questionary.quantity_respones}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="h5" style={{ marginBottom: "5%" }}>
-                Cantidad de respuestas correctas{" "}
-                {calculateHowManyCorrectAnswersHasQuestionary()}
               </Typography>
             </Grid>
             <Grid
