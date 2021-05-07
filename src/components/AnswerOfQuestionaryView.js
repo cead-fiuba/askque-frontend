@@ -13,6 +13,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Typography from "@material-ui/core/Typography";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -37,7 +38,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AnswerOfQuestionaryView = (props) => {
-  const questionaryHash = props.match.params.hash;
+
+  const { hash } = useParams();
 
   const styles = useStyles();
   const [answer, setAnswer] = useState({});
@@ -45,12 +47,12 @@ const AnswerOfQuestionaryView = (props) => {
 
   useEffect(() => {
     fetchAnswersOfQuestionaryWithQuestionaryInfo(
-      questionaryHash,
+      hash,
       setAnswer,
       setLoading
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchAnswersOfQuestionaryWithQuestionaryInfo, questionaryHash]);
+  }, [fetchAnswersOfQuestionaryWithQuestionaryInfo, hash]);
 
   const optionsIsOk = (option, optionsSelected) => {
     console.log("optionsSelected", optionsSelected);
