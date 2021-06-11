@@ -243,8 +243,8 @@ function CreateQuestionary2(props) {
           ...alertDialogValues,
           content: "Guardando imagenes ...",
         });
-        const response = await uploadImage(question.fileImage);
-        questionToSend.image_url = response.data.image_url;
+        const url = await uploadImage(question.fileImage);
+        questionToSend.image_url = url;
         questionToSend.has_image = true;
       }
       return questionToSend;

@@ -11,6 +11,7 @@
     "axios": "^0.19.0",
     "chart.js": "^2.8.0",
     "clsx": "^1.0.4",
+    "firebase": "^8.6.7",
     "form-data": "^2.5.1",
     "ignore-warnings": "^0.2.1",
     "mdi-material-ui": "^6.0.0",

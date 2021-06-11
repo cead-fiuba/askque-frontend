@@ -1,13 +1,11 @@
 import server from '../Server';
-import FormData from 'form-data'
+import { storage } from "./FirebaseService";
 
-export const uploadImage = (file) => {
-    const data = new FormData();
-    data.append('image', file, file.name);
-    return server.post('/images', data, {
-        headers: {
-            'accept': 'application/json',
-            'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
-        }
-    })
+export const uploadImage = async (file) => {
+	if (file) {
+		const res = await storage.ref(`/images/${file.name}`).put(file)
+		const url = await res.ref.getDownloadURL()
+		console.log(url)
+		return url
+	}
 }

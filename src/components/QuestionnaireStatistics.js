@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useEffect, useState } from "react";
 import AppBar from "./AppBar";
 import { getResultOfQuestionary } from "../service/TeacherService";
@@ -111,7 +112,7 @@ function QuestionnaireStatistics(props) {
     });
     return counter;
   };
-
+// eslint-disable-next-line
   const calculateHowManyCorrectAnswersHasQuestionary = () => {
     var counter = 0;
     responses.forEach((response) => {
